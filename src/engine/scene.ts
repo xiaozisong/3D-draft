@@ -77,9 +77,11 @@ export class Scene {
     const gridSpacing = gap / seg;
     const gridPoints = [];
 
+    // 第一个grid是下面的灰色网格
     const gridHelper1 = new THREE.GridHelper(size, size * 2, 0xEEEEEE, 0xEEEEEE);
     this.scene.add(gridHelper1);
 
+    // 第二个是上面的黑色网格
     const gridHelper2 = new THREE.GridHelper(size, size, 0x54626F, 0x54626F);
     this.scene.add(gridHelper2);
 
@@ -96,6 +98,7 @@ export class Scene {
       const x = gridPoints[i].x;
       const y = gridPoints[i].y;
       const z = gridPoints[i].z;
+      // 设置球体 大小为0.01
       const geometry = new THREE.SphereGeometry(0.01, 8, 8);
       const material = new THREE.MeshBasicMaterial({ color: '#f00' });
       const point = new THREE.Mesh(geometry, material);
@@ -128,7 +131,9 @@ export class Scene {
       return;
     }
     this.controls = new OrbitControls(camera, this.engine.renderer.domElement);
-    this.controls.enableRotate = false;
+    this.controls.enableRotate = true;
+    this.controls.enableDamping = true; // 启用惯性效果
+    this.controls.dampingFactor = 0.05; // 阻尼惯性参数
 
     // 初始化控制器状态监听
     this.controls.addEventListener('change', () => {

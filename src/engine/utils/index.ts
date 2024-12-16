@@ -68,6 +68,47 @@ export class Utils {
     return boundingBox
   }
 
+  // 销毁group
+  static disposeGroup(group: THREE.Group<Object3DEventMap>) {
+    while (group.children.length > 0) {
+      const child = group.children[0];
+      group.remove(child);
+
+       // 递归销毁子元素的几何体和材质
+      if (child instanceof THREE.Mesh) {
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(mat => mat.dispose());
+          } else {
+            child.material.dispose();
+          }
+        }
+      }
+
+      // 如果子对象也有子对象，也需要递归处理
+      if (child instanceof THREE.Group) {
+        Utils.disposeGroup(child);
+      }
+    }
+    group.parent?.remove(group);
+  }
+
+  // 找出最近的网格关键点
+  static findNearestPoint(position: THREE.Vector3, gridPoints: THREE.Vector3[]): THREE.Vector3 {
+    var closestPoint = gridPoints[0];
+    var closestDistance = position.distanceTo(closestPoint);
+
+    for (var i = 1; i < gridPoints.length; i++) {
+      var distance = position.distanceTo(gridPoints[i]);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestPoint = gridPoints[i]
+      }
+    }
+
+    return closestPoint;
+  }
 
 }
 

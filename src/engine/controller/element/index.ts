@@ -91,6 +91,7 @@ export class Elements extends THREE.Group {
     if (element) {
       this.elementMap.set(element.key, element);
       this.add(element);
+      return element;
     }
   }
 
@@ -101,6 +102,7 @@ export class Elements extends THREE.Group {
     if (target) {
       this.remove(target);
       target?.destroy();
+      this.elementMap.delete(elementKey);
     }
   }
 

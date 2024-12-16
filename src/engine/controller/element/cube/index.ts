@@ -5,14 +5,15 @@ import { Base3DObject } from "../base";
 import { Utils } from "@/engine/utils";
 import { nanoid } from 'nanoid';
 import { SIDE_DARK_COLOR, SIDE_LIGHT_COLOR, TOP_COLOR } from "@/engine/constant";
+import { BaseOptions } from "@/engine/interface";
 
-export interface CubeOptions {
+export interface CubeOptions extends BaseOptions {
   x: number,
   z: number
 }
 
 
-export class Cube extends Base3DObject {
+export class Cube extends Base3DObject<CubeOptions> {
   groundGap = 0.01;
 
   lineWdith = 0.02;
@@ -31,8 +32,8 @@ export class Cube extends Base3DObject {
 
   matLine?: LineMaterial = new LineMaterial(this.matLineOptions);
 
-  constructor(engine: Render, private options: CubeOptions) {
-    super(engine);
+  constructor(engine: Render, options: CubeOptions) {
+    super(engine, options);
     this.init();
   }
 
@@ -151,6 +152,7 @@ export class Cube extends Base3DObject {
     return {
       type: 'cube',
       options: {
+        ...me.options,
         x,
         z
       }

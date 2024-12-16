@@ -32,7 +32,7 @@ export const EditBar = () => {
         left: editbarPosition.x,
       }}
     >
-      <Tooltip title='箭头连接' placement="left">
+      <Tooltip title='箭头连接' placement="right">
         <Button
           type='primary'
           shape='circle'
@@ -40,14 +40,14 @@ export const EditBar = () => {
           onClick={handleArrowConnect}
         />
       </Tooltip>
-      <Tooltip title='线条连接' placement="left">
+      <Tooltip title='线条连接' placement="right">
         <Button
           type='primary'
           shape='circle'
           icon={<StockOutlined />}
         />
       </Tooltip>
-      <Tooltip title='添加文字' placement="left">
+      <Tooltip title='添加文字' placement="right">
         <Button
           type='primary'
           shape='circle'

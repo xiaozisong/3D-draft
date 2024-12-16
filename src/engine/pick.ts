@@ -16,7 +16,7 @@ export class PickController {
   }
 
   // 与平面求交点
-  intersectPlane(event: MouseEvent) {
+  intersectPlane(event: MouseEvent): THREE.Vector3 {
     const camera = this.engine.cameraController.camera
     const intersectionPoint = new THREE.Vector3();
     if (!camera) { return intersectionPoint }
@@ -33,7 +33,7 @@ export class PickController {
   }
 
   // 获取视窗下的三维中心点
-  getViewportCenterPoint() {
+  getViewportCenterPoint(): THREE.Vector3 {
     const camera = this.engine.cameraController.camera
     const intersectionPoint = new THREE.Vector3();
     if (!camera) { return intersectionPoint }

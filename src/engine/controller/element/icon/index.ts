@@ -3,8 +3,9 @@ import * as THREE from "three";
 import { Line2, LineGeometry, LineMaterial, SVGLoader } from "three/addons";
 import { Base3DObject } from "../base";
 import { Utils } from "@/engine/utils";
+import { BaseOptions } from "@/engine/interface";
 
-export interface IconOptions {
+export interface IconOptions extends BaseOptions {
   x: number,
   z: number,
   size: number,
@@ -12,7 +13,7 @@ export interface IconOptions {
 
 }
 
-export class Icon extends Base3DObject {
+export class Icon extends Base3DObject<IconOptions> {
   lineWdith = 0.03;
   groundGap = 0.01;
   outlinePadding = 0.1;
@@ -32,8 +33,8 @@ export class Icon extends Base3DObject {
 
   svgUrl = 'user.svg';
 
-  constructor(engine: Render, private options: IconOptions) {
-    super(engine);
+  constructor(engine: Render, options: IconOptions) {
+    super(engine, options);
     this.init();
   }
 
@@ -124,6 +125,7 @@ export class Icon extends Base3DObject {
     return {
       type: 'icon',
       options: {
+        ...me.options,
         x,
         z,
         size: me.icon?.scale.x * 1024,

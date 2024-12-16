@@ -20,7 +20,7 @@ const useKeyPressEffect = () => {
 
   useKeyPress(["esc"], (event) => {
     event.preventDefault();
-    engine.controller.action.line.cancelAction();
+    engine.controller.action.line.endAddArrowConnect();
   });
 };
 

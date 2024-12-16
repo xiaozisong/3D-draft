@@ -3,8 +3,9 @@ import * as THREE from "three";
 import { Line2, LineGeometry, LineMaterial } from "three/addons";
 import { Text as TextMesh } from 'troika-three-text';
 import { Base3DObject, IBase3DObject } from "../base";
+import { BaseOptions } from "@/engine/interface";
 
-export interface AreaOptions extends IBase3DObject{
+export interface AreaOptions extends BaseOptions{
   x: number,
   z: number,
   width: number,
@@ -12,7 +13,7 @@ export interface AreaOptions extends IBase3DObject{
   color: string,
 };
 
-export class Area extends Base3DObject {
+export class Area extends Base3DObject<AreaOptions> {
   lineWdith = 0.03;
   groundGap = 0;
   outlinePadding = 0;
@@ -30,8 +31,8 @@ export class Area extends Base3DObject {
 
   line?: Line2;
 
-  constructor(engine: Render, private options: AreaOptions) {
-    super(engine);
+  constructor(engine: Render, options: AreaOptions) {
+    super(engine, options);
     this.init();
   };
 
@@ -108,6 +109,7 @@ export class Area extends Base3DObject {
     return {
       type: 'area',
       options: {
+        ...me.options,
         x,
         z,
         width: me.area?.geometry.parameters.width,

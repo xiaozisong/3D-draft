@@ -14,6 +14,8 @@ export class Scene {
   // 地面
   plane?: THREE.Plane;
 
+  gridPoints: THREE.Vector3[] = [];
+
   constructor(private engine: Render) {
     // this.scene.background = new THREE.Color(0x000000);
 
@@ -64,8 +66,44 @@ export class Scene {
 
   // 初始化网格帮助器
   initGridHelper() {
-    const gridHelper = new THREE.GridHelper(16, 16, 0x54626F, 0x54626F);
-    this.scene.add(gridHelper);
+    const me = this;
+    // 尺寸
+    const size = 16;
+    // 间隔
+    const gap = 1;
+    // 吸附点细分
+    const seg = 4;
+    const gridSize = size * seg;
+    const gridSpacing = gap / seg;
+    const gridPoints = [];
+
+    const gridHelper1 = new THREE.GridHelper(size, size * 2, 0xEEEEEE, 0xEEEEEE);
+    this.scene.add(gridHelper1);
+
+    const gridHelper2 = new THREE.GridHelper(size, size, 0x54626F, 0x54626F);
+    this.scene.add(gridHelper2);
+
+    for (let i = -gridSize / 2; i <= gridSize / 2; i++) {
+      for (let j = -gridSize / 2; j <= gridSize / 2; j++) {
+        gridPoints.push(new THREE.Vector3(i * gridSpacing, 0, j * gridSpacing));
+      }
+    }
+    this.gridPoints = gridPoints;
+
+    const pointsGroup = new THREE.Group();
+
+    for (let i = 0; i < gridPoints.length; i += 1) {
+      const x = gridPoints[i].x;
+      const y = gridPoints[i].y;
+      const z = gridPoints[i].z;
+      const geometry = new THREE.SphereGeometry(0.01, 8, 8);
+      const material = new THREE.MeshBasicMaterial({ color: '#f00' });
+      const point = new THREE.Mesh(geometry, material);
+      point.position.set(x, y, z);
+      pointsGroup.add(point);
+    }
+
+    this.scene.add(pointsGroup);
   }
 
   // 初始化光

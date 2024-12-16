@@ -5,13 +5,14 @@ import { Base3DObject } from "../base";
 import { Utils } from "@/engine/utils";
 import { nanoid } from 'nanoid';
 import { SIDE_LIGHT_COLOR, TOP_COLOR } from "@/engine/constant";
+import { BaseOptions } from "@/engine/interface";
 
-export interface CylinderOptions {
+export interface CylinderOptions extends BaseOptions {
   x: number,
   z: number
 }
 
-export class Cylinder extends Base3DObject {
+export class Cylinder extends Base3DObject<CylinderOptions> {
   groundGap = 0.01;
   lineWdith = 0.02;
   lineWdithActive = 0.03;
@@ -27,8 +28,8 @@ export class Cylinder extends Base3DObject {
     vertexColors: false,
   });
 
-  constructor(engine: Render, private options: CylinderOptions) {
-    super(engine);
+  constructor(engine: Render, options: CylinderOptions) {
+    super(engine, options);
     this.init();
   }
 
@@ -43,8 +44,8 @@ export class Cylinder extends Base3DObject {
     // const geometry = new THREE.BoxGeometry(length, height, width);
 
     // 创建圆柱体几何体
-    const radiusTop = 0.5; // 顶部半径
-    const radiusBottom = 0.5; // 底部半径
+    const radiusTop = 0.538; // 顶部半径
+    const radiusBottom = 0.538; // 底部半径
     const height = 0.5; // 高度
     const radialSegments = 8 // 分段数，决定棱柱的边数
     const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
@@ -154,6 +155,7 @@ export class Cylinder extends Base3DObject {
     return {
       type: 'cylinder',
       options: {
+        ...me.options,
         x,
         z
       }

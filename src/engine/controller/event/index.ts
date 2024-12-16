@@ -72,8 +72,10 @@ export class Events {
     const me = this;
     var intersectPoint = me.engine.pickController.intersectPlane(event);
     if (!intersectPoint || !me.dragObject) { return }
-    me.dragObject.position.x = intersectPoint.x - me.dragDelta.x;
-    me.dragObject.position.z = intersectPoint.z - me.dragDelta.z;
+    const tempVetor = new THREE.Vector3(intersectPoint.x - me.dragDelta.x, 0, intersectPoint.z - me.dragDelta.z);
+    const target = Utils.findNearestPoint(tempVetor, this.engine.sceneController.gridPoints);
+    me.dragObject.position.x = target.x;
+    me.dragObject.position.z = target.z;
     me.dragObject.position.y = me.dragObject?.groundGap || 0;
     this.engine.controller.setting.updateEditBarPosition();
   }
@@ -82,17 +84,25 @@ export class Events {
   pointdown(event: MouseEvent) {
     const me = this;
     event.preventDefault();
-    me.selectObject(event);
+    // 绘制连线
+    if (me.engine.controller.action.line.status === LineActionStatus.add) {
+      me.engine.controller.action.line.addingArrowPoint(event);
+    } else {
+      // 选中物体
+      me.selectObject(event);
+    }
   }
 
   // 鼠标移动
   pointerMove(event: MouseEvent) {
     const me = this;
+    // 拖拽物体
     if (me.dragObject) {
       me.moveObject(event);
     }
+    // 绘制连线
     if (me.engine.controller.action.line.status === LineActionStatus.add) {
-      me.engine.controller.action.line.addingArrowPositionUpdate(event);
+      me.engine.controller.action.line.addingArrowMouseMove(event);
     }
 
   }

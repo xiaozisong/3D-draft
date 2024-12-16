@@ -3,20 +3,29 @@ import { Render } from "@/engine/render";
 import * as THREE from "three";
 import { Line2, LineGeometry, LineMaterial } from "three/addons";
 import { Base3DObject } from "../base";
+import { Utils } from "@/engine/utils";
+import { BaseOptions } from "@/engine/interface";
 
-export interface LineOptions {
-  points: number[]
+export interface LineOptions extends BaseOptions {
+  points: number[],
+  startElementKey?: string,
+  endElementKey?: string,
+  color?: string,
+  opacity?: number,
+  lineWidth?: number,
 }
 
 
-export class Line extends Base3DObject {
-  groundGap = 0.01;
+export class Line extends Base3DObject<LineOptions> {
+  groundGap = 0;
 
   lineWdith = 0.03;
   lineWdithActive = 0.03;
 
+  // 线条实例
   line?: Line2;
 
+  // 材质配置
   matLineOptions = {
     color: this.defaultOutlineColor,
     linewidth: this.lineWdith,
@@ -25,15 +34,16 @@ export class Line extends Base3DObject {
     alphaToCoverage: true,
     vertexColors: false,
   }
-
+  // 材质
   matLine?: LineMaterial = new LineMaterial(this.matLineOptions);
 
-  constructor(engine: Render, private options: LineOptions) {
-    super(engine);
+  // 顶点集合
+  pointsGroup?: THREE.Group<THREE.Object3DEventMap>;
+
+  constructor(engine: Render, options: LineOptions) {
+    super(engine, options);
     this.init();
   }
-
-
 
   init() {
     const me = this;
@@ -56,49 +66,37 @@ export class Line extends Base3DObject {
   getPoints() {
     return this.options.points
   }
-
+  
+  // 获取起点位置
   getStartPoints() {
     return [this.options.points[0], this.options.points[1], this.options.points[2]]
   }
 
+  // 获取终点位置
   getEndPoints() {
     const length = this.options.points.length
     return [this.options.points[length - 3], this.options.points[length - 2], this.options.points[length - 1]]
   }
 
   updatePoints(points: number[]) {
-    const geometry = this.line?.geometry as LineGeometry;
-    if (!geometry) { return }
-    geometry?.setPositions(points);
-    geometry.attributes.position.needsUpdate = true;
+    const oldGeometry = this.line?.geometry as LineGeometry;
+    if (!this.line || !oldGeometry) { return; }
+    const newGeometry = new LineGeometry();
+    newGeometry?.setPositions(points);
+    newGeometry.attributes.position.needsUpdate = true;
     this.line?.computeLineDistances();
+    this.line.geometry = newGeometry;
     this.options.points = points;
-  }
-
-  setPositions() {
-
-  }
-
-  getLinePoints() {
-    if (!this.line) { return []; }
-    const geometry = this.line.geometry as LineGeometry;
-    const positions = geometry.attributes.position.array;
-    const itemSize = geometry.attributes.position.itemSize; // 每个顶点的大小（通常是3）
-    const count = geometry.attributes.position.count; // 顶点数量
-
-    const points = [];
-    for (let i = 0; i < count; i++) {
-      const x = positions[i * itemSize];
-      const y = positions[i * itemSize + 1];
-      const z = positions[i * itemSize + 2];
-      points.push(x, y, z);
-    }
-    return points;
+    oldGeometry.dispose();
+    this.updateBreakPoints();
   }
 
   // 更新折点
   updateBreakPoints() {
     const me = this;
+    if (this.pointsGroup) {
+      Utils.disposeGroup(this.pointsGroup);
+    }
     const pointsGroup = new THREE.Group();
     const points = me.options.points;
 
@@ -113,7 +111,7 @@ export class Line extends Base3DObject {
       pointsGroup.add(point)
     }
 
-
+    this.pointsGroup = pointsGroup;
     me.add(pointsGroup)
   }
 
@@ -133,37 +131,17 @@ export class Line extends Base3DObject {
 
   getData() {
     const me = this;
-    const position = me?.position
-    if (!position) return;
-    const { x, z } = position;
     return {
       type: 'line',
-      options: {
-        x,
-        z,
-        points: me.options.points,
-      }
+      options: me.options
     }
   }
 
   destroy() {
     const me = this;
-    this.children.forEach(child => {
-      if (child instanceof THREE.Mesh) {
-        child?.parent?.remove(child);
-        child.geometry.dispose();
-        if (child.material instanceof Array) {
-          child.material.forEach(material => {
-            material.dispose();
-          });
-        } else {
-          child.material.dispose();
-        }
-      }
-    });
+    super.destroy();
     me.line = undefined;
     me.matLine = undefined;
-    super.destroy();
   }
 
 }

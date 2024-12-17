@@ -131,7 +131,7 @@ export class Scene {
       return;
     }
     this.controls = new OrbitControls(camera, this.engine.renderer.domElement);
-    this.controls.enableRotate = true;
+    this.controls.enableRotate = false;
     this.controls.enableDamping = true; // 启用惯性效果
     this.controls.dampingFactor = 0.05; // 阻尼惯性参数
 

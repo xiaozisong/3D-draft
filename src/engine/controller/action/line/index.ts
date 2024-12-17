@@ -3,6 +3,7 @@ import { Line } from "../../element/line";
 import { LineActionStatus, Element3D } from "@/engine/interface";
 import { Utils } from '@/engine/utils';
 import * as Three from 'three';
+import { isEmpty } from "lodash";
 
 export class LineAction {
 
@@ -132,5 +133,19 @@ export class LineAction {
     this.tempLine.visible = false;
     this.tempLine.updatePoints([0, 0, 0, 0, 0, 0]);
   };
+
+  // 更新关联线
+  updateLinkLine(obejct: Element3D) {
+    const linkLineKeys = obejct.getOptions().linkLineKeys || [];
+    if (isEmpty(linkLineKeys)) { return }
+
+    const linkLines = linkLineKeys.map(key => this.engine.controller.element.getElementByKey(key));
+
+    linkLines.forEach(line => {
+      if (line && line instanceof Line) {
+        line.updatePointsByRelation();
+      }
+    })
+  }
 
 };

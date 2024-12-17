@@ -77,6 +77,8 @@ export class Events {
     me.dragObject.position.x = target.x;
     me.dragObject.position.z = target.z;
     me.dragObject.position.y = me.dragObject?.groundGap || 0;
+    // 移动物体时要更新连线位置
+    me.engine.controller.action.line.updateLinkLine(me.dragObject);
     this.engine.controller.setting.updateEditBarPosition();
   }
 

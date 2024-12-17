@@ -72,6 +72,16 @@ export class Line extends Base3DObject<LineOptions> {
     return [this.options.points[0], this.options.points[1], this.options.points[2]]
   }
 
+  // 获取中间位置(少于2个点的返回空数组)
+  getMiddlePoints() {
+    const points = this.getPoints();
+    if (points.length <= 6) {
+      return [];
+    } else {
+      return points.slice(3, points.length - 3);
+    }
+  }
+
   // 获取终点位置
   getEndPoints() {
     const length = this.options.points.length
@@ -113,6 +123,31 @@ export class Line extends Base3DObject<LineOptions> {
 
     this.pointsGroup = pointsGroup;
     me.add(pointsGroup)
+  }
+
+  // 根据要素关系更新线条
+  updatePointsByRelation() {
+    const me = this;
+    const startElementKey = me.options.startElementKey;
+    const endElementKey = me.options.endElementKey;
+
+    let startPoint = this.getStartPoints();
+    let endPoint = this.getEndPoints();
+    if (startElementKey) {
+      const startElement = me.engine.controller.element.getElementByKey(startElementKey);
+      if (startElement) {
+        startPoint = [startElement.position.x, startElement.position.y, startElement.position.z];
+      }
+    }
+    if (endElementKey) {
+      const endElement = me.engine.controller.element.getElementByKey(endElementKey);
+      if (endElement) {
+        endPoint = [endElement.position.x, endElement.position.y, endElement.position.z];
+      }
+    }
+
+    const middlePoints = this.getMiddlePoints();
+    me.updatePoints([...startPoint, ...middlePoints, ...endPoint]);
   }
 
   active() {

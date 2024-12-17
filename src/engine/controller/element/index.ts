@@ -18,6 +18,10 @@ export class Elements extends THREE.Group {
     super();
   }
 
+  getElementByKey(key: string) {
+    return this.elementMap.get(key);
+  }
+
   // 新增元素
   createElement(key: string) {
     const centerPoint = this.engine.pickController?.getViewportCenterPoint();

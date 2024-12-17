@@ -21,7 +21,7 @@ export class Setting {
   // 更新编辑栏位置
   updateEditBar() {
     const me = this;
-    const activeObject = me.engine.controller.event.activeObject;
+    const activeObject = me.engine.controller.action.select.activeObject;
     if (!activeObject) { 
       this.store.setState({
         editbarPosition: { x: 0, y: 0 },

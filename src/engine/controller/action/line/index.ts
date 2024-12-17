@@ -2,14 +2,14 @@ import { Render } from "@/engine/render";
 import { Line } from "../../element/line";
 import { LineActionStatus, Element3D } from "@/engine/interface";
 import { Utils } from '@/engine/utils';
-import * as Three from 'three';
+import * as THREE from 'three';
 import { isEmpty } from "lodash";
 import { Point } from "../../element/point";
 
 export class LineAction {
 
   // 当前动作状态
-  status: LineActionStatus = LineActionStatus.idle;
+  _status: LineActionStatus = LineActionStatus.idle;
 
   // 临时线
   tempLine: Line;
@@ -17,7 +17,10 @@ export class LineAction {
   // store= new Store()
 
   // 下一个点位
-  nextPoint: Three.Vector3 = new Three.Vector3();
+  nextPoint: THREE.Vector3 = new THREE.Vector3();
+
+  // 连线原始元素
+  originElement?: Element3D;
 
   // 连线目标元素
   targetElement?: Element3D;
@@ -25,9 +28,33 @@ export class LineAction {
   constructor(private engine: Render) {
     this.tempLine = new Line(this.engine, { points: [0, 0, 0] });
     this.tempLine.visible = false;
+    this.tempLine.pickable = false;
     this.engine.sceneController.scene.add(this.tempLine);
   };
 
+  set status(status: LineActionStatus) {
+    this._status = status;
+    switch (status) {
+      case LineActionStatus.create:
+        break;
+      case LineActionStatus.addPoint:
+        const activeObject = this.engine.controller.action.select.activeObject;
+        if (activeObject && activeObject instanceof Line) {
+
+        }
+        break;
+      case LineActionStatus.idle:
+        break;
+      default:
+        break;
+    }
+  }
+
+  get status() {
+    return this._status;
+  }
+
+  // 判断是否是线或点
   isLineOrPoint(target: Element3D): boolean {
     if (target instanceof Line) {
       return true;
@@ -40,10 +67,13 @@ export class LineAction {
 
   // 开始添加箭头
   startAddArrowConnect() {
-    this.status = LineActionStatus.add;
-    const activeObject = this.engine.controller.event.activeObject;
+    const me = this;
+    me.reset();
+    this.status = LineActionStatus.create;
+    const activeObject = this.engine.controller.action.select.activeObject;
     if (!activeObject) { return }
-    const startPoint = activeObject.position;
+    this.originElement = activeObject;
+    const startPoint = this.originElement.position;
     this.tempLine.visible = true;
     this.tempLine.updatePoints([startPoint.x, startPoint.y, startPoint.z])
   };
@@ -51,24 +81,18 @@ export class LineAction {
   // 添加箭头中，鼠标移动点位更新
   addingArrowMouseMove(event: MouseEvent) {
     const me = this;
-    const activeObject = this.engine.controller.event.activeObject;
-    if (!activeObject) { return }
     const points = this.tempLine.getPoints();
     const length = points.length;
     const prevPoint = length > 3 ? points.slice(0, length - 3) : points;
-    const allIntersects = me.engine.pickController?.pick(event);
-    const allObjects = allIntersects?.filter((item) => item.object.userData.pickable);
 
     const intersectPoint = this.engine.pickController.intersectPlane(event);
+    this.targetElement = undefined;
     this.nextPoint = Utils.findNearestPoint(intersectPoint, this.engine.sceneController.gridPoints);
 
-    if (allObjects.length > 0) {
-      const object = allObjects[0].object;
-      const target = Utils.lookUpElement(object);
-      if (target && !me.isLineOrPoint(target)) {
-        this.nextPoint = target.position;
-        this.targetElement = target;
-      }
+    const { element } = me.engine.pickController.pickToElement(event);
+    if (element && !me.isLineOrPoint(element)) {
+      this.nextPoint = element.position;
+      this.targetElement = element
     }
 
     const newPoints = [...prevPoint, this.nextPoint.x, this.nextPoint.y, this.nextPoint.z];
@@ -78,10 +102,6 @@ export class LineAction {
   // 添加箭头中，鼠标点击点位
   addingArrowPoint(event: MouseEvent) {
     const me = this;
-    const activeObject = this.engine.controller.event.activeObject;
-    if (!activeObject) {
-      return;
-    }
     // 获取新点位
     const points = this.tempLine.getPoints();
     const newPoints = [...points, me.nextPoint?.x, me.nextPoint?.y, me.nextPoint?.z];
@@ -95,12 +115,12 @@ export class LineAction {
   // 添加箭头结束
   endAddArrowConnect() {
     const me = this;
-    const activeObject = this.engine.controller.event.activeObject;
-    if (!activeObject) { return };
-
+    const originElement = me.originElement;
+    if (!originElement) { return }
     const points = this.tempLine.getPoints();
     if (points.length <= 3) {
       me.reset();
+      return;
     }
 
     // const line = new Line(this.engine, { points: points });
@@ -114,14 +134,14 @@ export class LineAction {
 
     //更新线条上的关系
     lineElement.setOptions({
-      startElementKey: activeObject.key,
+      startElementKey: originElement?.key,
       endElementKey: this.targetElement?.key,
     });
 
     // 更新当前要素的连接线关系
-    const activeObjectOptions = activeObject.getOptions();
-    const oldLinkLineKeys = activeObjectOptions.linkLineKeys || [];
-    activeObject.setOptions({
+    const originElementOptions = originElement?.getOptions();
+    const oldLinkLineKeys = originElementOptions?.linkLineKeys || [];
+    originElement?.setOptions({
       linkLineKeys: [...oldLinkLineKeys, lineElement.key]
     })
 
@@ -141,8 +161,9 @@ export class LineAction {
     this.status = LineActionStatus.idle;
     this.tempLine.updatePoints([0, 0, 0]);
     this.tempLine.visible = false;
+    this.originElement = undefined;
     this.targetElement = undefined;
-    this.nextPoint = new Three.Vector3();
+    this.nextPoint = new THREE.Vector3();
   }
 
   // 取消当前动作 
@@ -152,7 +173,7 @@ export class LineAction {
     this.tempLine.updatePoints([0, 0, 0, 0, 0, 0]);
   };
 
-  // 更新关联线
+  // 移动物体时更新该物体的关联线
   updateLinkLine(obejct: Element3D) {
     const linkLineKeys = obejct.getOptions().linkLineKeys || [];
     if (isEmpty(linkLineKeys)) { return }
@@ -201,6 +222,58 @@ export class LineAction {
         points.splice(index * 3, 3, point.x, point.y, point.z);
         line.updateGeometryPoint(points);
       }
+    }
+  }
+
+  // 新增线条上的点
+  addPoint(event: MouseEvent) {
+    const me = this;
+    const activeObject = this.engine.controller.action.select.activeObject;
+    if (!activeObject || !(activeObject instanceof Line) || me.status !== LineActionStatus.addPoint) {
+      return;
+    }
+    const intersectPoint = this.engine.pickController.pickToPoint(event, activeObject);
+    if (intersectPoint) {
+      const positions = activeObject.getPoints();
+      let closestSegmentIndex = 0;
+      let closestDistance = Infinity;
+      // 遍历每段线段，找到距离点击最近的线段
+      for (let i = 0; i < positions.length - 3; i += 3) {
+        const start = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
+        const end = new THREE.Vector3(positions[i + 3], positions[i + 4], positions[i + 5]);
+        const distance = Utils.Math.distanceToSegment(intersectPoint, start, end);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSegmentIndex = i / 3;
+        }
+      }
+
+
+      const newPositions = [];
+      for (let i = 0; i < positions.length; i += 3) {
+        newPositions.push(positions[i], positions[i + 1], positions[i + 2]);
+        if (i == closestSegmentIndex * 3) {
+          newPositions.push(intersectPoint.x, intersectPoint.y, intersectPoint.z);
+        }
+      }
+      activeObject.updatePoints(newPositions);
+      const activeBreakPoint = activeObject.getBreakPoint(closestSegmentIndex + 1);
+      this.engine.controller.action.select.selectObject(activeBreakPoint, event);
+      this.reset();
+    }
+  }
+
+  // 删除线条上的点
+  removeLinePoint(target: Point) {
+    const { lineKey, index } = target.getOptions();
+    if (!lineKey || index === undefined) {
+      return;
+    }
+    const line = this.engine.controller.element.getElementByKey(lineKey);
+    if (line && line instanceof Line) {
+      const points = line.getPoints();
+      points.splice(index * 3, 3);
+      line.updatePoints(points);
     }
   }
 

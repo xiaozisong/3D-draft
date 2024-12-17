@@ -83,20 +83,17 @@ export class Cylinder extends Base3DObject<CylinderOptions> {
     var lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 20 });
 
     var lines = new THREE.LineSegments(edges, lineMaterial);
-    lines.userData.pickable = false;
 
     cylinder.add(lines);
 
     me.cylinder = cylinder;
-    cylinder.userData.pickable = true;
-    cylinder.userData.key = this.key;
 
-    this.addLine2();
+    this.addLine();
     me.add(cylinder);
     this.position.y = this.groundGap
   }
 
-  addLine2() {
+  addLine() {
     const me = this;
     const mesh = me.cylinder;
     if (!mesh) { return }

@@ -18,8 +18,9 @@ export interface LineOptions extends BaseOptions {
 
 
 export class Line extends Base3DObject<LineOptions> {
-  groundGap = 0;
 
+  // 是否可拖拽
+  dragable: boolean = false;
   lineWdith = 0.03;
   lineWdithActive = 0.03;
 
@@ -56,8 +57,6 @@ export class Line extends Base3DObject<LineOptions> {
     line.computeLineDistances();
     line.scale.set(1, 1, 1);
 
-    line.userData.pickable = true;
-    line.userData.key = this.key;
     this.line = line;
     me.add(line);
     me.updateBreakPoints();
@@ -156,6 +155,11 @@ export class Line extends Base3DObject<LineOptions> {
 
     const middlePoints = this.getMiddlePoints();
     me.updatePoints([...startPoint, ...middlePoints, ...endPoint]);
+  }
+
+  // 通过索引获取折点
+  getBreakPoint(index: number) {
+    return this.pointsGroup?.children[index] as Point;
   }
 
   active() {

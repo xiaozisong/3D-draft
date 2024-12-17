@@ -7,6 +7,8 @@ import { Cylinder, CylinderOptions } from "./cylinder";
 import { Icon, IconOptions } from "./icon";
 import { Text, TextOptions } from "./text";
 import { Line, LineOptions } from "./line";
+import { Point } from "./point";
+import { instance } from "three/examples/jsm/nodes/Nodes.js";
 
 export class Elements extends THREE.Group {
 
@@ -103,14 +105,27 @@ export class Elements extends THREE.Group {
   removeElement(elementKey: string) {
     const target = this.elementMap.get(elementKey);
     console.log('target', target)
-    const isLine = target instanceof Line;
     if (target) {
-      if (isLine) {
-        this.engine.controller.action.line.removeLineLink(target);
-      }
       this.remove(target);
       target?.destroy();
       this.elementMap.delete(elementKey);
+    }
+  }
+
+  // 移除选中元素
+  removeSelectedElement() {
+    const selectedElement = this.engine.controller.action.select.activeObject;
+    if (selectedElement instanceof Point) {
+      console.log(111)
+      this.engine.controller.action.line.removeLinePoint(selectedElement);
+    }
+
+    if (selectedElement instanceof Line) {
+      this.engine.controller.action.line.removeLineLink(selectedElement);
+    }
+
+    if (selectedElement) {
+      this.removeElement(selectedElement.key);
     }
   }
 

@@ -29,8 +29,6 @@ export class Point extends Base3DObject<PointOptions> {
     const point = new THREE.Mesh(geometry, material);
 
     me.point = point;
-    point.userData.pickable = true;
-    point.userData.key = this.key;
     me.add(point);
     me.position.set(x, y, z);
   }

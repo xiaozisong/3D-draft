@@ -1,3 +1,4 @@
+import { Vector2 } from 'three';
 import *  as THREE from 'three';
 
 
@@ -41,5 +42,33 @@ export class Math {
     var screenX = (vector.x + 1) / 2 * width;
     var screenY = (-vector.y + 1) / 2 * height;
     return { x: screenX, y: screenY }
+  }
+
+  /**
+   * 计算点与线的距离
+   * 
+   * @static
+   * @param {THREE.Vector3} point
+   * @param {THREE.Vector3} start
+   * @param {THREE.Vector3} end
+   * @returns
+   * 
+   * @memberOf Math
+   */
+
+  static distanceToSegment(point: THREE.Vector3, start: THREE.Vector3, end: THREE.Vector3) {
+    const segmentVector = new THREE.Vector3().subVectors(end, start);
+    const pointVector = new THREE.Vector3().subVectors(point, start);
+    const segmentLengthSquared = segmentVector.lengthSq();
+    const projection = pointVector.dot(segmentVector) / segmentLengthSquared;
+
+    if (projection < 0) {
+      return point.distanceTo(start);
+    } else if (projection > 1) {
+      return point.distanceTo(end);
+    } else {
+      const projectionPoint = start.clone().add(segmentVector.multiplyScalar(projection));
+      return point.distanceTo(projectionPoint);
+    }
   }
 }

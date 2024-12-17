@@ -59,11 +59,8 @@ export class Text extends Base3DObject<TextOptions> {
     this.add(text);
     
     this.text = text;
-    text.userData.pickable = true;
-    text.userData.key = this.key;
     this.position.y = this.groundGap;
     this.rotation.x = - Math.PI / 2;
-
 
   }
 

@@ -65,8 +65,6 @@ export class Icon extends Base3DObject<IconOptions> {
           const geometry = new THREE.ShapeGeometry(shape);
           const mesh = new THREE.Mesh(geometry, material);
           mesh.renderOrder = renderOrder++;
-          mesh.userData.pickable = true;
-          mesh.userData.key = me.key;
           icon.add(mesh);
         });
       });

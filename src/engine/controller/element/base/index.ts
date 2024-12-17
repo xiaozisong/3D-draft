@@ -18,6 +18,10 @@ export class Base3DObject<OptionsType extends BaseOptions> extends THREE.Group {
   defaultOutlineColor = COLOR_SET.defaultColor;
   // 选中边框颜色
   activeOutlineColor = COLOR_SET.activeColor;
+  // 是否可选中
+  pickable: boolean = true;
+  // 是否可拖拽
+  dragable: boolean = true;
   
   constructor(public engine: Render, public options: OptionsType) {
     super();

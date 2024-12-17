@@ -64,14 +64,12 @@ export class Cube extends Base3DObject<CubeOptions> {
     this.position.z = me.options.z;
     me.cube = cube;
 
-    this.addLine2()
-    cube.userData.pickable = true;
-    cube.userData.key = this.key;
+    this.addLine()
     me.add(cube);
     this.position.y = this.groundGap
   }
 
-  addLine1() {
+  addLine() {
     const me = this;
     const cube = me.cube;
     if (!cube) { return }

@@ -55,9 +55,6 @@ export class Area extends Base3DObject<AreaOptions> {
     // 创建网格对象
     const area = new THREE.Mesh(geometry, material);
 
-    area.userData.pickable = true;
-    area.userData.key = this.key;
-
     this.rotation.x = - Math.PI / 2;
     this.position.y = this.groundGap;
 

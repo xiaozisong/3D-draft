@@ -5,15 +5,14 @@ const useKeyPressEffect = () => {
   // 获取engine类
   const engine = useEngine();
   // 监听 删除、保存、退出
-  useKeyPress("delete", () => {
-    const activeElementKey = engine.controller.event?.activeObject?.key;
-    if (!activeElementKey) {
-      return;
-    }
-    engine.controller.element?.removeElement(activeElementKey);
+  useKeyPress(["backspace", "delete"], (event) => {
+    console.log('删除')
+   event.preventDefault();
+    engine.controller.element?.removeSelectedElement();
   });
 
   useKeyPress(["meta.s"], (event) => {
+    console.log('保存')
     event.preventDefault();
     engine.controller.data?.save();
   });

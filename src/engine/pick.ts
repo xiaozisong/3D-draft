@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Render } from "./render";
+import { Utils } from "./utils";
 
 export class PickController {
   // 视窗中心位置
@@ -47,7 +48,7 @@ export class PickController {
     return intersectionPoint
   }
 
-  // 拾取物体
+  // 拾取物体返回交集数组
   pick(event: MouseEvent, target?: THREE.Object3D) {
     const camera = this.engine.cameraController.camera
     const scene = this.engine.sceneController.scene
@@ -65,6 +66,48 @@ export class PickController {
     } else {
       allIntersects = this.raycaster.intersectObject(pickTarget, true);
     }
-    return allIntersects || [];
+    const result = allIntersects.filter(item => {
+      if (item.object instanceof THREE.GridHelper || item.object.name === 'plane') {
+        return false;
+      }
+      return true;
+    })
+    return result;
+  }
+
+  // 拾取物体并返回Mesh
+  pickToMesh(event: MouseEvent) {
+    const me = this;
+    const allIntersects = me.engine.pickController?.pick(event);
+    const mesh = allIntersects[0]?.object;
+    const point = allIntersects[0]?.point;
+    return { mesh, point };
+  }
+
+  // 拾取物体并返回Element
+  pickToElement(event: MouseEvent) {
+    const me = this;
+    const { mesh, point } = me.pickToMesh(event);
+    const element = Utils.lookUpElement(mesh);
+    return { element, point };
+  }
+
+  // 拾取物体并返回可点击的Element
+  pickToPickableElement(event: MouseEvent) {
+    const me = this;
+    const { element, point } = me.pickToElement(event);
+    if (element?.pickable) {
+      return { element, point };
+    }
+    return { element: null, point };
+  }
+
+  // 拾取物体并返回交点
+  pickToPoint(event: MouseEvent, target?: THREE.Object3D): THREE.Vector3 | null {
+    const intersects = this.pick(event, target);
+    if (intersects.length > 0) {
+      return intersects[0].point;
+    }
+    return null;
   }
 }

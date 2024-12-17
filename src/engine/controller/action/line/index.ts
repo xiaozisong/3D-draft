@@ -4,6 +4,7 @@ import { LineActionStatus, Element3D } from "@/engine/interface";
 import { Utils } from '@/engine/utils';
 import * as Three from 'three';
 import { isEmpty } from "lodash";
+import { Point } from "../../element/point";
 
 export class LineAction {
 
@@ -26,6 +27,16 @@ export class LineAction {
     this.tempLine.visible = false;
     this.engine.sceneController.scene.add(this.tempLine);
   };
+
+  isLineOrPoint(target: Element3D): boolean {
+    if (target instanceof Line) {
+      return true;
+    }
+    if (target instanceof Point) {
+      return true;
+    }
+    return false;
+  }
 
   // 开始添加箭头
   startAddArrowConnect() {
@@ -54,7 +65,7 @@ export class LineAction {
     if (allObjects.length > 0) {
       const object = allObjects[0].object;
       const target = Utils.lookUpElement(object);
-      if (target && !(target instanceof Line)) {
+      if (target && !me.isLineOrPoint(target)) {
         this.nextPoint = target.position;
         this.targetElement = target;
       }
@@ -88,6 +99,9 @@ export class LineAction {
     if (!activeObject) { return };
 
     const points = this.tempLine.getPoints();
+    if (points.length <= 3) {
+      me.reset();
+    }
 
     // const line = new Line(this.engine, { points: points });
     // 生成线条
@@ -120,12 +134,16 @@ export class LineAction {
       })
     }
 
+    me.reset();
+  };
+
+  reset() {
     this.status = LineActionStatus.idle;
     this.tempLine.updatePoints([0, 0, 0]);
     this.tempLine.visible = false;
     this.targetElement = undefined;
     this.nextPoint = new Three.Vector3();
-  };
+  }
 
   // 取消当前动作 
   cancelAction() {
@@ -146,6 +164,44 @@ export class LineAction {
         line.updatePointsByRelation();
       }
     })
+  }
+
+  removeLineLink(target: Line) {
+    const startElementKey = target.getOptions().startElementKey;
+    const endElementKey = target.getOptions().endElementKey;
+
+    if (startElementKey) {
+      const startElement = this.engine.controller.element.getElementByKey(startElementKey);
+      startElement?.setOptions({
+        linkLineKeys: startElement.getOptions().linkLineKeys?.filter(key => key !== target.key)
+      });
+    }
+
+    if (endElementKey) {
+      const endElement = this.engine.controller.element.getElementByKey(endElementKey);
+      endElement?.setOptions({
+        linkLineKeys: endElement.getOptions().linkLineKeys?.filter(key => key !== target.key)
+      });
+    }
+
+    target.setOptions({
+      startElementKey: undefined,
+      endElementKey: undefined,
+    })
+  }
+
+  // 根据点要素更新线条的数据
+  updateLineByPoint(target: Point) {
+    const point = target.position;
+    const { lineKey, index } = target.getOptions();
+    if (lineKey && index !== undefined) {
+      const line = this.engine.controller.element.getElementByKey(lineKey);
+      if (line && line instanceof Line) {
+        const points = line.getPoints();
+        points.splice(index * 3, 3, point.x, point.y, point.z);
+        line.updateGeometryPoint(points);
+      }
+    }
   }
 
 };

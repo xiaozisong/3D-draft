@@ -7,6 +7,7 @@ import { Line, LineOptions } from "../controller/element/line";
 
 
 export interface BaseOptions {
+  key?: string,
   x?: number,
   z?: number,
   linkLineKeys?: string[],
@@ -15,6 +16,7 @@ export interface BaseOptions {
 export type Element3D = Cube | Cylinder | Text | Area | Icon | Line
 
 export interface ElementData {
+  key?: string,
   type: string,
   options: CubeOptions | CylinderOptions | TextOptions | AreaOptions | IconOptions | LineOptions,
 }

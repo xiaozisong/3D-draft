@@ -3,6 +3,8 @@ import { Render } from "@/engine/render";
 import { MeshElement, Utils } from "@/engine/utils";
 import * as THREE from "three";
 import { RenderPass, EffectComposer, OutlinePass } from "three/addons";
+import { Line } from "../element/line";
+import { Point } from "../element/point";
 
 export class Events {
   // 拖拽偏移量
@@ -23,13 +25,13 @@ export class Events {
     let activeElementKeys = []
     if (value) {
       activeElementKeys.push(value.key)
-      this.engine.controller.setting.updateEditBarPosition();
     } else {
       activeElementKeys = []
     }
     this.engine.controller.setting?.store.setState({
       activeElementKeys,
     })
+    this.engine.controller.setting.updateEditBar();
   }
 
   get activeObject() {
@@ -73,13 +75,19 @@ export class Events {
     var intersectPoint = me.engine.pickController.intersectPlane(event);
     if (!intersectPoint || !me.dragObject) { return }
     const tempVetor = new THREE.Vector3(intersectPoint.x - me.dragDelta.x, 0, intersectPoint.z - me.dragDelta.z);
-    const target = Utils.findNearestPoint(tempVetor, this.engine.sceneController.gridPoints);
-    me.dragObject.position.x = target.x;
-    me.dragObject.position.z = target.z;
-    me.dragObject.position.y = me.dragObject?.groundGap || 0;
-    // 移动物体时要更新连线位置
-    me.engine.controller.action.line.updateLinkLine(me.dragObject);
-    this.engine.controller.setting.updateEditBarPosition();
+    const targetPoint = Utils.findNearestPoint(tempVetor, this.engine.sceneController.gridPoints);
+    if (!(me.dragObject instanceof Line)) {
+      me.dragObject.position.x = targetPoint.x;
+      me.dragObject.position.y = me.dragObject?.groundGap || 0;
+      me.dragObject.position.z = targetPoint.z;
+      // 更新关联线
+      me.engine.controller.action.line.updateLinkLine(me.dragObject);
+      // 更新编辑栏位置
+      this.engine.controller.setting.updateEditBar();
+      if (me.dragObject instanceof Point) {
+        me.engine.controller.action.line.updateLineByPoint(me.dragObject);
+      }
+    }
   }
 
   // 鼠标按下

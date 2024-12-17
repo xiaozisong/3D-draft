@@ -8,8 +8,8 @@ import { useCallback } from "react";
 
 export const EditBar = () => {
   const engine = useEngine();
-  const [{ activeElementKeys, editbarPosition }] = useStore(engine.controller.setting.store, [
-    "activeElementKeys",
+  const [{ editbarVisible, editbarPosition }] = useStore(engine.controller.setting.store, [
+    "editbarVisible",
     "editbarPosition",
   ]);
 
@@ -19,7 +19,7 @@ export const EditBar = () => {
     engine.controller.action.line.startAddArrowConnect()
   },[])
 
-  if (isEmpty(activeElementKeys)) {
+  if (!editbarVisible) {
     return null;
   }
 

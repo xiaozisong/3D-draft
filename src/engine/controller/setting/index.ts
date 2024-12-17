@@ -2,12 +2,14 @@ import { Store } from "@/components/store";
 import { SettingStore } from "@/engine/interface/setting";
 import { Render } from "@/engine/render";
 import { Utils } from "@/engine/utils";
+import { Line } from '../element/line';
 
 
 export class Setting {
   initialData: SettingStore = {
     activeElementKeys: [],
-    editbarPosition: { x: 0, y: 0 }
+    editbarPosition: { x: 0, y: 0 },
+    editbarVisible: false,
   }
 
   store = new Store<SettingStore>(this.initialData)
@@ -17,10 +19,16 @@ export class Setting {
   }
 
   // 更新编辑栏位置
-  updateEditBarPosition() {
+  updateEditBar() {
     const me = this;
     const activeObject = me.engine.controller.event.activeObject;
-    if (!activeObject) { return }
+    if (!activeObject) { 
+      this.store.setState({
+        editbarPosition: { x: 0, y: 0 },
+        editbarVisible: false
+      })  
+      return;
+    }
     const objectPosition = [activeObject.position.x, activeObject.position.y, activeObject.position.z]
     const editbarPosition = Utils.Math.getViewportPointByWorldPoint({
       camera: this.engine.cameraController.camera,
@@ -28,7 +36,8 @@ export class Setting {
       point: objectPosition,
     })
     this.store.setState({
-      editbarPosition: editbarPosition
+      editbarPosition: editbarPosition,
+      editbarVisible: !(activeObject instanceof Line)
     })
   }
 }

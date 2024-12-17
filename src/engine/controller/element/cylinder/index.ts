@@ -154,6 +154,7 @@ export class Cylinder extends Base3DObject<CylinderOptions> {
     const { x, z } = position;
     return {
       type: 'cylinder',
+      key: me.key,
       options: {
         ...me.options,
         x,

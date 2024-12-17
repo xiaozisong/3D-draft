@@ -151,6 +151,7 @@ export class Cube extends Base3DObject<CubeOptions> {
     const { x, z } = position;
     return {
       type: 'cube',
+      key: me.key,
       options: {
         ...me.options,
         x,
@@ -161,22 +162,9 @@ export class Cube extends Base3DObject<CubeOptions> {
 
   destroy() {
     const me = this;
-    this.children.forEach(child => {
-      if (child instanceof THREE.Mesh) {
-        child?.parent?.remove(child);
-        child.geometry.dispose();
-        if (child.material instanceof Array) {
-          child.material.forEach(material => {
-            material.dispose();
-          });
-        } else {
-          child.material.dispose();
-        }
-      }
-    });
+    super.destroy();
     me.cube = undefined;
     me.matLine = undefined;
-    super.destroy();
   }
 
 }

@@ -70,26 +70,26 @@ export class Elements extends THREE.Group {
 
   // 添加元素
   addElement(data: ElementData) {
-    const { type, options } = data
+    const { type, options, key } = data
     let element: any;
     switch (type) {
       case 'cube':
-        element = new Cube(this.engine, options as CubeOptions)
+        element = new Cube(this.engine, { ...options, key } as CubeOptions)
         break;
       case 'cylinder':
-        element = new Cylinder(this.engine, options as CylinderOptions)
+        element = new Cylinder(this.engine, { ...options, key } as CylinderOptions)
         break;
       case 'text':
-        element = new Text(this.engine, options as TextOptions)
+        element = new Text(this.engine, { ...options, key } as TextOptions)
         break;
       case 'area':
-        element = new Area(this.engine, options as AreaOptions)
+        element = new Area(this.engine, { ...options, key } as AreaOptions)
         break;
       case 'icon':
-        element = new Icon(this.engine, options as IconOptions)
+        element = new Icon(this.engine, { ...options, key } as IconOptions)
         break;
       case 'line':
-        element = new Line(this.engine, options as LineOptions)
+        element = new Line(this.engine, { ...options, key } as LineOptions)
         break;
     }
     if (element) {
@@ -103,7 +103,11 @@ export class Elements extends THREE.Group {
   removeElement(elementKey: string) {
     const target = this.elementMap.get(elementKey);
     console.log('target', target)
+    const isLine = target instanceof Line;
     if (target) {
+      if (isLine) {
+        this.engine.controller.action.line.removeLineLink(target);
+      }
       this.remove(target);
       target?.destroy();
       this.elementMap.delete(elementKey);

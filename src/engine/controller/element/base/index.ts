@@ -3,12 +3,13 @@ import { nanoid } from "nanoid";
 import * as THREE from "three";
 import { COLOR_SET } from "@/engine/constant/color";
 import { Utils } from "@/engine/utils";
+import { BaseOptions } from "@/engine/interface";
 export interface IBase3DObject extends THREE.Group {
   key: string;
   isElement: boolean;
 }
 
-export class Base3DObject<OptionsType> extends THREE.Group {
+export class Base3DObject<OptionsType extends BaseOptions> extends THREE.Group {
   // 元素标记
   isElement: boolean = true;
   // 元素唯一标识
@@ -20,8 +21,7 @@ export class Base3DObject<OptionsType> extends THREE.Group {
   
   constructor(public engine: Render, public options: OptionsType) {
     super();
-    this.key = nanoid()
-
+    this.key = options.key || nanoid();
   }
 
   getOptions() {

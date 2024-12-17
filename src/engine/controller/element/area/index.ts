@@ -108,6 +108,7 @@ export class Area extends Base3DObject<AreaOptions> {
     const { x, z } = position;
     return {
       type: 'area',
+      key: me.key,
       options: {
         ...me.options,
         x,

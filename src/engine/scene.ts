@@ -92,21 +92,22 @@ export class Scene {
     }
     this.gridPoints = gridPoints;
 
-    const pointsGroup = new THREE.Group();
+    // 可视化磁吸点
+    // const pointsGroup = new THREE.Group();
 
-    for (let i = 0; i < gridPoints.length; i += 1) {
-      const x = gridPoints[i].x;
-      const y = gridPoints[i].y;
-      const z = gridPoints[i].z;
-      // 设置球体 大小为0.01
-      const geometry = new THREE.SphereGeometry(0.01, 8, 8);
-      const material = new THREE.MeshBasicMaterial({ color: '#f00' });
-      const point = new THREE.Mesh(geometry, material);
-      point.position.set(x, y, z);
-      pointsGroup.add(point);
-    }
+    // for (let i = 0; i < gridPoints.length; i += 1) {
+    //   const x = gridPoints[i].x;
+    //   const y = gridPoints[i].y;
+    //   const z = gridPoints[i].z;
+    //   // 设置球体 大小为0.01
+    //   const geometry = new THREE.SphereGeometry(0.01, 8, 8);
+    //   const material = new THREE.MeshBasicMaterial({ color: '#f00' });
+    //   const point = new THREE.Mesh(geometry, material);
+    //   point.position.set(x, y, z);
+    //   pointsGroup.add(point);
+    // }
 
-    this.scene.add(pointsGroup);
+    // this.scene.add(pointsGroup);
   }
 
   // 初始化光
@@ -137,7 +138,7 @@ export class Scene {
 
     // 初始化控制器状态监听
     this.controls.addEventListener('change', () => {
-      this.engine.controller.setting.updateEditBarPosition();
+      this.engine.controller.setting.updateEditBar();
     });
 
 

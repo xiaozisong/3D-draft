@@ -124,6 +124,7 @@ export class Icon extends Base3DObject<IconOptions> {
     const { x, z } = position;
     return {
       type: 'icon',
+      key: me.key,
       options: {
         ...me.options,
         x,

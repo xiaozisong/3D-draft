@@ -109,6 +109,7 @@ export class Text extends Base3DObject<TextOptions> {
     const { x, z } = position;
     return {
       type: 'text',
+      key: me.key,
       options: {
         ...me.options,
         x,

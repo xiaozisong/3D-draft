@@ -5,6 +5,7 @@ import { Line2, LineGeometry, LineMaterial } from "three/addons";
 import { Base3DObject } from "../base";
 import { Utils } from "@/engine/utils";
 import { BaseOptions } from "@/engine/interface";
+import { Point } from "../point";
 
 export interface LineOptions extends BaseOptions {
   points: number[],
@@ -88,7 +89,8 @@ export class Line extends Base3DObject<LineOptions> {
     return [this.options.points[length - 3], this.options.points[length - 2], this.options.points[length - 1]]
   }
 
-  updatePoints(points: number[]) {
+  // 更新几何点信息
+  updateGeometryPoint(points: number[]) {
     const oldGeometry = this.line?.geometry as LineGeometry;
     if (!this.line || !oldGeometry) { return; }
     const newGeometry = new LineGeometry();
@@ -98,6 +100,11 @@ export class Line extends Base3DObject<LineOptions> {
     this.line.geometry = newGeometry;
     this.options.points = points;
     oldGeometry.dispose();
+  }
+
+  // 更新几何点信息以及折点
+  updatePoints(points: number[]) {
+    this.updateGeometryPoint(points);
     this.updateBreakPoints();
   }
 
@@ -111,13 +118,14 @@ export class Line extends Base3DObject<LineOptions> {
     const points = me.options.points;
 
     for (let i = 0; i < points.length; i += 3) {
-      const x = points[i]
-      const y = points[i + 1]
-      const z = points[i + 2]
-      const geometry = new THREE.SphereGeometry(0.03, 8, 8);
-      const material = new THREE.MeshBasicMaterial({ color: this.defaultOutlineColor });
-      const point = new THREE.Mesh(geometry, material);
-      point.position.set(x, y, z);
+      const x = points[i];
+      const y = points[i + 1];
+      const z = points[i + 2];
+      const point = new Point(this.engine, {
+        x,y,z,
+        index: Math.floor(i / 3),
+        lineKey: me.key,
+      })
       pointsGroup.add(point)
     }
 
@@ -168,6 +176,7 @@ export class Line extends Base3DObject<LineOptions> {
     const me = this;
     return {
       type: 'line',
+      key: me.key,
       options: me.options
     }
   }

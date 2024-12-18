@@ -36,13 +36,6 @@ export class Cylinder extends Base3DObject<CylinderOptions> {
   init() {
     const me = this;
 
-
-
-    // const length = 1;
-    // const width = 1;
-    // const height = 0.5;
-    // const geometry = new THREE.BoxGeometry(length, height, width);
-
     // 创建圆柱体几何体
     const radiusTop = 0.538; // 顶部半径
     const radiusBottom = 0.538; // 底部半径
@@ -60,10 +53,6 @@ export class Cylinder extends Base3DObject<CylinderOptions> {
       new THREE.MeshBasicMaterial({ color: 'yellow' }), // 右面
     ];
 
-    // var material = new THREE.MeshBasicMaterial({
-    //   color: 0xedebe9,
-    //   map: new THREE.CanvasTexture(this.getTextCanvas({text:'T2',width:200,height:200})),
-    // }); // 白色材质
     const textTexture = new THREE.CanvasTexture(
       Utils.getTextCanvas({ text: "T2", width: 1000, height: 1000 })
     );
@@ -78,13 +67,6 @@ export class Cylinder extends Base3DObject<CylinderOptions> {
     this.position.z = me.options.z;
 
     this.rotateY(180 / radialSegments * Math.PI / 180); // 绕y轴旋转45度
-
-    var edges = new THREE.EdgesGeometry(geometry);
-    var lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 20 });
-
-    var lines = new THREE.LineSegments(edges, lineMaterial);
-
-    cylinder.add(lines);
 
     me.cylinder = cylinder;
 

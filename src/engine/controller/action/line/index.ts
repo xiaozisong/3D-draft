@@ -38,10 +38,6 @@ export class LineAction {
       case LineActionStatus.create:
         break;
       case LineActionStatus.addPoint:
-        const activeObject = this.engine.controller.action.select.activeObject;
-        if (activeObject && activeObject instanceof Line) {
-
-        }
         break;
       case LineActionStatus.idle:
         break;
@@ -248,7 +244,6 @@ export class LineAction {
         }
       }
 
-
       const newPositions = [];
       for (let i = 0; i < positions.length; i += 3) {
         newPositions.push(positions[i], positions[i + 1], positions[i + 2]);
@@ -259,8 +254,8 @@ export class LineAction {
       activeObject.updatePoints(newPositions);
       const activeBreakPoint = activeObject.getBreakPoint(closestSegmentIndex + 1);
       this.engine.controller.action.select.selectObject(activeBreakPoint, event);
-      this.reset();
     }
+    this.reset();
   }
 
   // 删除线条上的点

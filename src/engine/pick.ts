@@ -78,7 +78,7 @@ export class PickController {
   // 拾取物体并返回Mesh
   pickToMesh(event: MouseEvent) {
     const me = this;
-    const allIntersects = me.engine.pickController?.pick(event);
+    const allIntersects = me?.pick(event);
     const mesh = allIntersects[0]?.object;
     const point = allIntersects[0]?.point;
     return { mesh, point };

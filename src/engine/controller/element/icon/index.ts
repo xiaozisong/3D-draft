@@ -4,6 +4,7 @@ import { Line2, LineGeometry, LineMaterial, SVGLoader } from "three/addons";
 import { Base3DObject } from "../base";
 import { Utils } from "@/engine/utils";
 import { BaseOptions } from "@/engine/interface";
+import { Unit3DObject } from "../unit";
 
 export interface IconOptions extends BaseOptions {
   x: number,
@@ -13,7 +14,8 @@ export interface IconOptions extends BaseOptions {
 
 }
 
-export class Icon extends Base3DObject<IconOptions> {
+export class Icon extends Unit3DObject<IconOptions> {
+  name: string = '图标';
   lineWdith = 0.03;
   groundGap = 0.01;
   outlinePadding = 0.1;
@@ -69,6 +71,11 @@ export class Icon extends Base3DObject<IconOptions> {
         });
       });
 
+      const iconSize = Utils.getGroupSize(icon);
+      const { x: iconWidth, y: iconHeight } = iconSize;
+      icon.position.y = iconHeight / 1.27;
+      icon.position.x = iconWidth / 1.15;
+
       me.add(icon);
 
       me.icon = icon;
@@ -83,10 +90,10 @@ export class Icon extends Base3DObject<IconOptions> {
     const boundingBox = Utils.getBoundingBox(this);
     const { z: length } = Utils.getGroupSize(this);
 
-    const { max, min } = boundingBox
+    const { max, min } = boundingBox;
     const padding = this.outlinePadding;
-    const position = this.position
-    const lineHeight = 1.55
+    const position = this.position;
+    const lineHeight = 0;
     const positions = [
       max.x + padding - position.x, min.z - position.z - lineHeight * length - padding, 0,
       min.x - padding - position.x, min.z - position.z - lineHeight * length - padding, 0,

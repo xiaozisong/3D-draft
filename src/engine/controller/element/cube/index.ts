@@ -6,6 +6,7 @@ import { Utils } from "@/engine/utils";
 import { nanoid } from 'nanoid';
 import { SIDE_DARK_COLOR, SIDE_LIGHT_COLOR, TOP_COLOR } from "@/engine/constant";
 import { BaseOptions } from "@/engine/interface";
+import { Unit3DObject } from "../unit";
 
 export interface CubeOptions extends BaseOptions {
   x: number,
@@ -13,7 +14,8 @@ export interface CubeOptions extends BaseOptions {
 }
 
 
-export class Cube extends Base3DObject<CubeOptions> {
+export class Cube extends Unit3DObject<CubeOptions> {
+  name: string = '立方体';
   groundGap = 0.01;
 
   lineWdith = 0.02;

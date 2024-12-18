@@ -12,6 +12,7 @@ export interface BaseOptions {
   x?: number,
   z?: number,
   linkLineKeys?: string[],
+  linkTextKey?: string,
 }
 
 export type Element3D = Cube | Cylinder | Text | Area | Icon | Line | Point

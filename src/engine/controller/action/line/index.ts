@@ -62,20 +62,24 @@ export class LineAction {
   }
 
   // 开始添加箭头
-  startAddArrowConnect() {
+  startCreateLine(showArrow: boolean) {
     const me = this;
     me.reset();
     this.status = LineActionStatus.create;
-    const activeObject = this.engine.controller.action.select.activeObject;
-    if (!activeObject) { return }
-    this.originElement = activeObject;
+    const activeElement = this.engine.controller.action.select.activeElement;
+    if (!activeElement) { return }
+    this.originElement = activeElement;
     const startPoint = this.originElement.position;
     this.tempLine.visible = true;
+    this.tempLine.setOptions({
+      showArrow
+    })
+    this.tempLine.setArrowVisible(showArrow);
     this.tempLine.updatePoints([startPoint.x, startPoint.y, startPoint.z])
   };
 
   // 添加箭头中，鼠标移动点位更新
-  addingArrowMouseMove(event: MouseEvent) {
+  createLineMouseMove(event: MouseEvent) {
     const me = this;
     const points = this.tempLine.getPoints();
     const length = points.length;
@@ -96,7 +100,7 @@ export class LineAction {
   };
 
   // 添加箭头中，鼠标点击点位
-  addingArrowPoint(event: MouseEvent) {
+  addingLinePoint() {
     const me = this;
     // 获取新点位
     const points = this.tempLine.getPoints();
@@ -105,16 +109,16 @@ export class LineAction {
     this.tempLine.updateGeometryPoint(newPoints);
     this.tempLine.updateBreakPoints();
     if (this.targetElement) {
-      me.endAddArrowConnect();
+      me.endCreateLine();
     }
   }
 
   // 添加箭头结束
-  endAddArrowConnect() {
+  endCreateLine() {
     const me = this;
     const originElement = me.originElement;
     if (!originElement) { return }
-    const points = this.tempLine.getPoints();
+    const { points, showArrow } = this.tempLine.getOptions();
     if (points.length <= 3) {
       me.reset();
       return;
@@ -128,6 +132,7 @@ export class LineAction {
         points: points.slice(0, points.length - 3),
         startElementKey: originElement.key,
         endElementKey: this.targetElement?.key,
+        showArrow,
       }
     });
 
@@ -228,13 +233,13 @@ export class LineAction {
   // 新增线条上的点
   addPoint(event: MouseEvent) {
     const me = this;
-    const activeObject = this.engine.controller.action.select.activeObject;
-    if (!activeObject || !(activeObject instanceof Line) || me.status !== LineActionStatus.addPoint) {
+    const activeElement = this.engine.controller.action.select.activeElement;
+    if (!activeElement || !(activeElement instanceof Line) || me.status !== LineActionStatus.addPoint) {
       return;
     }
-    const intersectPoint = this.engine.pickController.pickToPoint(event, activeObject);
+    const intersectPoint = this.engine.pickController.pickToPoint(event, activeElement);
     if (intersectPoint) {
-      const positions = activeObject.getPoints();
+      const positions = activeElement.getPoints();
       let closestSegmentIndex = 0;
       let closestDistance = Infinity;
       // 遍历每段线段，找到距离点击最近的线段
@@ -255,8 +260,8 @@ export class LineAction {
           newPositions.push(intersectPoint.x, intersectPoint.y, intersectPoint.z);
         }
       }
-      activeObject.updatePoints(newPositions);
-      const activeBreakPoint = activeObject.getBreakPoint(closestSegmentIndex + 1);
+      activeElement.updatePoints(newPositions);
+      const activeBreakPoint = activeElement.getBreakPoint(closestSegmentIndex + 1);
       this.engine.controller.action.select.selectObject(activeBreakPoint, event);
     }
     this.reset();

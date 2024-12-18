@@ -77,13 +77,15 @@ export class Scene {
     const gridSpacing = gap / seg;
     const gridPoints = [];
 
+    const grid1Color = 0xEEEEEE;
+    const grid2Color = 0xbbbbbb;
     // 第一个grid是下面的灰色网格
-    const gridHelper1 = new THREE.GridHelper(size, size * 2, 0xEEEEEE, 0xEEEEEE);
+    const gridHelper1 = new THREE.GridHelper(size, size * 2, grid1Color, grid1Color);
     this.scene.add(gridHelper1);
 
     gridHelper1.position.y = -0.008;
     // 第二个是上面的黑色网格
-    const gridHelper2 = new THREE.GridHelper(size, size, 0x54626F, 0x54626F);
+    const gridHelper2 = new THREE.GridHelper(size, size, grid2Color, grid2Color);
     this.scene.add(gridHelper2);
 
     for (let i = -gridSize / 2; i <= gridSize / 2; i++) {

@@ -4,6 +4,7 @@ import { Line2, LineGeometry, LineMaterial } from "three/addons";
 import { Text as TextMesh } from 'troika-three-text';
 import { Base3DObject, IBase3DObject } from "../base";
 import { BaseOptions } from "@/engine/interface";
+import { Unit3DObject } from "../unit";
 
 export interface AreaOptions extends BaseOptions{
   x: number,
@@ -13,7 +14,8 @@ export interface AreaOptions extends BaseOptions{
   color: string,
 };
 
-export class Area extends Base3DObject<AreaOptions> {
+export class Area extends Unit3DObject<AreaOptions> {
+  name: string = '平面';
   lineWdith = 0.03;
   groundGap = 0;
   outlinePadding = 0;

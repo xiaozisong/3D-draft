@@ -32,10 +32,10 @@ const data = [
     key: "icon",
     name: "图标",
   },
-  {
-    key: "line",
-    name: "线条",
-  },
+  // {
+  //   key: "line",
+  //   name: "线条",
+  // },
   // {
   //   key: "image",
   //   name: "图片",

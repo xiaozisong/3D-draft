@@ -4,6 +4,7 @@ import { Render } from "@/engine/render";
 import * as THREE from "three";
 import { LineMaterial } from "three/addons";
 import { Base3DObject } from "../base";
+import { Unit3DObject } from "../unit";
 
 export interface PointOptions extends BaseOptions {
   x: number,
@@ -13,9 +14,9 @@ export interface PointOptions extends BaseOptions {
   lineKey?: string,
 }
 
-export class Point extends Base3DObject<PointOptions> {
+export class Point extends Unit3DObject<PointOptions> {
   point: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap> | undefined
-
+  name: string = '点';
   constructor(engine: Render, options: PointOptions) {
     super(engine, options);
     this.init();

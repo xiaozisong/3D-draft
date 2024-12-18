@@ -19,7 +19,7 @@ export interface LineOptions extends BaseOptions {
 
 
 export class Line extends Base3DObject<LineOptions> {
-
+  name: string = '线';
   // 是否可拖拽
   dragable: boolean = false;
   lineWdith = 0.03;
@@ -170,6 +170,13 @@ export class Line extends Base3DObject<LineOptions> {
       // 计算箭头的旋转角度
       const angle = Math.atan2(direction.x, direction.z);
       this.arrow.rotation.z = angle;
+    }
+  }
+
+  // 设置箭头是否可见
+  setArrowVisible(visible: boolean) {
+    if (this.arrow) {
+      this.arrow.visible = visible;
     }
   }
 

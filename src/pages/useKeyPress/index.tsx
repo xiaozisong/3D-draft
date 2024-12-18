@@ -19,7 +19,7 @@ const useKeyPressEffect = () => {
 
   useKeyPress(["esc"], (event) => {
     event.preventDefault();
-    engine.controller.action.line.endAddArrowConnect();
+    engine.controller.action.line.endCreateLine();
   });
 };
 

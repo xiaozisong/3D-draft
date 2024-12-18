@@ -4,6 +4,7 @@ import { Line2, LineGeometry, LineMaterial } from "three/addons";
 import { Text as TextMesh } from 'troika-three-text';
 import { Base3DObject } from "../base";
 import { BaseOptions } from "@/engine/interface";
+import { Unit3DObject } from "../unit";
 
 export interface TextOptions extends BaseOptions {
   x: number,
@@ -12,10 +13,13 @@ export interface TextOptions extends BaseOptions {
   color: string,
   fontSize: number,
   fontWeight: string,
+  linkElementKey?: string,
+  linkElementRelactionPosition?: THREE.Vector3
 }
 
 
-export class Text extends Base3DObject<TextOptions> {
+export class Text extends Unit3DObject<TextOptions> {
+  name = '文字';
   lineWdith = 0.03;
   groundGap = 0.01;
   outlinePadding = 0.05;
@@ -45,13 +49,16 @@ export class Text extends Base3DObject<TextOptions> {
     this.position.z = z;
 
     let text = new TextMesh();
-    text.font = 'MicrosoftYahei.ttf';
+    text.font = 'MicrosoftYahei.woff';
     text.text = content;
     text.fontSize = fontSize;
     text.color = color;
     text.fontWeight = fontWeight;
     text.outlineColor = '#ffffff'
     text.outlineWidth = 0.02;
+    text.textAlign = 'center';
+    text.anchorX = 'center';
+    text.anchorY = 'middle';
 
     text.sync()
 

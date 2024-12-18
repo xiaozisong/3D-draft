@@ -21,15 +21,15 @@ export class Setting {
   // 更新编辑栏位置
   updateEditBar() {
     const me = this;
-    const activeObject = me.engine.controller.action.select.activeObject;
-    if (!activeObject) { 
+    const activeElement = me.engine.controller.action.select.activeElement;
+    if (!activeElement) { 
       this.store.setState({
         editbarPosition: { x: 0, y: 0 },
         editbarVisible: false
       })  
       return;
     }
-    const objectPosition = [activeObject.position.x, activeObject.position.y, activeObject.position.z]
+    const objectPosition = [activeElement.position.x, activeElement.position.y, activeElement.position.z]
     const editbarPosition = Utils.Math.getViewportPointByWorldPoint({
       camera: this.engine.cameraController.camera,
       renderer: this.engine.renderer,
@@ -37,7 +37,7 @@ export class Setting {
     })
     this.store.setState({
       editbarPosition: editbarPosition,
-      editbarVisible: !(activeObject instanceof Line)
+      editbarVisible: !(activeElement instanceof Line)
     })
   }
 }

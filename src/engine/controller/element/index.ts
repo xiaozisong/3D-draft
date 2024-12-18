@@ -114,7 +114,7 @@ export class Elements extends THREE.Group {
 
   // 移除选中元素
   removeSelectedElement() {
-    const selectedElement = this.engine.controller.action.select.activeObject;
+    const selectedElement = this.engine.controller.action.select.activeElement;
     if (selectedElement instanceof Point) {
       console.log(111)
       this.engine.controller.action.line.removeLinePoint(selectedElement);

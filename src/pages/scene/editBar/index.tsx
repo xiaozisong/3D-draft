@@ -13,11 +13,20 @@ export const EditBar = () => {
     "editbarPosition",
   ]);
 
-
   // 箭头连接
-  const handleArrowConnect = useCallback(()=>{
-    engine.controller.action.line.startAddArrowConnect()
-  },[])
+  // const handleArrowConnect = useCallback(() => {
+  //   engine.controller.action.line.startAddArrowConnect()
+  // },[]);
+
+  // 开始连线
+  const handleLineConnect = useCallback((showArrow: boolean) => {
+    engine.controller.action.line.startCreateLine(showArrow)
+  }, []);
+
+  // 添加文字
+  const handleAddText = useCallback(() => {
+    engine.controller.action.text.addTextForActiveElement();
+  }, []);
 
   if (!editbarVisible) {
     return null;
@@ -37,7 +46,7 @@ export const EditBar = () => {
           type='primary'
           shape='circle'
           icon={<RiseOutlined />}
-          onClick={handleArrowConnect}
+          onClick={handleLineConnect.bind(null, true)}
         />
       </Tooltip>
       <Tooltip title='线条连接' placement="right">
@@ -52,6 +61,7 @@ export const EditBar = () => {
           type='primary'
           shape='circle'
           icon={<EditOutlined />}
+          onClick={handleAddText.bind(null)}
         />
       </Tooltip>
     </Space>

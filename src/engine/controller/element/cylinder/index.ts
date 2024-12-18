@@ -6,13 +6,15 @@ import { Utils } from "@/engine/utils";
 import { nanoid } from 'nanoid';
 import { SIDE_LIGHT_COLOR, TOP_COLOR } from "@/engine/constant";
 import { BaseOptions } from "@/engine/interface";
+import { Unit3DObject } from "../unit";
 
 export interface CylinderOptions extends BaseOptions {
   x: number,
   z: number
 }
 
-export class Cylinder extends Base3DObject<CylinderOptions> {
+export class Cylinder extends Unit3DObject<CylinderOptions> {
+  name: string = '棱柱体';
   groundGap = 0.01;
   lineWdith = 0.02;
   lineWdithActive = 0.03;

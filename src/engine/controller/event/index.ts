@@ -13,7 +13,7 @@ export class Events {
     const me = this;
     event.preventDefault();
     const { element, point } = me.engine.pickController.pickToPickableElement(event);
-    const oldActiveObject = me.engine.controller.action.select.activeObject;
+    const oldActiveObject = me.engine.controller.action.select.activeElement;
     if (!element) {
       // 取消选中
       me.engine.controller.action.select.cancelSelectObject();
@@ -34,7 +34,7 @@ export class Events {
     }
     // 绘制连线
     if (me.engine.controller.action.line.status === LineActionStatus.create) {
-      me.engine.controller.action.line.addingArrowPoint(event);
+      me.engine.controller.action.line.addingLinePoint();
       return;
     }
   }
@@ -48,7 +48,7 @@ export class Events {
     }
     // 绘制连线
     if (me.engine.controller.action.line.status === LineActionStatus.create) {
-      me.engine.controller.action.line.addingArrowMouseMove(event);
+      me.engine.controller.action.line.createLineMouseMove(event);
     }
 
   }

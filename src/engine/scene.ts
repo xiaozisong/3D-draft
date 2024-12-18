@@ -149,6 +149,4 @@ export class Scene {
     // this.controls.maxPolarAngle = Math.PI / 2.5;
   }
 
-
-
 }

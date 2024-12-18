@@ -81,6 +81,7 @@ export class Scene {
     const gridHelper1 = new THREE.GridHelper(size, size * 2, 0xEEEEEE, 0xEEEEEE);
     this.scene.add(gridHelper1);
 
+    gridHelper1.position.y = -0.008;
     // 第二个是上面的黑色网格
     const gridHelper2 = new THREE.GridHelper(size, size, 0x54626F, 0x54626F);
     this.scene.add(gridHelper2);

@@ -110,6 +110,44 @@ export class Utils {
     return closestPoint;
   }
 
+  /**
+   * 通过线段和目标对象，计算交点
+   * 
+   * @static
+   * @param {{
+   *      endPoint: THREE.Vector3,
+   *      startPoint: THREE.Vector3,
+   *      target: THREE.Object3D,
+   * }} {
+   *      endPoint,
+   *      startPoint,
+   *      target
+   * }
+   * @returns {( THREE.Vector3 | null )}
+   * 
+   * @memberOf Utils
+   */
+  static getIntersectPointBySegment({
+    endPoint,
+    startPoint,
+    target,
+  }: {
+    endPoint: THREE.Vector3,
+    startPoint: THREE.Vector3,
+    target: Element3D,
+  }): THREE.Vector3  | null {
+    // 计算线段方向和长度
+    const direction = new THREE.Vector3().subVectors(endPoint, startPoint).normalize();
+    const distance = startPoint.distanceTo(endPoint);
+    // 使用Raycaster 检测交点
+    const raycaster = new THREE.Raycaster(startPoint, direction, 0, distance);
+    const intersects = raycaster.intersectObject(target);
+    if (intersects.length > 0) {
+      const intersectPoint = intersects[0].point;
+      return intersectPoint;
+    }
+    return null;
+  }
 }
 
 

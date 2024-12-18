@@ -102,7 +102,8 @@ export class LineAction {
     const points = this.tempLine.getPoints();
     const newPoints = [...points, me.nextPoint?.x, me.nextPoint?.y, me.nextPoint?.z];
     // 更新点位
-    this.tempLine.updatePoints(newPoints);
+    this.tempLine.updateGeometryPoint(newPoints);
+    this.tempLine.updateBreakPoints();
     if (this.targetElement) {
       me.endAddArrowConnect();
     }
@@ -125,14 +126,16 @@ export class LineAction {
       type: 'line',
       options: {
         points: points.slice(0, points.length - 3),
+        startElementKey: originElement.key,
+        endElementKey: this.targetElement?.key,
       }
     });
 
     //更新线条上的关系
-    lineElement.setOptions({
-      startElementKey: originElement?.key,
-      endElementKey: this.targetElement?.key,
-    });
+    // lineElement.setOptions({
+    //   startElementKey: originElement?.key,
+    //   endElementKey: this.targetElement?.key,
+    // });
 
     // 更新当前要素的连接线关系
     const originElementOptions = originElement?.getOptions();
@@ -217,6 +220,7 @@ export class LineAction {
         const points = line.getPoints();
         points.splice(index * 3, 3, point.x, point.y, point.z);
         line.updateGeometryPoint(points);
+        line.updateArrow();
       }
     }
   }

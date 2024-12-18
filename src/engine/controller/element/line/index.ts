@@ -14,6 +14,7 @@ export interface LineOptions extends BaseOptions {
   color?: string,
   opacity?: number,
   lineWidth?: number,
+  showArrow?: boolean,
 }
 
 
@@ -42,6 +43,9 @@ export class Line extends Base3DObject<LineOptions> {
   // 顶点集合
   pointsGroup?: THREE.Group<THREE.Object3DEventMap>;
 
+  // 箭头
+  arrow?: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial, THREE.Object3DEventMap>;
+
   constructor(engine: Render, options: LineOptions) {
     super(engine, options);
     this.init();
@@ -60,6 +64,7 @@ export class Line extends Base3DObject<LineOptions> {
     this.line = line;
     me.add(line);
     me.updateBreakPoints();
+    me.updateArrow();
   }
 
   // 获取点位信息
@@ -105,6 +110,67 @@ export class Line extends Base3DObject<LineOptions> {
   updatePoints(points: number[]) {
     this.updateGeometryPoint(points);
     this.updateBreakPoints();
+    this.updateArrow();
+  }
+
+  // 更新箭头
+  updateArrow() {
+    const me = this;
+    if (me.options.showArrow === false) { return }
+    const points = me.getPoints();
+    const length = points.length;
+
+    // 没有arrow就创建
+    if (!me.arrow) {
+      // 创建箭头的形状
+      const shape = new THREE.Shape();
+      const scale = 0.15;
+      shape.moveTo(0, 0);
+      shape.lineTo(-1 * scale, -2 * scale);
+      shape.lineTo(0, -1.5 * scale);
+      shape.lineTo(1 * scale, -2 * scale);
+      shape.lineTo(0, 0);
+      // 使用ExtrudeGeometry 创建平面箭头
+      const geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: 0,
+        bevelEnabled: false,
+      });
+      // 创建材质
+      const material = new THREE.MeshBasicMaterial({ color: this.defaultOutlineColor, side: THREE.DoubleSide });
+      // 创建Mesh
+      const arrow = new THREE.Mesh(geometry, material);
+      arrow.rotation.x = -Math.PI / 2;
+      this.arrow = arrow;
+      me.add(arrow);
+    }
+    if (this.arrow) {
+      let arrowStartPoint = new THREE.Vector3(...me.getStartPoints());
+      if (length >= 6) {
+        arrowStartPoint = new THREE.Vector3(points[length - 6], points[length - 5], points[length - 4]);
+      }
+      let endPoint = new THREE.Vector3(points[length - 3], points[length - 2], points[length - 1]);
+      // 如果链接的元素存在，则更新剪头的位置
+      if (me.options.endElementKey) {
+
+        const endElement = me.engine.controller.element.getElementByKey(me.options.endElementKey);
+        if (endElement) {
+          const endElementIntersectPoint = Utils.getIntersectPointBySegment({
+            startPoint: arrowStartPoint,
+            endPoint,
+            target: endElement,
+          });
+          if (endElementIntersectPoint) {
+            endPoint = endElementIntersectPoint;
+          }
+        }
+      }
+      const direction = new THREE.Vector3().subVectors(arrowStartPoint, endPoint).normalize();
+      // 设置箭头的位置到线段的末尾
+      this.arrow.position.copy(endPoint);
+      // 计算箭头的旋转角度
+      const angle = Math.atan2(direction.x, direction.z);
+      this.arrow.rotation.z = angle;
+    }
   }
 
   // 更新折点
@@ -167,12 +233,18 @@ export class Line extends Base3DObject<LineOptions> {
       this.matLine.linewidth = this.lineWdithActive
       this.matLine.color.set(this.activeOutlineColor)
     }
+    if (this.arrow) {
+      this.arrow.material.color.set(this.activeOutlineColor);
+    }
   }
 
   disActive() {
     if (this.matLine) {
       this.matLine.linewidth = this.lineWdith;
       this.matLine.color.set(this.defaultOutlineColor)
+    }
+    if (this.arrow) {
+      this.arrow.material.color.set(this.defaultOutlineColor);
     }
   }
 
@@ -190,6 +262,7 @@ export class Line extends Base3DObject<LineOptions> {
     super.destroy();
     me.line = undefined;
     me.matLine = undefined;
+    me.arrow = undefined;
   }
 
 }

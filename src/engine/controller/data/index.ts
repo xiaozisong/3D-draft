@@ -1,6 +1,7 @@
 import { ElementData } from "@/engine/interface";
 import { Render } from "@/engine/render";
 import { message } from "antd";
+import { set } from "lodash";
 export class Data {
 
   constructor(private engine: Render) {
@@ -15,9 +16,16 @@ export class Data {
   // 初始化数据
   setData(data: ElementData[]) {
     const me = this;
-    for (let i = 0; i < data.length; i++) {
-      me.engine.controller?.element?.addElement(data[i])
+    const lineData = data.filter(item => item.type === 'line');
+    const otherData = data.filter(item => item.type !== 'line');
+    for (let i = 0; i < otherData.length; i++) {
+      me.engine.controller?.element?.addElement(otherData[i]);
     }
+    setTimeout(() => {
+      for (let i = 0; i < lineData.length; i++) {
+        me.engine.controller?.element?.addElement(lineData[i]);
+      }
+    }, 100)
   }
 
   // 保存

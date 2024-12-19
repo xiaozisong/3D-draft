@@ -8,7 +8,6 @@ import { Icon, IconOptions } from "./icon";
 import { Text, TextOptions } from "./text";
 import { Line, LineOptions } from "./line";
 import { Point } from "./point";
-import { instance } from "three/examples/jsm/nodes/Nodes.js";
 
 export class Elements extends THREE.Group {
 
@@ -115,8 +114,8 @@ export class Elements extends THREE.Group {
   // 移除选中元素
   removeSelectedElement() {
     const selectedElement = this.engine.controller.action.select.activeElement;
+    // 删除时前置处理
     if (selectedElement instanceof Point) {
-      console.log(111)
       this.engine.controller.action.line.removeLinePoint(selectedElement);
     }
 
@@ -124,8 +123,16 @@ export class Elements extends THREE.Group {
       this.engine.controller.action.line.removeLineLink(selectedElement);
     }
 
+    if (selectedElement instanceof Text) {
+      this.engine.controller.action.text.removeTextLink(selectedElement);
+    }
+
+    // 执行删除
     if (selectedElement) {
+      this.engine.controller.action.text.clearLinkText(selectedElement);
       this.removeElement(selectedElement.key);
+      this.engine.controller.action.select.cancelSelectObject();
+      this.engine.controller.setting.updateEditBar();
     }
   }
 

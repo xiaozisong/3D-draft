@@ -63,4 +63,24 @@ export class TextAction {
       }
     }
   }
+
+  // 删除文字时移除关联关系
+  removeTextLink(element: Text) {
+    const linkElementKey = element.options.linkElementKey;
+    if (linkElementKey) {
+      const linkElement = this.engine.controller.element.getElementByKey(linkElementKey);
+      if (linkElement) {
+        linkElement.setOptions({
+          linkTextKey: '',
+        })
+      }
+    }
+  }
+
+  // 清除关联文字
+  clearLinkText(element: Element3D) {
+    if (element.options.linkTextKey) {
+      this.engine.controller.element.removeElement(element.options.linkTextKey);
+    }
+  }
 }

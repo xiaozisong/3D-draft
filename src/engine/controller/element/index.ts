@@ -8,6 +8,7 @@ import { Icon, IconOptions } from "./icon";
 import { Text, TextOptions } from "./text";
 import { Line, LineOptions } from "./line";
 import { Point } from "./point";
+import { TOP_COLOR } from "@/engine/constant";
 
 export class Elements extends THREE.Group {
 
@@ -38,6 +39,13 @@ export class Elements extends THREE.Group {
         };
         break;
       case "cube":
+        data.options = {
+          ...data.options,
+          length: 1,
+          width: 1,
+          height: 0.5,
+          color: TOP_COLOR
+        }
         break;
       case "cylinder":
         break;

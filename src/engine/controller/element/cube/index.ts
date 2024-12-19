@@ -1,17 +1,21 @@
-import * as THREE from "three";
-import { RenderPass, EffectComposer, OutlinePass, Line2, LineMaterial, LineGeometry } from "three/addons";
-import { Render } from "@/engine/render";
-import { Base3DObject } from "../base";
-import { Utils } from "@/engine/utils";
-import { nanoid } from 'nanoid';
 import { SIDE_DARK_COLOR, SIDE_LIGHT_COLOR, TOP_COLOR } from "@/engine/constant";
 import { BaseOptions } from "@/engine/interface";
+import { Render } from "@/engine/render";
+import * as THREE from "three";
+import { Line2, LineMaterial, LineGeometry } from "three/addons";
 import { Unit3DObject } from "../unit";
+import CubeSchema from "./schema";
+import { Color } from "antd/es/color-picker";
+import { Utils } from "@/engine/utils";
 
 export interface CubeOptions extends BaseOptions {
   x: number,
   z: number,
   y: number,
+  width: number,
+  height: number,
+  length: number,
+  color?: string,
 }
 
 
@@ -35,24 +39,35 @@ export class Cube extends Unit3DObject<CubeOptions> {
 
   matLine?: LineMaterial = new LineMaterial(this.matLineOptions);
 
+  static schema = CubeSchema
+
+  outLine?: THREE.Group<THREE.Object3DEventMap>;
+
   constructor(engine: Render, options: CubeOptions) {
     super(engine, options);
     this.init();
   }
 
+  getColor() {
+    const color = this.options.color || TOP_COLOR;
+    const topColor = color;
+    const sideColorZ = Utils.Color.darkenColor(color, 10);
+    const sideColorX = Utils.Color.darkenColor(color, 20);
+    return { topColor, sideColorZ, sideColorX }
+  }
+
   init() {
     const me = this;
-    const length = 1;
-    const width = 1;
-    const height = 0.5;
+    const { length = 1, width = 1, height = 0.5 } = me.options;
     const geometry = new THREE.BoxGeometry(length, height, width);
+    const { topColor, sideColorZ, sideColorX } = me.getColor();
 
     var material = [
-      new THREE.MeshBasicMaterial({ color: SIDE_DARK_COLOR }), // 前面
+      new THREE.MeshBasicMaterial({ color: sideColorX }), // 前面
       new THREE.MeshBasicMaterial({ color: 'green' }), // 后面
-      new THREE.MeshBasicMaterial({ color: TOP_COLOR }), // 顶面
+      new THREE.MeshBasicMaterial({ color: topColor }), // 顶面
       new THREE.MeshBasicMaterial({ color: 'blue' }), // 底面
-      new THREE.MeshBasicMaterial({ color: SIDE_LIGHT_COLOR }), // 左面
+      new THREE.MeshBasicMaterial({ color: sideColorZ }), // 左面
       new THREE.MeshBasicMaterial({ color: 'purple' }), // 右面
     ];
 
@@ -72,6 +87,7 @@ export class Cube extends Unit3DObject<CubeOptions> {
     me.add(cube);
   }
 
+  // 添加描边
   addLine() {
     const me = this;
     const cube = me.cube;
@@ -101,34 +117,101 @@ export class Cube extends Unit3DObject<CubeOptions> {
       const end = new THREE.Vector3(edgesArray[i + 3], edgesArray[i + 4], edgesArray[i + 5]);
       edgesCoordinates.push({ start, end });
     }
+    const lineGroup = new THREE.Group();
+    this.outLine = lineGroup;
     for (let i = 0; i < edgesCoordinates.length; i++) {
       const start = edgesCoordinates[i].start;
       const end = edgesCoordinates[i].end;
-      // const positions = [
-      //   start.x + position.x + 0.01,
-      //   start.y + position.y + 0.01,
-      //   start.z + position.z + 0.01,
-      //   end.x + position.x + 0.01,
-      //   end.y + position.y + 0.01,
-      //   end.z + position.z + 0.01,
-      // ];
 
       const positions = [
-        start.x + position.x,
-        start.y + position.y,
-        start.z + position.z,
-        end.x + position.x,
-        end.y + position.y,
-        end.z + position.z,
+        start.x + position.x + 0.01,
+        start.y + position.y + 0.01,
+        start.z + position.z + 0.01,
+        end.x + position.x + 0.01,
+        end.y + position.y + 0.01,
+        end.z + position.z + 0.01,
       ];
 
       const lineGeometry = new LineGeometry();
       lineGeometry.setPositions(positions);
       const line = new Line2(lineGeometry, me.matLine);
       line.computeLineDistances();
-      line.scale.set(1.01, 1.01, 1.01);
-      this.add(line);
+      lineGroup.add(line);
     }
+    this.add(lineGroup);
+  }
+
+  // 更新描边
+  updateLine() {
+    const me = this;
+    const cube = me.cube;
+    if (!cube) { return }
+    const geometry = cube.geometry;
+    const position = cube.position;
+    
+    // 添加线条
+    var edges = new THREE.EdgesGeometry(geometry);
+    const edgesArray = edges.attributes.position.array;
+    const edgesCoordinates = [];
+    for (let i = 0; i < edgesArray.length; i += 6) {
+      const start = new THREE.Vector3(edgesArray[i], edgesArray[i + 1], edgesArray[i + 2]);
+      const end = new THREE.Vector3(edgesArray[i + 3], edgesArray[i + 4], edgesArray[i + 5]);
+      edgesCoordinates.push({ start, end });
+    }
+    for (let i = 0; i < edgesCoordinates.length; i++) {
+      const start = edgesCoordinates[i].start;
+      const end = edgesCoordinates[i].end;
+      const positions = [
+        start.x = position.x + 0.01,
+        start.y = position.y + 0.01,
+        start.z = position.z + 0.01,
+        end.x = position.x + 0.01,
+        end.y = position.y + 0.01,
+        end.z = position.z + 0.01,
+      ];
+      if (!this.outLine) { return; }
+      const line = this.outLine.children[i] as Line2;
+      const lineGeometry = line.geometry;
+      lineGeometry.setPositions(positions);
+      line.computeLineDistances();
+    }
+  }
+
+  // 改变宽度
+  changeSize({ value, type }: { value: number, type: string }) {
+    if (!this.cube || !value || value < 0.25) { return; }
+    this.setOptions({
+      [type]: value
+    });
+    const { width, height, length } = this.options;
+    const new_geometry = new THREE.BoxGeometry(length, height, width);
+    this.cube.geometry.dispose();
+    this.cube.geometry = new_geometry;
+    this.cube.geometry.translate(0, height / 2, 0);
+    this.updateLine();
+  }
+
+  // 改变颜色
+  changeColor({ value, type }: { value: Color, type: string }) {
+    const me = this;
+    const color = value.toHexString();
+    me.setOptions({
+      [type]: color
+    });
+    if (!this.cube) { return; }
+    const { topColor, sideColorZ, sideColorX } = me.getColor();
+    const newMaterial = [
+      new THREE.MeshBasicMaterial({ color: sideColorX }), // 前面
+      new THREE.MeshBasicMaterial({ color: 'green' }), // 后面
+      new THREE.MeshBasicMaterial({ color: topColor }), // 顶面
+      new THREE.MeshBasicMaterial({ color: 'blue' }), // 底面
+      new THREE.MeshBasicMaterial({ color: sideColorZ }), // 左面
+      new THREE.MeshBasicMaterial({ color: 'purple' }) // 右面
+    ];
+    this.cube.material.forEach((mat) => {
+      mat.dispose();
+    });
+    this.cube.material = newMaterial;
   }
 
   active() {

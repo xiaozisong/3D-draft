@@ -3,6 +3,7 @@ import { TOP_COLOR } from "../constant";
 import { Element3D } from "../interface";
 import * as THREE from "three";
 import { Math } from './math'
+import { get } from "lodash";
 export interface MeshElement extends Mesh {
   isElement: boolean;
   parent: MeshElement;
@@ -148,6 +149,35 @@ export class Utils {
     }
     return null;
   }
+
+  /**
+   * 从场景中找物体
+   * 
+   * @static
+   * @param {{
+   *  key: string,
+   *  scene: THREE.Scene,
+   * }} {
+   *  key,
+   *  scene
+   * }
+   * @returns
+   * 
+   * @memberOf Utils
+   */
+  static getObjectByKey({
+    key,
+    scene
+  }: {
+    key: string,
+    scene: THREE.Scene,
+  }): THREE.Object3D | null {
+    var foundObject = null;
+    scene.traverse(function (object) {
+      if (get(object, 'key') === key) {
+        foundObject = object;
+      }
+    });
+    return foundObject;
+  }
 }
-
-

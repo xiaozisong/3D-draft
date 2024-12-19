@@ -33,6 +33,7 @@ export class TextAction {
     text.setOptions({
       linkElementKey: activeElement.key,
     })
+    this.updateTextRelactionPosition(text);
   }
   
   // 更新文字
@@ -56,9 +57,15 @@ export class TextAction {
     const linkElementKey = text.options.linkElementKey;
     if (linkElementKey) {
       const element = this.engine.controller.element.getElementByKey(linkElementKey);
+      const point = Utils.getObjectByKey({ key: linkElementKey, scene: this.engine.sceneController.scene });
       if (element) {
         text.setOptions({
           linkElementRelactionPosition: text.position.clone().sub(element.position),
+        })
+      }
+      if (point) {
+        text.setOptions({
+          linkElementRelactionPosition: text.position.clone().sub(point.position),
         })
       }
     }

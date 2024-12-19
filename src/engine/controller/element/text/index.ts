@@ -21,7 +21,7 @@ export interface TextOptions extends BaseOptions {
 export class Text extends Unit3DObject<TextOptions> {
   name = '文字';
   lineWdith = 0.03;
-  groundGap = 0.01;
+  groundGap = 0.2;
   outlinePadding = 0.05;
 
   text: any;

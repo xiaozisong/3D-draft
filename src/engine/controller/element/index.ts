@@ -27,9 +27,9 @@ export class Elements extends THREE.Group {
   createElement(key: string) {
     const centerPoint = this.engine.pickController?.getViewportCenterPoint();
     if (!centerPoint) { return }
-    const { x, z } = centerPoint
 
-    let data = { type: key, options: { x, z } } as ElementData;
+    const { x, y, z } = centerPoint;
+    let data = { type: key, options: { x, y, z } } as ElementData;
     switch (key) {
       case "line":
         data.options = {

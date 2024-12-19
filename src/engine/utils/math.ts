@@ -71,4 +71,22 @@ export class Math {
       return point.distanceTo(projectionPoint);
     }
   }
+
+  /**
+   * 处理近似零的数
+   * 
+   * @static
+   * @param {number} value
+   * @returns
+   * 
+   * @memberOf Math
+   */
+  static resolveZero(value: number) {
+    let result = value;
+    const EPSILON = 1e-14; // 自定义一个很小的数
+    if (window.Math.abs(value) < EPSILON) {
+      result = 0;
+    }
+    return result;
+  }
 }

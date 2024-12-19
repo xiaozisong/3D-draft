@@ -11,6 +11,7 @@ export interface BaseOptions {
   key?: string,
   x?: number,
   z?: number,
+  y?: number,
   linkLineKeys?: string[],
   linkTextKey?: string,
 }

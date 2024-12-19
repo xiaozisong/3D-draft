@@ -10,7 +10,8 @@ import { Unit3DObject } from "../unit";
 
 export interface CubeOptions extends BaseOptions {
   x: number,
-  z: number
+  z: number,
+  y: number,
 }
 
 
@@ -63,12 +64,12 @@ export class Cube extends Unit3DObject<CubeOptions> {
     const cube = new THREE.Mesh(geometry, material);
     geometry.translate(0, height / 2, 0);
     this.position.x = me.options.x;
+    this.position.y = me.options.y || this.groundGap;
     this.position.z = me.options.z;
     me.cube = cube;
 
     this.addLine()
     me.add(cube);
-    this.position.y = this.groundGap
   }
 
   addLine() {
@@ -148,13 +149,14 @@ export class Cube extends Unit3DObject<CubeOptions> {
     const me = this;
     const position = me?.position
     if (!position) return;
-    const { x, z } = position;
+    const { x, z, y } = position;
     return {
       type: 'cube',
       key: me.key,
       options: {
         ...me.options,
         x,
+        y,
         z
       }
     }

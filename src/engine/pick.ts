@@ -39,12 +39,16 @@ export class PickController {
     const intersectionPoint = new THREE.Vector3();
     if (!camera) { return intersectionPoint }
 
-    this.raycaster.setFromCamera(this.centerVector2, camera);
     if (!this.engine.sceneController.plane) {
       return intersectionPoint
     }
+    this.raycaster.setFromCamera(this.centerVector2, camera);
     // 找到射线和平面的交点
     this.raycaster.ray.intersectPlane(this.engine.sceneController.plane, intersectionPoint);
+    const x = Utils.Math.resolveZero(intersectionPoint.x);
+    const y = Utils.Math.resolveZero(intersectionPoint.x);
+    const z = Utils.Math.resolveZero(intersectionPoint.x);
+    intersectionPoint.set(x, y, z)
     return intersectionPoint
   }
 

@@ -15,6 +15,7 @@ export interface LineOptions extends BaseOptions {
   opacity?: number,
   lineWidth?: number,
   showArrow?: boolean,
+  dashed?: boolean,
 }
 
 
@@ -34,6 +35,8 @@ export class Line extends Base3DObject<LineOptions> {
     linewidth: this.lineWdith,
     worldUnits: true,
     dashed: false,
+    dashSize: 0.1, // 虚线段的长度
+    gapSize: 0.05, // 虚线间隔的长度
     alphaToCoverage: true,
     vertexColors: false,
   }
@@ -53,9 +56,13 @@ export class Line extends Base3DObject<LineOptions> {
 
   init() {
     const me = this;
+    const { dashed } = me.options;
     const lineGeometry = new LineGeometry();
 
     lineGeometry.setPositions(this.options.points);
+    if (dashed && me.matLine) {
+      me.matLine.dashed = true;
+    }
 
     const line = new Line2(lineGeometry, me.matLine);
     line.computeLineDistances();

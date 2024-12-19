@@ -36,6 +36,7 @@ export class Text extends Unit3DObject<TextOptions> {
   });
 
   line?: Line2;
+  linkLine?: Line2;
 
   constructor(engine: Render, options: TextOptions) {
     super(engine, options);
@@ -44,9 +45,7 @@ export class Text extends Unit3DObject<TextOptions> {
 
   init() {
     const me = this;
-    const { x, z, content, color, fontSize, fontWeight } = me.options
-    this.position.x = x;
-    this.position.z = z;
+    const { x, z, content, color, fontSize, fontWeight } = me.options;
 
     let text = new TextMesh();
     text.font = 'MicrosoftYahei.woff';
@@ -61,13 +60,15 @@ export class Text extends Unit3DObject<TextOptions> {
     text.anchorY = 'middle';
 
     text.sync()
-
     
     this.add(text);
     
     this.text = text;
     this.position.y = this.groundGap;
-    this.rotation.x = - Math.PI / 2;
+    this.text.rotation.x = - Math.PI / 2;
+
+    this.position.x = x;
+    this.position.z = z;
 
   }
 
@@ -78,11 +79,11 @@ export class Text extends Unit3DObject<TextOptions> {
     const { max, min } = boundingBox
     const padding = this.outlinePadding;
     const positions = [
-      max.x + padding, min.y - padding, 0,
-      min.x - padding, min.y - padding, 0,
-      min.x - padding, max.y + padding, 0,
-      max.x + padding, max.y + padding, 0,
-      max.x + padding, min.y - padding, 0,
+      max.x + padding, 0, min.y - padding,
+      min.x - padding, 0, min.y - padding,
+      min.x - padding, 0, max.y + padding,
+      max.x + padding, 0, max.y + padding,
+      max.x + padding, 0, min.y - padding,
     ]
     const lineGeometry = new LineGeometry();
     lineGeometry.setPositions(positions);
@@ -95,6 +96,44 @@ export class Text extends Unit3DObject<TextOptions> {
 
   active() {
     this.addLine();
+    this.addLinkLine();
+  }
+
+  // 新增关联线
+  addLinkLine() {
+    const me = this;
+    if (!me.matLine) {
+      return;
+    }
+    const lineGeometry = new LineGeometry();
+    const newMath = me.matLine.clone();
+    newMath.dashed = true;
+    newMath.dashSize = 0.05;
+    newMath.gapSize = 0.05;
+    const linkLine = new Line2(lineGeometry, newMath);
+    me.linkLine = linkLine;
+    me.add(linkLine);
+    me.updateLinkLine();
+  }
+
+  // 更新关联线
+  updateLinkLine() {
+    const me = this;
+    if (!this.linkLine) {
+      return;
+    }
+    const { linkElementKey, linkElementRelactionPosition } = me.options;
+    if (linkElementKey && linkElementRelactionPosition) {
+      const linkElement = me.engine.controller.element.getElementByKey(linkElementKey);
+      if (!linkElement) { return }
+      const positions = [
+        linkElement.position.x - me.position.x, linkElement.position.y - me.position.y, linkElement.position.z - me.position.z,
+        0, 0, 0,
+      ]
+      this.linkLine.geometry.setPositions(positions);
+      this.linkLine.computeLineDistances();
+      this.linkLine.scale.set(1, 1, 1);
+    }
   }
 
   disActive() {
@@ -103,6 +142,12 @@ export class Text extends Unit3DObject<TextOptions> {
       this.line.geometry.dispose();
       this.line.material.dispose();
       this.line = undefined;
+    }
+    if (this.linkLine) {
+      this.remove(this.linkLine);
+      this.linkLine.geometry.dispose();
+      this.linkLine.material.dispose();
+      this.linkLine = undefined;
     }
   }
 
@@ -146,7 +191,8 @@ export class Text extends Unit3DObject<TextOptions> {
     });
     me.text = undefined;
     me.matLine = undefined;
-    me.line = undefined
+    me.line = undefined;
+    me.linkLine = undefined;
     super.destroy();
   }
 

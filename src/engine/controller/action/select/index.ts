@@ -83,9 +83,11 @@ export class SelectAction {
       me.engine.controller.action.text.updateLinkTextPosition(me.dragObject);
       // 更新编辑栏位置
       this.engine.controller.setting.updateEditBar();
+      // 更新点关联的线
       if (me.dragObject instanceof Point) {
         me.engine.controller.action.line.updateLineByPoint(me.dragObject);
       }
+      // 更新文字关联的物体的相对位置
       if (me.dragObject instanceof Text) {
         me.engine.controller.action.text.updateTextRelactionPosition(me.dragObject);
       }

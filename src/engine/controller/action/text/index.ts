@@ -43,7 +43,7 @@ export class TextAction {
     if (!linkTextKey) { return }
     const linkText = this.engine.controller.element.getElementByKey(linkTextKey) as Text;
     if (linkText) {
-      const point = new THREE.Vector3(position.x, position.y, position.z);
+      const point = position.clone();
       const linkElementRelactionPosition = linkText.options.linkElementRelactionPosition;
       if (linkElementRelactionPosition) {
         point.add(linkElementRelactionPosition);
@@ -57,18 +57,20 @@ export class TextAction {
     const linkElementKey = text.options.linkElementKey;
     if (linkElementKey) {
       const element = this.engine.controller.element.getElementByKey(linkElementKey);
-      const point = Utils.getObjectByKey({ key: linkElementKey, scene: this.engine.sceneController.scene });
       if (element) {
         text.setOptions({
           linkElementRelactionPosition: text.position.clone().sub(element.position),
         })
-      }
-      if (point) {
-        text.setOptions({
-          linkElementRelactionPosition: text.position.clone().sub(point.position),
-        })
+      } else {
+        const point = Utils.getObjectByKey({ key: linkElementKey, scene: this.engine.sceneController.scene });
+        if (point) {
+          text.setOptions({
+            linkElementRelactionPosition: text.position.clone().sub(point.position)
+          })
+        }
       }
     }
+    text.updateLinkLine();
   }
 
   // 删除文字时移除关联关系

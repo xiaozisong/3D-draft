@@ -20,6 +20,7 @@ export interface CubeOptions extends BaseOptions {
 
 
 export class Cube extends Unit3DObject<CubeOptions> {
+  static schema = CubeSchema;
   name: string = '立方体';
   groundGap = 0.01;
 
@@ -38,8 +39,6 @@ export class Cube extends Unit3DObject<CubeOptions> {
   }
 
   matLine?: LineMaterial = new LineMaterial(this.matLineOptions);
-
-  static schema = CubeSchema
 
   outLine?: THREE.Group<THREE.Object3DEventMap>;
 

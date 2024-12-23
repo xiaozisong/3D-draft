@@ -1,14 +1,14 @@
 import { DynamicForm, Schema, Value } from "@/components/dynamicform";
 import styles from "./index.less";
 import { Collapse, Form, Typography } from "antd";
-import { useCallback, useLayoutEffect, useMemo } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, memo } from "react";
 import { useEngine } from "@/engine";
 import { useStore } from "@/components/store/useStore";
 import { get } from "lodash";
 import { getTypeByString } from "@/engine/interface/utils";
 const { Title } = Typography;
 
-export default function ProtoPanel() {
+function ProtoPanel() {
   const engine = useEngine();
   const [{ activeElementKeys }] = useStore(engine.controller.setting.store, ['activeElementKeys']);
 
@@ -41,12 +41,17 @@ export default function ProtoPanel() {
         field.onChange({ key, value: typedValue, instance: activeElement });
       }
     });
-  }, [activeElementKeys, schema]);
+  }, [schema]);
 
   useLayoutEffect(() => {
     const activeElement = engine.controller.action.select.activeElement;
     if (activeElement) {
       form.setFieldsValue(activeElement.options);
+    }
+    return () => {
+      if (form) {
+        form.resetFields();
+      }
     }
   }, [activeElementKeys]);
 
@@ -59,11 +64,13 @@ export default function ProtoPanel() {
       </div>
       <DynamicForm
         schema={schema}
-        size='small'
+        // size='small'
         layout='vertical'
         onValuesChange={onValuesChange}
         form={form}
       />
     </div>
   );
-}
+};
+
+export default ProtoPanel;

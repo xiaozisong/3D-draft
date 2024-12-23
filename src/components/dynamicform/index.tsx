@@ -7,6 +7,7 @@ const componentMap: Record<string, React.FC<any>> = {
   Input,
   InputNumber,
   ColorPicker,
+  TextArea: Input.TextArea,
 };
 
 export type Value = any;

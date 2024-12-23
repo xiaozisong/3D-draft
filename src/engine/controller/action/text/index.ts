@@ -22,9 +22,10 @@ export class TextAction {
       options: {
         x: position.x,
         z: position.z + length / 2 + 0.25,
-        content: activeElement.name,
+        text: activeElement.name,
         color: 'red',
-        fontSize: 0.5
+        fontSize: 0.5,
+        lineHeight: 1.5,
       }
     });
     activeElement.setOptions({

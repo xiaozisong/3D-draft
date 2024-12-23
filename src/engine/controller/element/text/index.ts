@@ -5,20 +5,26 @@ import { Text as TextMesh } from 'troika-three-text';
 import { Base3DObject } from "../base";
 import { BaseOptions } from "@/engine/interface";
 import { Unit3DObject } from "../unit";
+import TextSchema from "./schema";
+import { Color } from "antd/es/color-picker";
+import { Utils } from "@/engine/utils";
 
 export interface TextOptions extends BaseOptions {
   x: number,
   z: number,
-  content: string,
+  text: string,
   color: string,
   fontSize: number,
   fontWeight: string,
+  lineHeight?: number,
   linkElementKey?: string,
   linkElementRelactionPosition?: THREE.Vector3
 }
 
 
 export class Text extends Unit3DObject<TextOptions> {
+  static schema = TextSchema;
+
   name = '文字';
   lineWdith = 0.03;
   groundGap = 0.2;
@@ -45,14 +51,15 @@ export class Text extends Unit3DObject<TextOptions> {
 
   init() {
     const me = this;
-    const { x, z, content, color, fontSize, fontWeight } = me.options;
+    const { x, z, text: textContent = 'default text', color, fontSize, fontWeight, lineHeight = 1.5 } = me.options;
 
     let text = new TextMesh();
     text.font = 'MicrosoftYahei.woff';
-    text.text = content;
+    text.text = textContent;
     text.fontSize = fontSize;
     text.color = color;
     text.fontWeight = fontWeight;
+    text.lineHeight = lineHeight;
     text.outlineColor = '#ffffff'
     text.outlineWidth = 0.02;
     text.textAlign = 'center';
@@ -73,11 +80,11 @@ export class Text extends Unit3DObject<TextOptions> {
   }
 
 
-  addLine() {
+  addOutLine() {
     const me = this;
     const boundingBox = this.text.geometry.boundingBox;
     const { max, min } = boundingBox
-    const padding = this.outlinePadding;
+    const padding = (max.x - min.x) / 10;
     const positions = [
       max.x + padding, 0, min.y - padding,
       min.x - padding, 0, min.y - padding,
@@ -89,13 +96,56 @@ export class Text extends Unit3DObject<TextOptions> {
     lineGeometry.setPositions(positions);
     const line = new Line2(lineGeometry, me.matLine);
     line.computeLineDistances();
-    line.scale.set(1, 1, 1);
     this.line = line
     this.add(line);
   }
 
+  // 更新边框线
+  updateOutLine() {
+    const me = this;
+    if (!me.line) { return; }
+    const boundingBox = this.text.geometry.boundingBox;
+    const { max, min } = boundingBox;
+    const padding = (max.x - min.x) / 10;
+    const positions = [
+      max.x + padding, 0, min.y - padding,
+      max.x - padding, 0, min.y - padding,
+      max.x - padding, 0, min.y + padding,
+      max.x + padding, 0, min.y + padding,
+      max.x + padding, 0, min.y - padding,
+    ];
+    const lineGeometry = me.line.geometry;
+    lineGeometry.setPositions(positions);
+    const line = me.line;
+    line.computeLineDistances();
+  }
+
+  // 改变文字颜色
+  changeColor({ value, type }: { value: Color, type: string }) {
+    const me = this;
+    const color = value.toHexString();
+    if (!this.text) { return; }
+    me.setOptions({
+      [type]: color,
+    });
+    this.text.color = color;
+    this.text.sync();
+  }
+
+  // 改变文字属性
+  changeTextAttribute({ value, type }: { value: number, type: string }) {
+    const me = this;
+    if (!this.text) { return; }
+    me.setOptions({
+      [type]: value,
+    });
+    this.text[type] = value;
+    this.text.sync();
+    Utils.Render.executeAfterFrames(this.updateOutLine.bind(me), 2);
+  }
+
   active() {
-    this.addLine();
+    this.addOutLine();
     this.addLinkLine();
   }
 

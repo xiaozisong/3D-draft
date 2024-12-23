@@ -52,10 +52,11 @@ export class Elements extends THREE.Group {
       case "text":
         data.options = {
           ...data.options,
-          content: "Default Text 😀😝🤡😳😞😟🦋🐽",
+          text: "Default Text",
           color: "#000000",
-          fontSize: 0.2,
+          fontSize: 0.3,
           fontWeight: "bold",
+          lineHeight: 1.5,
         };
         break;
       case "area":

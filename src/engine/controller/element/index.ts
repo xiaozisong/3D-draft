@@ -152,6 +152,15 @@ export class Elements extends THREE.Group {
     return Array.from(this.elementMap.values()).map(element => element.getData());
   }
 
+  // 清除数据
+  clearData() {
+    this.elementMap.forEach(element => {
+      this.remove(element);
+      element.destroy();
+    });
+    this.elementMap.clear();
+  }
+
   destroy() {
 
   }

@@ -37,4 +37,8 @@ export class Data {
     message.success("保存成功");
   }
 
+  clear() {
+    this.engine.controller.element.clearData();
+  }
+
 }

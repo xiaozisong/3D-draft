@@ -214,10 +214,6 @@ export class Area extends Unit3DObject<AreaOptions> {
         ...me.options,
         x,
         z,
-        width: me.area?.geometry.parameters.width,
-        length: me.area?.geometry.parameters.height,
-        color: me.area?.material.color,
-
       }
     };
   };

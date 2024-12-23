@@ -5,6 +5,7 @@ import { Utils } from '@/engine/utils';
 import * as THREE from 'three';
 import { isEmpty } from "lodash";
 import { Point } from "../../element/point";
+import { Area } from "../../element/area";
 
 export class LineAction {
 
@@ -50,15 +51,18 @@ export class LineAction {
     return this._status;
   }
 
-  // 判断是否是线或点
-  isLineOrPoint(target: Element3D): boolean {
+  // 判断是否可连接
+  canLink(target: Element3D): boolean {
     if (target instanceof Line) {
-      return true;
+      return false;
     }
     if (target instanceof Point) {
-      return true;
+      return false;
     }
-    return false;
+    if (target instanceof Area) {
+      return false;
+    }
+    return true;
   }
 
   // 开始添加箭头
@@ -90,7 +94,7 @@ export class LineAction {
     this.nextPoint = Utils.findNearestPoint(intersectPoint, this.engine.sceneController.gridPoints);
 
     const { element } = me.engine.pickController.pickToElement(event);
-    if (element && !me.isLineOrPoint(element)) {
+    if (element && !me.canLink(element)) {
       this.nextPoint = element.position;
       this.targetElement = element
     }

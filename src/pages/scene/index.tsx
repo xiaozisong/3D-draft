@@ -7,6 +7,7 @@ import { useLocalStorageState } from "ahooks";
 import { ElementData } from "@/engine/interface";
 import ToolBar from "./toolbar";
 import { EditBar } from "./editBar";
+import demoData from '@/assets/data';
 
 export default function Scene() {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,15 +15,7 @@ export default function Scene() {
   const engine = useEngine();
 
   const [elementsData, setElementsData] = useLocalStorageState<ElementData[]>("elements", {
-    defaultValue: [
-      // {
-      //   type: "cube",
-      //   options: {
-      //     x: 0,
-      //     z: 0,
-      //   },
-      // },
-    ],
+    defaultValue: demoData,
   });
 
   // 初始化3D场景

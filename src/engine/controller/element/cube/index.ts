@@ -177,7 +177,7 @@ export class Cube extends Unit3DObject<CubeOptions> {
     }
   }
 
-  // 改变宽度
+  // 改变尺寸
   changeSize({ value, type }: { value: number, type: string }) {
     if (!this.cube || !value || value < 0.25) { return; }
     this.setOptions({

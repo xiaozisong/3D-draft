@@ -1,14 +1,19 @@
 import styles from "./index.less";
 import { Typography } from "antd";
-const { Title } = Typography;
 import SideMenu from "./sidemenu";
 import Scene from "./scene";
 import ProtoPanel from "./protopanel";
-import { engine } from "../engine";
+import { useEngine } from "../engine";
 import useKeyPressEffect from "./useKeyPress";
+import { useStore } from "@/components/store/useStore";
+import { isEmpty } from "lodash";
+const { Title } = Typography;
 
 export default function HomePage() {
-  console.log('engine',engine)
+
+  const engine = useEngine();
+  const [{ activeElementKeys }] = useStore(engine.controller.setting.store, ["activeElementKeys"]);
+
   useKeyPressEffect();
 
   return (
@@ -18,7 +23,7 @@ export default function HomePage() {
       {/* 渲染场景 */}
       <Scene />
       {/* 物体原型面板 -- 后续补 */}
-      <ProtoPanel />
+      {!isEmpty(activeElementKeys) && <ProtoPanel />}
     </div>
   );
 }

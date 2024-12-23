@@ -64,7 +64,9 @@ export class Elements extends THREE.Group {
           ...data.options,
           width: 3,
           length: 3,
+          height: 0.001,
           color: "#E6E7E8",
+          opacity: 0.5,
         };
         break;
       case "icon":

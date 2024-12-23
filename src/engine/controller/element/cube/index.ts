@@ -1,4 +1,4 @@
-import { SIDE_DARK_COLOR, SIDE_LIGHT_COLOR, TOP_COLOR } from "@/engine/constant";
+import { TOP_COLOR } from "@/engine/constant";
 import { BaseOptions } from "@/engine/interface";
 import { Render } from "@/engine/render";
 import * as THREE from "three";
@@ -53,22 +53,23 @@ export class Cube extends Unit3DObject<CubeOptions> {
     const topColor = color;
     const sideColorZ = Utils.Color.darkenColor(color, 10);
     const sideColorX = Utils.Color.darkenColor(color, 20);
-    return { topColor, sideColorZ, sideColorX }
+    const otherColor = Utils.Color.darkenColor(color, 30);
+    return { topColor, sideColorZ, sideColorX, otherColor };
   }
 
   init() {
     const me = this;
     const { length = 1, width = 1, height = 0.5 } = me.options;
     const geometry = new THREE.BoxGeometry(length, height, width);
-    const { topColor, sideColorZ, sideColorX } = me.getColor();
+    const { topColor, sideColorZ, sideColorX, otherColor } = me.getColor();
 
     var material = [
       new THREE.MeshBasicMaterial({ color: sideColorX }), // 前面
-      new THREE.MeshBasicMaterial({ color: 'green' }), // 后面
+      new THREE.MeshBasicMaterial({ color: otherColor }), // 后面
       new THREE.MeshBasicMaterial({ color: topColor }), // 顶面
-      new THREE.MeshBasicMaterial({ color: 'blue' }), // 底面
+      new THREE.MeshBasicMaterial({ color: otherColor }), // 底面
       new THREE.MeshBasicMaterial({ color: sideColorZ }), // 左面
-      new THREE.MeshBasicMaterial({ color: 'purple' }), // 右面
+      new THREE.MeshBasicMaterial({ color: otherColor }), // 右面
     ];
 
     // const textTexture = new THREE.CanvasTexture(

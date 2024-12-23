@@ -46,8 +46,8 @@ export class PickController {
     // 找到射线和平面的交点
     this.raycaster.ray.intersectPlane(this.engine.sceneController.plane, intersectionPoint);
     const x = Utils.Math.resolveZero(intersectionPoint.x);
-    const y = Utils.Math.resolveZero(intersectionPoint.x);
-    const z = Utils.Math.resolveZero(intersectionPoint.x);
+    const y = Utils.Math.resolveZero(intersectionPoint.y);
+    const z = Utils.Math.resolveZero(intersectionPoint.z);
     intersectionPoint.set(x, y, z)
     return intersectionPoint
   }

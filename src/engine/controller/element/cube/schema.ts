@@ -1,5 +1,6 @@
 import { Schema } from "@/components/dynamicform";
 import { Cube } from ".";
+import { COLOR_PRESETS } from '@/engine/constant/color';
 
 export default {
   properties: {
@@ -46,7 +47,8 @@ export default {
       props: {
         // min: 0.25,
         // style: { width: '100%' },
-        showText: true
+        showText: true,
+        presets: COLOR_PRESETS,
       },
       onChange: ({ key, value, instance }) => {
         (instance as Cube).changeColor({ value, type: key });

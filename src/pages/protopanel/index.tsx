@@ -1,7 +1,7 @@
 import { DynamicForm, Schema, Value } from "@/components/dynamicform";
 import styles from "./index.less";
-import { Collapse, Typography } from "antd";
-import { useCallback, useMemo } from "react";
+import { Collapse, Form, Typography } from "antd";
+import { useCallback, useLayoutEffect, useMemo } from "react";
 import { useEngine } from "@/engine";
 import { useStore } from "@/components/store/useStore";
 import { get } from "lodash";
@@ -11,6 +11,8 @@ const { Title } = Typography;
 export default function ProtoPanel() {
   const engine = useEngine();
   const [{ activeElementKeys }] = useStore(engine.controller.setting.store, ['activeElementKeys']);
+
+  const [form] = Form.useForm();
 
   const schema = useMemo(() => {
     const activeElement = engine.controller.action.select.activeElement;
@@ -41,6 +43,13 @@ export default function ProtoPanel() {
     });
   }, [activeElementKeys, schema]);
 
+  useLayoutEffect(() => {
+    const activeElement = engine.controller.action.select.activeElement;
+    if (activeElement) {
+      form.setFieldsValue(activeElement.options);
+    }
+  }, [activeElementKeys]);
+
   if (!schema) { return; }
 
   return (
@@ -53,6 +62,7 @@ export default function ProtoPanel() {
         size='small'
         layout='vertical'
         onValuesChange={onValuesChange}
+        form={form}
       />
     </div>
   );

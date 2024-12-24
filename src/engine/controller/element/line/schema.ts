@@ -1,9 +1,11 @@
 import { Schema } from "@/components/dynamicform";
 import { Line } from ".";
 import { COLOR_PRESETS } from "@/engine/constant/color";
+import unitSchema from "../unit/schema";
 
 export default {
   properties: {
+    ...unitSchema.properties,
     color: {
       type: 'string',
       title: '颜色',

@@ -9,9 +9,15 @@ import { Text, TextOptions } from "./text";
 import { Line, LineOptions } from "./line";
 import { Point } from "./point";
 import { TOP_COLOR } from "@/engine/constant";
+import { Store } from '@/components/store';
 
 export class Elements extends THREE.Group {
 
+  initialData = {
+    elementListHash: '1',
+  }
+
+  store = new Store(this.initialData);
 
   // 元素集合
   elementMap: Map<string, Element3D> = new Map();
@@ -24,6 +30,15 @@ export class Elements extends THREE.Group {
     return this.elementMap.get(key);
   }
 
+  // 获取物体列表
+  getElementList() {
+    return Array.from(this.elementMap.values());
+  }
+
+  getElementListData() {
+    return Array.from(this.elementMap.values().map(element => element.getData()));
+  }
+
   // 新增元素
   createElement(key: string) {
     const centerPoint = this.engine.pickController?.getViewportCenterPoint();
@@ -34,12 +49,14 @@ export class Elements extends THREE.Group {
     switch (key) {
       case "line":
         data.options = {
+          name: '折线',
           ...data.options,
           points: [0, 0, 0, 0, 0, 2.1, 2.2, 0, 3.3],
         };
         break;
       case "cube":
         data.options = {
+          name: '立方体',
           ...data.options,
           length: 1,
           width: 1,
@@ -48,9 +65,14 @@ export class Elements extends THREE.Group {
         }
         break;
       case "cylinder":
+        data.options = {
+          name: '棱柱体',
+          ...data.options,
+        }
         break;
       case "text":
         data.options = {
+          name: '文字',
           ...data.options,
           text: "Default Text",
           color: "#000000",
@@ -61,6 +83,7 @@ export class Elements extends THREE.Group {
         break;
       case "area":
         data.options = {
+          name: '平面',
           ...data.options,
           width: 3,
           length: 3,
@@ -71,6 +94,7 @@ export class Elements extends THREE.Group {
         break;
       case "icon":
         data.options = {
+          name: '图标',
           ...data.options,
           size: 1,
           color: "#000000",
@@ -78,6 +102,7 @@ export class Elements extends THREE.Group {
         break;
     }
     this.addElement(data);
+    this.refreshElementList();
   }
 
   // 添加元素
@@ -120,36 +145,52 @@ export class Elements extends THREE.Group {
       target?.destroy();
       this.elementMap.delete(elementKey);
     }
+    this.refreshElementList();
   }
 
   // 移除选中元素
-  removeSelectedElement() {
+  deleteSelectedElement() {
+    const activeElement = this.engine.controller.action.select.activeElement;
+    if (activeElement) { this.deleteElement(activeElement); }
+  }
+
+  // 移除选中元素
+  deleteElement(element: Element3D) {
     const selectedElement = this.engine.controller.action.select.activeElement;
     // 删除时前置处理
-    if (selectedElement instanceof Point) {
-      this.engine.controller.action.line.removeLinePoint(selectedElement);
+    if (element instanceof Point) {
+      this.engine.controller.action.line.removeLinePoint(element);
     }
 
-    if (selectedElement instanceof Line) {
-      this.engine.controller.action.line.removeLineLink(selectedElement);
+    if (element instanceof Line) {
+      this.engine.controller.action.line.removeLineLink(element);
     }
 
-    if (selectedElement instanceof Text) {
-      this.engine.controller.action.text.removeTextLink(selectedElement);
+    if (element instanceof Text) {
+      this.engine.controller.action.text.removeTextLink(element);
     }
 
     // 执行删除
-    if (selectedElement) {
-      this.engine.controller.action.text.clearLinkText(selectedElement);
-      this.removeElement(selectedElement.key);
+    if (element) {
+      this.engine.controller.action.text.clearLinkText(element);
+      this.removeElement(element.key);
       this.engine.controller.action.select.cancelSelectObject();
       this.engine.controller.setting.updateEditBar();
     }
   }
 
+  // 移除选中元素
+  deleteElementByKey(key: string) {
+    const element = this.getElementByKey(key);
+    if (element) { this.deleteElement(element); }
+  }
+
   // 获取数据
   getData() {
-    return Array.from(this.elementMap.values()).map(element => element.getData());
+    return Array.from(this.elementMap.values()).map(element => {
+      const itemData = element.getData();
+      return itemData;
+    });
   }
 
   // 清除数据
@@ -159,6 +200,15 @@ export class Elements extends THREE.Group {
       element.destroy();
     });
     this.elementMap.clear();
+    this.refreshElementList();
+  }
+
+  // 刷新元素列表
+  refreshElementList() {
+    const me = this;
+    me.engine.controller.element.store.setState({
+      elementListHash: Date.now().toString(),
+    })
   }
 
   destroy() {

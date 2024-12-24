@@ -59,9 +59,9 @@ export default function HomePage() {
   return (
     <div className={styles.left}>
       <div className={styles.header}>
-        <div className={styles.title}>
+        {/* <div className={styles.title}> */}
           <Title level={5}>物体</Title>
-        </div>
+        {/* </div> */}
         <div className={styles.search}>
           <Search
             placeholder='搜索'

@@ -30,7 +30,7 @@ export const EditBar = () => {
 
   // 删除选中元素
   const handleDelete = useCallback(() => {
-    engine.controller.element.removeSelectedElement();
+    engine.controller.element.deleteSelectedElement();
   }, [])
 
   if (!editbarVisible) {

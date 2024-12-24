@@ -1,9 +1,11 @@
 import { Schema } from "@/components/dynamicform";
 import { Text } from ".";
 import { COLOR_PRESETS } from "@/engine/constant/color";
+import unitSchema from "../unit/schema";
 
 export default {
   properties: {
+    ...unitSchema.properties,
     text: {
       type: 'string',
       title: '内容',

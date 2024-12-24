@@ -1,9 +1,11 @@
 import { Schema } from "@/components/dynamicform";
 import { Cube } from ".";
 import { COLOR_PRESETS } from '@/engine/constant/color';
+import unitSchema from "../unit/schema";
 
 export default {
   properties: {
+    ...unitSchema.properties,
     length: {
       type: 'number',
       title: "长度",

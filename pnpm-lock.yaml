@@ -8,10 +8,12 @@ specifiers:
   '@types/three': ^0.164.0
   ahooks: ^3.7.11
   antd: ^5.17.2
+  classnames: 2.5.1
   lodash: ^4.17.21
   nanoid: ^5.0.7
+  react-split-pane: 0.1.92
   three: ^0.164.1
-  tinycolor2: 1.6.0
+  tinycolor2: ^1.6.0
   troika-three-text: ^0.49.1
   typescript: ^5.0.3
   umi: ^4.2.3
@@ -20,8 +22,10 @@ dependencies:
   '@ant-design/icons': 5.3.7
   ahooks: 3.7.11
   antd: 5.17.2
+  classnames: 2.5.1
   lodash: 4.17.21
   nanoid: 5.0.7
+  react-split-pane: 0.1.92
   three: 0.164.1
   tinycolor2: 1.6.0
   troika-three-text: 0.49.1_three@0.164.1
@@ -7478,6 +7482,10 @@ packages:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
     dev: false
 
+  /react-lifecycles-compat/3.0.4:
+    resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
+    dev: false
+
   /react-merge-refs/1.1.0:
     resolution: {integrity: sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==}
     dev: false
@@ -7529,6 +7537,23 @@ packages:
     dependencies:
       history: 5.3.0
       react: 18.3.1
+    dev: false
+
+  /react-split-pane/0.1.92:
+    resolution: {integrity: sha512-GfXP1xSzLMcLJI5BM36Vh7GgZBpy+U/X0no+VM3fxayv+p1Jly5HpMofZJraeaMl73b3hvlr+N9zJKvLB/uz9w==}
+    peerDependencies:
+      react: ^16.0.0-0
+      react-dom: ^16.0.0-0
+    dependencies:
+      prop-types: 15.8.1
+      react-lifecycles-compat: 3.0.4
+      react-style-proptype: 3.2.2
+    dev: false
+
+  /react-style-proptype/3.2.2:
+    resolution: {integrity: sha512-ywYLSjNkxKHiZOqNlso9PZByNEY+FTyh3C+7uuziK0xFXu9xzdyfHwg4S9iyiRRoPCR4k2LqaBBsWVmSBwCWYQ==}
+    dependencies:
+      prop-types: 15.8.1
     dev: false
 
   /react/18.3.1:

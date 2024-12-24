@@ -20,18 +20,21 @@ export class SelectAction {
   }
 
   set activeElement(value) {
+    const me = this;
+    me.activeElement?.disActive();
     this._activeElement = value;
     let activeElementKeys = [];
     if (value) {
       activeElementKeys.push(value.key);
     } else {
-      activeElementKeys = []
+      activeElementKeys = [];
     }
 
     this.engine.controller.setting.store.setState({
       activeElementKeys,
     })
     this.engine.controller.setting.updateEditBar();
+    me.activeElement?.active();
   }
 
   get activeElement() {
@@ -54,9 +57,9 @@ export class SelectAction {
       me.dragDeltaToCenter.subVectors(inersectPoint, target.position);
     }
     me.dragObject = target;
-    me.activeElement?.disActive();
+    // me.activeElement?.disActive();
     me.activeElement = target;
-    me.activeElement?.active();
+    // me.activeElement?.active();
     return element;
   }
 

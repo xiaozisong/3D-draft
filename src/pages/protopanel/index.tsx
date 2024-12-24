@@ -1,11 +1,12 @@
 import { DynamicForm, Schema, Value } from "@/components/dynamicform";
-import styles from "./index.less";
-import { Collapse, Form, Typography } from "antd";
-import { useCallback, useLayoutEffect, useMemo, useRef, memo } from "react";
-import { useEngine } from "@/engine";
 import { useStore } from "@/components/store/useStore";
-import { get } from "lodash";
+import commonStyle from "@/components/styles/common.less";
+import { useEngine } from "@/engine";
 import { getTypeByString } from "@/engine/interface/utils";
+import { Empty, Form, Typography } from "antd";
+import { get, isEmpty } from "lodash";
+import { useCallback, useLayoutEffect, useMemo, useRef, memo } from "react";
+import styles from "./index.less";
 const { Title } = Typography;
 
 function ProtoPanel() {
@@ -55,20 +56,26 @@ function ProtoPanel() {
     }
   }, [activeElementKeys]);
 
-  if (!schema) { return; }
-
   return (
-    <div className={styles.right}>
-      <div className={styles.title}>
+    <div className={styles.proto}>
+      <div className={commonStyle.title}>
         <Title level={5}>属性</Title>
       </div>
-      <DynamicForm
-        schema={schema}
-        // size='small'
-        layout='vertical'
-        onValuesChange={onValuesChange}
-        form={form}
-      />
+      <div className={styles.content}>
+        {!isEmpty(activeElementKeys) && schema ? (
+          <DynamicForm
+            schema={schema}
+            // size='small'
+            layout='vertical'
+            onValuesChange={onValuesChange}
+            form={form}
+          />
+        ) : (
+          <div className={styles.empty}>
+            <Empty description={'选择物体后显示属性'} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

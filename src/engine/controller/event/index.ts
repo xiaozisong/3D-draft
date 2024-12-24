@@ -23,6 +23,8 @@ export class Events {
         if (element && element instanceof Line && oldActiveObject && me.engine.controller.action.line.status === LineActionStatus.addPoint) {
           me.engine.controller.action.line.addPoint(event);
           return;
+        } else {
+          me.engine.controller.action.line.status = LineActionStatus.idle;
         }
         // 选中
         me.engine.controller.action.select.selectObject(element, event);

@@ -2,6 +2,7 @@ import { ElementData } from "@/engine/interface";
 import { Render } from "@/engine/render";
 import { message } from "antd";
 import { set } from "lodash";
+import { Utils } from "@/engine/utils";
 export class Data {
 
   constructor(private engine: Render) {
@@ -21,11 +22,14 @@ export class Data {
     for (let i = 0; i < otherData.length; i++) {
       me.engine.controller?.element?.addElement(otherData[i]);
     }
-    setTimeout(() => {
+    Utils.Render.executeAfterFrames(() => {
       for (let i = 0; i < lineData.length; i++) {
         me.engine.controller?.element?.addElement(lineData[i]);
       }
-    }, 100)
+      me.engine.controller.element.store.setState({
+        elementListHash: Date.now().toString(),
+      });
+    }, 1)
   }
 
   // 保存
@@ -37,12 +41,14 @@ export class Data {
     localStorage.setItem('isometric-3d-editor', JSON.stringify({
       elements,
       settings,
+      version: VERSION,
     }))
     message.success("保存成功");
   }
 
   clear() {
     this.engine.controller.element.clearData();
+    this.save();
   }
 
 }

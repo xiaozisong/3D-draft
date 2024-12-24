@@ -6,6 +6,7 @@ import { Math } from './math'
 import { get } from "lodash";
 import { Color } from "./color";
 import { Render } from "./render";
+import { Dom } from "./dom";
 export interface MeshElement extends Mesh {
   isElement: boolean;
   parent: MeshElement;
@@ -21,6 +22,8 @@ export class Utils {
 
   // 渲染工具类
   static Render = Render;
+
+  static Dom = Dom;
 
   // 生成文字canvas
   static getTextCanvas({ text, height, width }: { text: string, height: number, width: number }) {

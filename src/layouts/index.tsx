@@ -1,7 +1,7 @@
 import { Link, Outlet } from "umi";
 import styles from "./index.less";
 import "./global.less";
-import { Button, Space } from "antd";
+import { Button, Space, Tooltip } from "antd";
 import { 
   CodepenOutlined, 
   PoweroffOutlined, 
@@ -35,22 +35,28 @@ export default function Layout() {
           <CodepenOutlined /> 3D轴侧场景编辑器
         </div>
         <Space className={styles.toolbar}>
-          <Button
-            icon={<ClearOutlined />}
-            size='small'
-            onClick={handleClear}
-          />
-          <Button
-            icon={<ArrowDownOutlined />}
-            size='small'
-            onClick={handleLoadDemoData}
-          />
-          <Button
-            type='primary'
-            icon={<SaveOutlined />}
-            size='small'
-            onClick={handleSave}
-          />
+        <Tooltip title='清空场景'>
+            <Button
+              icon={<ClearOutlined />}
+              size='small'
+              onClick={handleClear}
+            />
+          </Tooltip>
+          <Tooltip title='加载示例'>
+            <Button
+              icon={<ArrowDownOutlined />}
+              size='small'
+              onClick={handleLoadDemoData}
+            />
+          </Tooltip>
+          <Tooltip title='保存'>
+            <Button
+              type='primary'
+              icon={<SaveOutlined />}
+              size='small'
+              onClick={handleSave}
+            />
+          </Tooltip>
         </Space>
       </div>
       <Outlet />

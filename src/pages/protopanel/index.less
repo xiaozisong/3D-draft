@@ -1,13 +1,23 @@
 
-.right{
-  width:200px;
-  border-left:1px solid #ccc;
-  flex-shrink: 0;
+.content{
   padding:12px;
+  width: 100%;
+  height: calc(100% - 40px);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-.title{
+.empty{
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+}
+
+.proto {
+  // padding: 12px;
+  // height:fit-content;
+  height:100%;
+  width:100%;
+  position: absolute;
 }

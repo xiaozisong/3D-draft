@@ -9,6 +9,7 @@ import { Point, PointOptions } from "../controller/element/point";
 
 export interface BaseOptions {
   key?: string,
+  name?: string,
   x?: number,
   z?: number,
   y?: number,
@@ -18,15 +19,18 @@ export interface BaseOptions {
 
 export type Element3D = Cube | Cylinder | Text | Area | Icon | Line | Point
 
+export type OptionsType = CubeOptions | CylinderOptions | TextOptions | AreaOptions | IconOptions | LineOptions | PointOptions
+
 export interface ElementData {
   key?: string,
   type: string,
-  options: CubeOptions | CylinderOptions | TextOptions | AreaOptions | IconOptions | LineOptions | PointOptions,
+  options: OptionsType,
 }
 
 export interface SceneData {
   elements: ElementData[],
   settings: any,
+  version?: string,
 }
 
 export enum LineActionStatus {

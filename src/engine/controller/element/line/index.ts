@@ -1,11 +1,11 @@
 import { Render } from "@/engine/render";
 import * as THREE from "three";
 import { Line2, LineGeometry, LineMaterial } from "three/addons";
-import { Base3DObject } from "../base";
 import { Utils } from "@/engine/utils";
 import { BaseOptions } from "@/engine/interface";
 import { Point } from "../point";
 import LineSchema from "./schema";
+import { Unit3DObject } from "../unit";
 
 export interface LineOptions extends BaseOptions {
   points: number[],
@@ -19,7 +19,7 @@ export interface LineOptions extends BaseOptions {
 }
 
 
-export class Line extends Base3DObject<LineOptions> {
+export class Line extends Unit3DObject<LineOptions> {
   static schema = LineSchema;
   name: string = '线';
   // 是否可拖拽

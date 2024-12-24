@@ -4,6 +4,7 @@ import { Utils } from "./utils";
 import { Element3D } from "./interface";
 import { Line } from "./controller/element/line";
 import { Area } from "./controller/element/area";
+import { orderBy } from "lodash";
 
 export class PickController {
   // 视窗中心位置
@@ -86,8 +87,10 @@ export class PickController {
   pickToMesh(event: MouseEvent) {
     const me = this;
     const allIntersects = me?.pick(event);
-    const mesh = allIntersects[0]?.object;
-    const point = allIntersects[0]?.point;
+    // 让平面最后选中
+    const orderedAllIntersects = orderBy(allIntersects, [item => Utils.lookUpElement(item.object) instanceof Area], ['asc']);
+    const mesh = orderedAllIntersects[0]?.object;
+    const point = orderedAllIntersects[0]?.point;
     return { mesh, point };
   }
 

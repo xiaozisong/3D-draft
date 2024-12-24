@@ -7,6 +7,8 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { EditBar } from "./editBar";
 import styles from "./index.less";
 import ToolBar from "./toolbar";
+import { Utils } from '@/engine/utils';
+
 const { Title } = Typography;
 
 export default function Scene() {
@@ -21,6 +23,9 @@ export default function Scene() {
   // 初始化3D场景
   useLayoutEffect(() => {
     const container = ref.current;
+    if (sceneData?.version !== VERSION) {
+      return;
+    }
     if (container && !ready) {
       engine.initDom(container);
       engine.controller.post?.initPostRender();

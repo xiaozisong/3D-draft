@@ -10,12 +10,30 @@ export class Setting {
     activeElementKeys: [],
     editbarPosition: { x: 0, y: 0 },
     editbarVisible: false,
+    gridSize: 16,
   }
 
   store = new Store<SettingStore>(this.initialData)
 
   constructor(private engine: Render) {
 
+  }
+
+  applySetting(settings: SettingStore) {
+    const me = this;
+    me.store.setState(settings);
+    const entries = Object.entries(settings);
+    for(const [key, value] of entries) {
+      me.changeSetting(key, value);
+    }
+  }
+
+  changeSetting(type: string, value: any) {
+    const me = this;
+    if (type === 'gridSize') {
+      me.engine.sceneController.updateGround(value);
+    }
+    me.store.setState({ [type]: value });
   }
 
   // 更新编辑栏位置

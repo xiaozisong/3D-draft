@@ -24,6 +24,11 @@ export interface ElementData {
   options: CubeOptions | CylinderOptions | TextOptions | AreaOptions | IconOptions | LineOptions | PointOptions,
 }
 
+export interface SceneData {
+  elements: ElementData[],
+  settings: any,
+}
+
 export enum LineActionStatus {
   // 空闲状态
   idle,

@@ -21,9 +21,9 @@ export class Camera {
     const aspect = width / height;
     const d = 7;
     // 创建正交相机
-    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 10000);
+    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.01, 10000);
     this.camera = camera;
-    camera.position.set(10, 10, 10);
+    camera.position.set(100, 100, 100);
 
     camera.updateProjectionMatrix();
 

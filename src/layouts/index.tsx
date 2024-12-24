@@ -21,7 +21,7 @@ export default function Layout() {
   }, []);
 
   const handleLoadDemoData = useCallback(() => {
-    engine.controller.data?.setData(elementsData);
+    engine.controller.data?.setData(elementsData.elements);
   }, []);
 
   const handleClear = useCallback(() => {

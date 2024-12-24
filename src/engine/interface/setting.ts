@@ -7,4 +7,6 @@ export interface SettingStore {
   editbarPosition: { x: number, y: number };
   // 编辑条是否显示
   editbarVisible: boolean;
+  // 网格大小
+  gridSize: number;
 }

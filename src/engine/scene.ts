@@ -11,17 +11,28 @@ export class Scene {
   // 轨道控制器
   controls?: OrbitControls;
 
+  // 网格磁吸点
+  gridPoints: THREE.Vector3[] = [];
+
   // 地面
   plane?: THREE.Plane;
 
-  gridPoints: THREE.Vector3[] = [];
+  // 地面几何体厚度
+  thickness = 0.1;
+
+  // 地面几何体
+  ground?: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[], THREE.Object3DEventMap>;
+
+  gridHelper1?: THREE.GridHelper;
+
+  gridHelper2?: THREE.GridHelper;
 
   constructor(private engine: Render) {
     // this.scene.background = new THREE.Color(0x000000);
 
-    this.initGridHelper();
-    this.initGround();
-    this.initControls();
+    this.addGridHelper();
+    this.addGround();
+    this.addControls();
     // this.initAxesHelper();
     // this.initLight();
   }
@@ -33,10 +44,9 @@ export class Scene {
   }
 
   // 初始化地面
-  initGround() {
+  addGround() {
     var width = 16;
     var height = 16;
-    var thickness = 0.1; // 厚度
 
     var material = [
       new THREE.MeshBasicMaterial({ color: SIDE_DARK_COLOR }), // 前面
@@ -47,28 +57,40 @@ export class Scene {
       new THREE.MeshBasicMaterial({ color: 'yellow' }), // 右面
     ];
 
-    const plane = new THREE.Mesh(
-      new THREE.BoxGeometry(width, height, thickness),
+    const ground = new THREE.Mesh(
+      new THREE.BoxGeometry(width, height, this.thickness),
       // new THREE.MeshPhongMaterial({
       //   color: 0x999999,
       // })
       material
     );
-    plane.name = "plane"
-    plane.rotation.x = -Math.PI / 2;
-    plane.position.y = -0.06
-    plane.userData.isGround = true;
+    ground.name = "plane"
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -0.06
+    ground.userData.isGround = true;
+    this.ground = ground;
     var planeFace = new THREE.Plane(new THREE.Vector3(0, 1, 0));
     // this.ground = planeFace;
     this.plane = planeFace;
-    this.scene.add(plane);
+    this.scene.add(ground);
+  }
+
+  // 更新地面
+  updateGround(gridSize: number) {
+    const me = this;
+    if (!me.ground) { return; }
+    const new_geometry = new THREE.BoxGeometry(gridSize, gridSize, me.thickness);
+    me.ground.geometry.dispose();
+    me.ground.geometry = new_geometry;
+    me.ground.geometry.translate(0, me.thickness / 2, 0);
+    me.updateGridHelper();
   }
 
   // 初始化网格帮助器
-  initGridHelper() {
+  addGridHelper() {
     const me = this;
     // 尺寸
-    const size = 16;
+    const size = me.engine.controller?.setting?.store?.getState()?.gridSize || 16;
     // 间隔
     const gap = 1;
     // 吸附点细分
@@ -80,20 +102,20 @@ export class Scene {
     const grid1Color = 0xEEEEEE;
     const grid2Color = 0xbbbbbb;
     // 第一个grid是下面的灰色网格
-    const gridHelper1 = new THREE.GridHelper(size, size * 2, grid1Color, grid1Color);
-    this.scene.add(gridHelper1);
+    me.gridHelper1 = new THREE.GridHelper(size, size * 2, grid1Color, grid1Color);
+    this.scene.add(me.gridHelper1);
 
-    gridHelper1.position.y = -0.008;
+    me.gridHelper1.position.y = -0.008;
     // 第二个是上面的黑色网格
-    const gridHelper2 = new THREE.GridHelper(size, size, grid2Color, grid2Color);
-    this.scene.add(gridHelper2);
+    me.gridHelper2 = new THREE.GridHelper(size, size, grid2Color, grid2Color);
+    this.scene.add(me.gridHelper2);
 
     for (let i = -gridSize / 2; i <= gridSize / 2; i++) {
       for (let j = -gridSize / 2; j <= gridSize / 2; j++) {
         gridPoints.push(new THREE.Vector3(i * gridSpacing, 0, j * gridSpacing));
       }
     }
-    this.gridPoints = gridPoints;
+    me.gridPoints = gridPoints;
 
     // 可视化磁吸点
     // const pointsGroup = new THREE.Group();
@@ -113,6 +135,19 @@ export class Scene {
     // this.scene.add(pointsGroup);
   }
 
+  // 更新网格帮助器
+  updateGridHelper() {
+    const me = this;
+    if (!me.gridHelper1 || !me.gridHelper2) { return; }
+
+    me.scene.remove(me.gridHelper1);
+    me.scene.remove(me.gridHelper2);
+    me.gridHelper1.geometry.dispose();
+    me.gridHelper2.geometry.dispose();
+
+    me.addGridHelper();
+  }
+
   // 初始化光
   initLight() {
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0000ff, 1);
@@ -129,7 +164,7 @@ export class Scene {
   }
 
   // 初始化轨道控制器
-  initControls() {
+  addControls() {
     const camera = this.engine.cameraController.camera;
     if (!camera) {
       return;

@@ -31,9 +31,13 @@ export class Data {
   // 保存
   save() {
     const me = this;
-    const data = this.engine.controller.element?.getData();
-    console.log('data', data)
-    localStorage.setItem('elements', JSON.stringify(data))
+    const elements = me.engine.controller.element?.getData();
+    const settings = me.engine.controller.setting.store.getState();
+    console.log('data', elements)
+    localStorage.setItem('isometric-3d-editor', JSON.stringify({
+      elements,
+      settings,
+    }))
     message.success("保存成功");
   }
 

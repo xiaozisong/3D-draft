@@ -3,6 +3,7 @@ import { Render } from "./render";
 import { Utils } from "./utils";
 import { Element3D } from "./interface";
 import { Line } from "./controller/element/line";
+import { Area } from "./controller/element/area";
 
 export class PickController {
   // 视窗中心位置
@@ -129,7 +130,7 @@ export class PickController {
       const intersect = allIntersects[i];
       const mesh = intersect.object;
       const element = Utils.lookUpElement(mesh);
-      if (element && !excludes.includes(element as THREE.Object3D) && !(element instanceof Line)) {
+      if (element && !excludes.includes(element as THREE.Object3D) && !(element instanceof Line) && !(element instanceof Area)) {
         targetElement = element;
         point = intersect.point;
         break;

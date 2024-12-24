@@ -1,4 +1,3 @@
-import { SIDE_DARK_COLOR, SIDE_LIGHT_COLOR, TOP_COLOR } from "@/engine/constant";
 import { Render } from "@/engine/render";
 import * as THREE from "three";
 import { Line2, LineGeometry, LineMaterial } from "three/addons";
@@ -6,6 +5,7 @@ import { Base3DObject } from "../base";
 import { Utils } from "@/engine/utils";
 import { BaseOptions } from "@/engine/interface";
 import { Point } from "../point";
+import LineSchema from "./schema";
 
 export interface LineOptions extends BaseOptions {
   points: number[],
@@ -20,11 +20,14 @@ export interface LineOptions extends BaseOptions {
 
 
 export class Line extends Base3DObject<LineOptions> {
+  static schema = LineSchema;
   name: string = '线';
   // 是否可拖拽
   dragable: boolean = false;
-  lineWdith = 0.03;
-  lineWdithActive = 0.03;
+  // 线粗
+  lineWidth = 0.03;
+  // 激活时线粗
+  lineWdithActive = this.lineWidth;
 
   // 线条实例
   line?: Line2;
@@ -32,7 +35,7 @@ export class Line extends Base3DObject<LineOptions> {
   // 材质配置
   matLineOptions = {
     color: this.defaultOutlineColor,
-    linewidth: this.lineWdith,
+    linewidth: this.lineWidth,
     worldUnits: true,
     dashed: false,
     dashSize: 0.1, // 虚线段的长度
@@ -56,12 +59,26 @@ export class Line extends Base3DObject<LineOptions> {
 
   init() {
     const me = this;
-    const { dashed } = me.options;
+    const { dashed, color, lineWidth } = me.options;
     const lineGeometry = new LineGeometry();
 
     lineGeometry.setPositions(this.options.points);
+    if (lineWidth && me.matLine) {
+      me.matLine.linewidth = lineWidth;
+      this.lineWidth = lineWidth;
+    } else {
+      me.options.lineWidth = this.matLineOptions.linewidth;
+    }
+    if (color && me.matLine) {
+      me.matLine.color.set(color);
+      me.defaultOutlineColor = color;
+    } else {
+      me.options.color = me.matLineOptions.color;
+    }
     if (dashed && me.matLine) {
       me.matLine.dashed = true;
+    } else {
+      me.options.dashed = false;
     }
 
     const line = new Line2(lineGeometry, me.matLine);
@@ -177,7 +194,34 @@ export class Line extends Base3DObject<LineOptions> {
       // 计算箭头的旋转角度
       const angle = Math.atan2(direction.x, direction.z);
       this.arrow.rotation.z = angle;
+      this.arrow.material.color.set(this.defaultOutlineColor);
     }
+  }
+
+  // 改变线条属性
+  changeProperty({ value, type }: { value: any, type: string }) {
+    if (!this.line || value === undefined) { return; }
+    if (type === 'color') {
+      value = value.toHexString();
+    }
+    this.setOptions({
+      [type]: value
+    });
+
+    const { lineWidth, dashed, color } = this.options;
+    if (!this.matLine) {
+      return;
+    }
+
+    this.matLine.linewidth = lineWidth as number;
+    this.lineWidth = lineWidth as number;
+
+    this.matLine.color.set(this.defaultOutlineColor);
+    this.defaultOutlineColor = color as string;
+
+    this.matLine.dashed = dashed as boolean;
+    this.line.computeLineDistances();
+    this.updateArrow();
   }
 
   // 设置箭头是否可见
@@ -244,7 +288,7 @@ export class Line extends Base3DObject<LineOptions> {
 
   active() {
     if (this.matLine) {
-      this.matLine.linewidth = this.lineWdithActive
+      // this.matLine.linewidth = this.lineWdithActive
       this.matLine.color.set(this.activeOutlineColor)
     }
     if (this.arrow) {
@@ -254,7 +298,7 @@ export class Line extends Base3DObject<LineOptions> {
 
   disActive() {
     if (this.matLine) {
-      this.matLine.linewidth = this.lineWdith;
+      // this.matLine.linewidth = this.lineWdith;
       this.matLine.color.set(this.defaultOutlineColor)
     }
     if (this.arrow) {

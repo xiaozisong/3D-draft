@@ -12,30 +12,31 @@ export class Events {
   pointdown(event: MouseEvent) {
     const me = this;
     event.preventDefault();
-    const { element, point } = me.engine.pickController.pickToPickableElement(event);
-    const oldActiveObject = me.engine.controller.action.select.activeElement;
-    if (!element) {
-      // 取消选中
-      me.engine.controller.action.select.cancelSelectObject();
-    } else {
-      // 如果已经是新增点模式，则开始新增点
-      if (element && element instanceof Line && oldActiveObject && me.engine.controller.action.line.status === LineActionStatus.addPoint) {
-        me.engine.controller.action.line.addPoint(event);
+    if (event.button === 0) {
+      const { element, point } = me.engine.pickController.pickToPickableElement(event);
+      const oldActiveObject = me.engine.controller.action.select.activeElement;
+      if (!element) {
+        // 取消选中
+        me.engine.controller.action.select.cancelSelectObject();
+      } else {
+        // 如果已经是新增点模式，则开始新增点
+        if (element && element instanceof Line && oldActiveObject && me.engine.controller.action.line.status === LineActionStatus.addPoint) {
+          me.engine.controller.action.line.addPoint(event);
+          return;
+        }
+        // 选中
+        me.engine.controller.action.select.selectObject(element, event);
+      }
+      // 如果选中的是线条，则进入线条的新增点模式
+      if (element && element instanceof Line) {
+        me.engine.controller.action.line.status = LineActionStatus.addPoint;
         return;
       }
-      // 选中
-      me.engine.controller.action.select.selectObject(element, event);
-    }
-
-    // 如果选中的是线条，则进入线条的新增点模式
-    if (element && element instanceof Line) {
-      me.engine.controller.action.line.status = LineActionStatus.addPoint;
-      return;
-    }
-    // 绘制连线
-    if (me.engine.controller.action.line.status === LineActionStatus.create) {
-      me.engine.controller.action.line.addingLinePoint();
-      return;
+      // 绘制连线
+      if (me.engine.controller.action.line.status === LineActionStatus.create) {
+        me.engine.controller.action.line.addingLinePoint();
+        return;
+      }
     }
   }
 

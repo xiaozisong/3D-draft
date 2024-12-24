@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { Render } from "./render";
 import { Utils } from "./utils";
+import { Element3D } from "./interface";
+import { Line } from "./controller/element/line";
 
 export class PickController {
   // 视窗中心位置
@@ -113,5 +115,29 @@ export class PickController {
       return intersects[0].point;
     }
     return null;
+  }
+
+  // 优先拾取物体，拾取不到物体则拾取平面，排除exclude
+  pickToPointFromElementOrPlane(event: MouseEvent, excludes: THREE.Object3D<THREE.Object3DEventMap>[]): {
+    point: THREE.Vector3, isPlane: boolean
+  } {
+    const me = this;
+    let targetElement: Element3D | null = null;
+    let point: THREE.Vector3 | null = null;
+    const allIntersects = me.pick(event);
+    for (let i = 0; i < allIntersects.length; i++) {
+      const intersect = allIntersects[i];
+      const mesh = intersect.object;
+      const element = Utils.lookUpElement(mesh);
+      if (element && !excludes.includes(element as THREE.Object3D) && !(element instanceof Line)) {
+        targetElement = element;
+        point = intersect.point;
+        break;
+      }
+    }
+    if (targetElement && point) {
+      return { point, isPlane: false };
+    }
+    return { point: this.intersectPlane(event), isPlane: true };
   }
 }

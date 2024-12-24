@@ -70,13 +70,24 @@ export class SelectAction {
   // 移动物体
   moveObject(event: MouseEvent) {
     const me = this;
-    var intersectPoint = me.engine.pickController.intersectPlane(event);
+    if (me.dragObject === undefined) { return; }
+    var { point: intersectPoint, isPlane } = me.engine.pickController.pickToPointFromElementOrPlane(event, [me.dragObject]);
+    // var intersectPoint = me.engine.pickController.intersectPlane(event);
     if (!intersectPoint || !me.dragObject?.dragable) { return }
-    const tempVector = new THREE.Vector3(intersectPoint.x - me.dragDeltaToCenter.x, 0, intersectPoint.z - me.dragDeltaToCenter.z);
-    const targetPoint = Utils.findNearestPoint(tempVector, this.engine.sceneController.gridPoints);
+    // const tempVector = new THREE.Vector3(intersectPoint.x - me.dragDeltaToCenter.x, 0, intersectPoint.z - me.dragDeltaToCenter.z);
+    // const targetPoint = Utils.findNearestPoint(tempVector, this.engine.sceneController.gridPoints);
+    let targetPoint = new THREE.Vector3(
+      intersectPoint.x - me.dragDeltaToCenter.x,
+      intersectPoint.y - me.dragDeltaToCenter.y,
+      intersectPoint.z - me.dragDeltaToCenter.z
+    );
+    if (isPlane) {
+      targetPoint = Utils.findNearestPoint(targetPoint, this.engine.sceneController.gridPoints);
+    }
     if (!(me.dragObject instanceof THREE.Line)) {
       me.dragObject.position.x = targetPoint.x;
       me.dragObject.position.z = targetPoint.z;
+      me.dragObject.position.y = targetPoint.y + 0.005;
       // 更新关联线
       me.engine.controller.action.line.updateLinkLine(me.dragObject);
       // 更新关联文字

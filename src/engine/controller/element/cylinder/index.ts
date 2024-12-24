@@ -67,6 +67,7 @@ export class Cylinder extends Unit3DObject<CylinderOptions> {
 
     this.position.x = me.options.x;
     this.position.z = me.options.z;
+    this.position.y = me.options.y || this.groundGap;
 
     this.rotateY(180 / radialSegments * Math.PI / 180); // 绕y轴旋转45度
 
@@ -74,7 +75,6 @@ export class Cylinder extends Unit3DObject<CylinderOptions> {
 
     this.addLine();
     me.add(cylinder);
-    this.position.y = this.groundGap
   }
 
   addLine() {

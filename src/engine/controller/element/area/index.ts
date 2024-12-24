@@ -61,7 +61,7 @@ export class Area extends Unit3DObject<AreaOptions> {
 
   init() {
     const me = this;
-    const { x, z, color, width, height, length, opacity = 0.5 } = me.options
+    const { x, z, y, color, width, height, length, opacity = 0.5 } = me.options
     this.position.x = x;
     this.position.z = z;
 

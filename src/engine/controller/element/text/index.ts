@@ -12,6 +12,7 @@ import { Utils } from "@/engine/utils";
 export interface TextOptions extends BaseOptions {
   x: number,
   z: number,
+  y: number,
   text: string,
   color: string,
   fontSize: number,
@@ -51,7 +52,7 @@ export class Text extends Unit3DObject<TextOptions> {
 
   init() {
     const me = this;
-    const { x, z, text: textContent = 'default text', color, fontSize, fontWeight, lineHeight = 1.5 } = me.options;
+    const { x, z, y, text: textContent = 'default text', color, fontSize, fontWeight, lineHeight = 1.5 } = me.options;
 
     let text = new TextMesh();
     text.font = 'MicrosoftYahei.woff';
@@ -71,11 +72,11 @@ export class Text extends Unit3DObject<TextOptions> {
     this.add(text);
     
     this.text = text;
-    this.position.y = this.groundGap;
     this.text.rotation.x = - Math.PI / 2;
 
     this.position.x = x;
     this.position.z = z;
+    this.position.y = y || this.groundGap;
 
   }
 
@@ -205,7 +206,7 @@ export class Text extends Unit3DObject<TextOptions> {
     const me = this;
     const position = me?.position
     if (!position) return;
-    const { x, z } = position;
+    const { x, z, y } = position;
     return {
       type: 'text',
       key: me.key,
@@ -213,6 +214,7 @@ export class Text extends Unit3DObject<TextOptions> {
         ...me.options,
         x,
         z,
+        y,
         content: me.text?.text,
         color: me.text?.color,
         fontSize: me.text?.fontSize,

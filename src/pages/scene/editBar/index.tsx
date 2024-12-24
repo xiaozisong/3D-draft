@@ -1,4 +1,4 @@
-import { EditOutlined, RiseOutlined, StockOutlined } from "@ant-design/icons";
+import { EditOutlined, RiseOutlined, StockOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Space, Button, Tooltip } from "antd";
 import styles from "./index.less";
 import { useEngine } from "@/engine";
@@ -27,6 +27,11 @@ export const EditBar = () => {
   const handleAddText = useCallback(() => {
     engine.controller.action.text.addTextForActiveElement();
   }, []);
+
+  // 删除选中元素
+  const handleDelete = useCallback(() => {
+    engine.controller.element.removeSelectedElement();
+  }, [])
 
   if (!editbarVisible) {
     return null;
@@ -62,6 +67,18 @@ export const EditBar = () => {
           shape='circle'
           icon={<EditOutlined />}
           onClick={handleAddText.bind(null)}
+        />
+      </Tooltip>
+      <Tooltip
+        title='删除'
+        placement='right'
+      >
+        <Button
+          type='primary'
+          danger
+          shape='circle'
+          icon={<DeleteOutlined />}
+          onClick={handleDelete.bind(null)}
         />
       </Tooltip>
     </Space>

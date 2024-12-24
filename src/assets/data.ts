@@ -158,7 +158,6 @@ export default [
           "key": "-dbj1Uw4Cd3-FRZ5ey3B2",
           "linkLineKeys": [
               "GYNuD5biX0nlZ0Yw0GZHA",
-              "523RcbiBp3nGJMbnm8mL1",
               "jxFzU-BllTMX0giKqR83q"
           ]
       }
@@ -196,7 +195,6 @@ export default [
           "linkTextKey": "ju7H2ZjFflHOY8ZsLiUMT",
           "key": "CkGWgUkLw-lJvb3pAhXw_",
           "linkLineKeys": [
-              "523RcbiBp3nGJMbnm8mL1",
               "jxFzU-BllTMX0giKqR83q",
               "Xlj97sR_CmqiJKBQtDmvk"
           ]
@@ -487,6 +485,21 @@ export default [
       }
   },
   {
+      "key": "EXfS7rhqUig7oaY4mMMQc",
+      "type": "text",
+      "options": {
+          "x": -0.25,
+          "y": 0,
+          "z": 0,
+          "text": "示例DEMO",
+          "color": "#ff6f00",
+          "fontSize": 0.4,
+          "fontWeight": "bold",
+          "lineHeight": 1.5,
+          "key": "EXfS7rhqUig7oaY4mMMQc"
+      }
+  },
+  {
       "key": "Az33lzi9lbiN3AeDBXoCG",
       "type": "line",
       "options": {
@@ -565,24 +578,6 @@ export default [
       }
   },
   {
-      "key": "523RcbiBp3nGJMbnm8mL1",
-      "type": "line",
-      "options": {
-          "points": [
-              3,
-              0.01,
-              -2.5,
-              3,
-              0.01,
-              1.75
-          ],
-          "startElementKey": "-dbj1Uw4Cd3-FRZ5ey3B2",
-          "endElementKey": "CkGWgUkLw-lJvb3pAhXw_",
-          "showArrow": true,
-          "key": "523RcbiBp3nGJMbnm8mL1"
-      }
-  },
-  {
       "key": "jxFzU-BllTMX0giKqR83q",
       "type": "line",
       "options": {
@@ -631,10 +626,10 @@ export default [
               4.25,
               -5.75,
               0.009999995369424752,
-              3.25,
+              3,
               -4.5,
               0.009999987958094536,
-              3.25,
+              3,
               -4.5,
               0.01,
               1.5
@@ -655,10 +650,10 @@ export default [
               4.25,
               -2.25,
               0,
-              3.25,
+              3,
               -4.5,
               0.002426221292145314,
-              3.25,
+              3,
               -4.5,
               0.01,
               1.5
@@ -751,20 +746,6 @@ export default [
           "endElementKey": "iMJnLFWY6iU3TFi9asGgJ",
           "showArrow": true,
           "key": "Xlj97sR_CmqiJKBQtDmvk"
-      }
-  },
-  {
-      "key": "EXfS7rhqUig7oaY4mMMQc",
-      "type": "text",
-      "options": {
-          "x": -0.25,
-          "y": 0,
-          "z": 0,
-          "text": "示例DEMO",
-          "color": "#ff6f00",
-          "fontSize": 0.4,
-          "fontWeight": "bold",
-          "lineHeight": 1.5
       }
   }
 ]

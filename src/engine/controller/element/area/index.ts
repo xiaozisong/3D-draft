@@ -50,15 +50,6 @@ export class Area extends Unit3DObject<AreaOptions> {
     this.init();
   };
 
-  getColor() {
-    const color = this.options.color || TOP_COLOR;
-    const topColor = color;
-    const sideColorZ = Utils.Color.darkenColor(color, 10);
-    const sideColorX = Utils.Color.darkenColor(color, 20);
-    const otherColor = Utils.Color.darkenColor(color, 30);
-    return { topColor, sideColorZ, sideColorX, otherColor };
-  }
-
   init() {
     const me = this;
     const { x, z, y, color, width, height, length, opacity = 0.5 } = me.options

@@ -90,6 +90,9 @@ export class Camera {
       this?.camera.position.set(0, 10, 0);
     }
     this?.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.engine.controller.setting.store.setState({
+      isIsometricView
+    })
   }
 
   // 切换正交相机或者透视相机
@@ -119,6 +122,10 @@ export class Camera {
       controls.maxPolarAngle = Math.PI / 2 - 0.1;
     }
     this.updateCamera();
+
+    this.engine.controller.setting.store.setState({
+      cameraType: isPerspectiveCamera ? 'perspectiveCamera' : 'orthographicCamera'
+    });
   }
 
 }

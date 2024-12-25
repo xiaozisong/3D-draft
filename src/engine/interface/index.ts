@@ -13,6 +13,7 @@ export interface BaseOptions {
   x?: number,
   z?: number,
   y?: number,
+  color?: string,
   linkLineKeys?: string[],
   linkTextKey?: string,
 }

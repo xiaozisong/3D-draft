@@ -133,6 +133,7 @@ export class LineAction {
     const lineElement = me.engine.controller.element.addElement({
       type: 'line',
       options: {
+        name: '折线',
         points: points.slice(0, points.length - 3),
         startElementKey: originElement.key,
         endElementKey: this.targetElement?.key,
@@ -159,9 +160,10 @@ export class LineAction {
       const oldLinkLineKeys = targetElementOptions.linkLineKeys || [];
       this.targetElement.setOptions({
         linkLineKeys: [...oldLinkLineKeys, lineElement.key]
-      })
+      });
     }
-
+    
+    me.engine.controller.element.refreshElementList();
     me.reset();
   };
 

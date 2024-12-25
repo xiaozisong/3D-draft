@@ -1,4 +1,4 @@
-export default {
+export  default {
   "elements": [
       {
           "key": "cKaLf1bNsoVhVdDAk97tr",
@@ -10,7 +10,7 @@ export default {
               "length": 3,
               "width": 1,
               "height": 0.5,
-              "color": "#3e8624",
+              "color": "#bfd1ff",
               "linkTextKey": "FHJcdmyv-Fu-1h9v7hrEd",
               "linkLineKeys": [
                   "Az33lzi9lbiN3AeDBXoCG",
@@ -119,12 +119,12 @@ export default {
           "type": "cube",
           "options": {
               "x": -4.5,
-              "y": 0.01,
+              "y": 0.005,
               "z": -2.5,
               "length": 3,
               "width": 1,
               "height": 0.5,
-              "color": "#d5d5ff",
+              "color": "#ffffff",
               "linkTextKey": "j0bdEKthpUnDLCa86qwTX",
               "linkLineKeys": [
                   "EU55dte3XqwQWoAJRGx6r",
@@ -151,7 +151,7 @@ export default {
                   "z": 0.014274973939070179
               },
               "key": "j0bdEKthpUnDLCa86qwTX",
-              "y": 0.5250000000000018,
+              "y": 0.5200000000000018,
               "name": "文字"
           }
       },
@@ -288,7 +288,7 @@ export default {
               "length": 3,
               "width": 1,
               "height": 0.5,
-              "color": "#3e8624",
+              "color": "#b2cfff",
               "linkTextKey": "goJ7HNM6XDvs2RefvBDJw",
               "key": "RrfLQUa4HfdIOTG0s5ltH",
               "linkLineKeys": [
@@ -330,7 +330,7 @@ export default {
               "length": 2,
               "width": 1,
               "height": 0.5,
-              "color": "#d3d3ff",
+              "color": "#ffffff",
               "linkTextKey": "PB2jlPere-eDh_tjlFkAe",
               "key": "cZc5ZwoohORcW__eL4Gz1",
               "linkLineKeys": [
@@ -408,14 +408,17 @@ export default {
           "type": "cylinder",
           "options": {
               "x": -3.75,
-              "y": 0,
+              "y": 0.01,
               "z": 6.25,
               "linkTextKey": "W7g9tQ0RK6HSOG9bcX8CE",
               "key": "IeGX0RI3NCN5P9oXvNIvV",
               "linkLineKeys": [
                   "L_jZXxC7EijRfs1-aztJ6"
               ],
-              "name": "棱柱体"
+              "name": "棱柱体",
+              "radius": 0.5,
+              "height": 0.5,
+              "color": "#f8f8ff"
           }
       },
       {
@@ -444,34 +447,37 @@ export default {
           "type": "cylinder",
           "options": {
               "x": -0.75,
-              "y": 0,
+              "y": 0.005,
               "z": 6.25,
               "linkTextKey": "u3bt0zMWtS5w_WK4K_Xyo",
               "key": "3O8YB6ifFGKQL7FSRZdWf",
               "linkLineKeys": [
                   "l74ULe5U_TcAyiSAsPuSw"
               ],
-              "name": "棱柱体"
+              "name": "棱柱体321312",
+              "radius": 0.5,
+              "height": 0.5,
+              "color": "#f7f4fd"
           }
       },
       {
           "key": "u3bt0zMWtS5w_WK4K_Xyo",
           "type": "text",
           "options": {
-              "x": -0.7529948821999126,
-              "z": 6.25305393044929,
+              "x": -0.7363554445444676,
+              "z": 6.261023729260204,
               "text": "MOM",
               "color": "#000000",
               "fontSize": 0.3,
               "lineHeight": 1.5,
               "linkElementKey": "3O8YB6ifFGKQL7FSRZdWf",
               "linkElementRelactionPosition": {
-                  "x": -0.0029948821999126185,
-                  "y": 0.515,
-                  "z": 0.003053930449289588
+                  "x": 0.013644555455532448,
+                  "y": 0.5099999999999991,
+                  "z": 0.011023729260204007
               },
               "key": "u3bt0zMWtS5w_WK4K_Xyo",
-              "y": 0.525,
+              "y": 0.5149999999999991,
               "name": "文字"
           }
       },
@@ -567,7 +573,7 @@ export default {
           "options": {
               "points": [
                   -4.5,
-                  0.01,
+                  0.005,
                   -2.5,
                   -4.5,
                   0.01,
@@ -614,7 +620,7 @@ export default {
           "options": {
               "points": [
                   -4.5,
-                  0.01,
+                  0.005,
                   -2.5,
                   -4.5,
                   0,
@@ -764,7 +770,7 @@ export default {
           "options": {
               "points": [
                   -0.75,
-                  0.01,
+                  0.005,
                   6.25,
                   -2.25,
                   0.01,
@@ -844,6 +850,9 @@ export default {
           "y": 0
       },
       "editbarVisible": false,
-      "gridSize": 50
-  }
+      "gridSize": 36,
+      "cameraType": "orthographicCamera",
+      "isIsometricView": true
+  },
+  "version": "0.0.1"
 }

@@ -1,6 +1,8 @@
 import { Render } from "@/engine/render";
 import { BaseOptions } from "@/engine/interface";
 import { Base3DObject } from "../base";
+import { TOP_COLOR } from "@/engine/constant";
+import { Utils } from "@/engine/utils";
 
 export class Unit3DObject<OptionsType extends BaseOptions> extends Base3DObject<OptionsType> {
 
@@ -16,6 +18,16 @@ export class Unit3DObject<OptionsType extends BaseOptions> extends Base3DObject<
     } as Partial<OptionsType>;
     me.setOptions(newOptions);
     me.engine.controller.element.refreshElementList();
+  }
+
+  // 生成面的颜色
+  getColor() {
+    const color = this.options.color || TOP_COLOR;
+    const topColor = color;
+    const sideColorZ = Utils.Color.darkenColor(color, 10);
+    const sideColorX = Utils.Color.darkenColor(color, 11);
+    const otherColor = Utils.Color.darkenColor(color, 12);
+    return { topColor, sideColorX, sideColorZ, otherColor };
   }
 
   destroy(): void {

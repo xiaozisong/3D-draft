@@ -15,13 +15,14 @@ export class TextAction {
     if (!activeElement || activeElement.options.linkTextKey) {
       return;
     }
-    const { z: length } = Utils.getGroupSize(activeElement);
+    const { z: length, y } = Utils.getGroupSize(activeElement);
     const position = activeElement.position;
     const text = this.engine.controller.element.addElement({
       type: 'text',
       options: {
         x: position.x,
         z: position.z + length / 2 + 0.25,
+        y,
         text: activeElement.name,
         color: 'red',
         fontSize: 0.5,

@@ -9,4 +9,8 @@ export interface SettingStore {
   editbarVisible: boolean;
   // 网格大小
   gridSize: number;
+  // 相机类型
+  cameraType: string;
+  // 轴侧展示
+  isIsometricView: boolean;
 }

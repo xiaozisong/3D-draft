@@ -18,7 +18,6 @@ export interface CubeOptions extends BaseOptions {
   color?: string,
 }
 
-
 export class Cube extends Unit3DObject<CubeOptions> {
   static schema = CubeSchema;
   name: string = '立方体';
@@ -45,15 +44,6 @@ export class Cube extends Unit3DObject<CubeOptions> {
   constructor(engine: Render, options: CubeOptions) {
     super(engine, options);
     this.init();
-  }
-
-  getColor() {
-    const color = this.options.color || TOP_COLOR;
-    const topColor = color;
-    const sideColorZ = Utils.Color.darkenColor(color, 10);
-    const sideColorX = Utils.Color.darkenColor(color, 20);
-    const otherColor = Utils.Color.darkenColor(color, 30);
-    return { topColor, sideColorZ, sideColorX, otherColor };
   }
 
   init() {
@@ -199,14 +189,14 @@ export class Cube extends Unit3DObject<CubeOptions> {
       [type]: color
     });
     if (!this.cube) { return; }
-    const { topColor, sideColorZ, sideColorX } = me.getColor();
+    const { topColor, sideColorZ, sideColorX, otherColor } = me.getColor();
     const newMaterial = [
       new THREE.MeshBasicMaterial({ color: sideColorX }), // 前面
-      new THREE.MeshBasicMaterial({ color: 'green' }), // 后面
+      new THREE.MeshBasicMaterial({ color: otherColor }), // 后面
       new THREE.MeshBasicMaterial({ color: topColor }), // 顶面
-      new THREE.MeshBasicMaterial({ color: 'blue' }), // 底面
+      new THREE.MeshBasicMaterial({ color: otherColor }), // 底面
       new THREE.MeshBasicMaterial({ color: sideColorZ }), // 左面
-      new THREE.MeshBasicMaterial({ color: 'purple' }) // 右面
+      new THREE.MeshBasicMaterial({ color: otherColor }) // 右面
     ];
     this.cube.material.forEach((mat) => {
       mat.dispose();

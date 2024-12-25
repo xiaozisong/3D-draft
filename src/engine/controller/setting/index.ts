@@ -3,7 +3,7 @@ import { SettingStore } from "@/engine/interface/setting";
 import { Render } from "@/engine/render";
 import { Utils } from "@/engine/utils";
 import { Line } from '../element/line';
-import { omit } from "lodash";
+import { pick } from "lodash";
 
 export class Setting {
   initialData: SettingStore = {
@@ -11,9 +11,15 @@ export class Setting {
     editbarPosition: { x: 0, y: 0 },
     editbarVisible: false,
     gridSize: 16,
+    cameraType: 'orthographicCamera',
+    // 轴侧显示
+    isIsometricView: true,
   }
 
-  store = new Store<SettingStore>(this.initialData)
+  store = new Store<SettingStore>(this.initialData);
+
+  // 回灌时需要排除的字段
+  applyKeys = ['gridSize'];
 
   constructor(private engine: Render) {
 
@@ -21,9 +27,9 @@ export class Setting {
 
   applySetting(settings: SettingStore) {
     const me = this;
-    const data = omit(settings, ['activeElementKeys', 'editbarPosition', 'editbarVisible']);
+    const data = pick(settings, this.applyKeys);
     me.store.setState(data);
-    const entries = Object.entries(settings);
+    const entries = Object.entries(data);
     for(const [key, value] of entries) {
       me.changeSetting(key, value);
     }

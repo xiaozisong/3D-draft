@@ -2,6 +2,7 @@ import { Element3D } from "@/engine/interface";
 import { ColorPicker, Form, FormProps, Input, InputNumber, Checkbox } from "antd";
 import { isEmpty } from "lodash";
 import React from "react";
+import IconSelect from "../iconselect";
 
 const componentMap: Record<string, React.FC<any>> = {
   Input,
@@ -9,6 +10,7 @@ const componentMap: Record<string, React.FC<any>> = {
   ColorPicker,
   TextArea: Input.TextArea,
   Checkbox,
+  IconSelect,
 };
 
 export type Value = any;

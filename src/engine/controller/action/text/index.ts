@@ -20,9 +20,10 @@ export class TextAction {
     const text = this.engine.controller.element.addElement({
       type: 'text',
       options: {
+        name: '文字',
         x: position.x,
         z: position.z + length / 2 + 0.25,
-        y,
+        y: position.y,
         text: activeElement.name,
         color: 'red',
         fontSize: 0.5,
@@ -36,6 +37,7 @@ export class TextAction {
       linkElementKey: activeElement.key,
     })
     this.updateTextRelactionPosition(text);
+    this.engine.controller.element.refreshElementList();
   }
   
   // 更新文字

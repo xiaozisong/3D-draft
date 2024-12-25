@@ -83,6 +83,7 @@ export class Text extends Unit3DObject<TextOptions> {
 
   addOutLine() {
     const me = this;
+    if (!this.text) { return; }
     const boundingBox = this.text.geometry.boundingBox;
     const { max, min } = boundingBox
     const padding = (max.x - min.x) / 10;
@@ -105,6 +106,7 @@ export class Text extends Unit3DObject<TextOptions> {
   updateOutLine() {
     const me = this;
     if (!me.line) { return; }
+    if (!this.text) { return; }
     const boundingBox = this.text.geometry.boundingBox;
     const { max, min } = boundingBox;
     const padding = (max.x - min.x) / 10;

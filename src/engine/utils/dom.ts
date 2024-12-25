@@ -12,4 +12,24 @@ export class Dom {
       return false;
     }
   }
+  
+  /**
+   * 获取SVG的宽高
+   * 
+   * @static
+   * @param {SVGElement} svgData
+   * @returns
+   * 
+   * @memberOf Dom
+   */
+  static getSVGWidth(svgData: SVGElement) {
+    const viewBox = svgData.getAttribute('viewBox');
+    if (!viewBox) {
+      return { width: 0, height: 0 };
+    }
+    const viewBoxValues = viewBox.split(' ');
+    const viewBoxWidth = viewBoxValues[2];
+    const viewBoxHeight = viewBoxValues[3];
+    return { width: parseFloat(viewBoxWidth), height: parseFloat(viewBoxHeight) };
+  }
 }

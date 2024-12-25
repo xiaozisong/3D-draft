@@ -37,10 +37,10 @@ export class Setting {
 
   changeSetting(type: string, value: any) {
     const me = this;
+    me.store.setState({ [type]: value });
     if (type === 'gridSize') {
       me.engine.sceneController.updateGround(value);
     }
-    me.store.setState({ [type]: value });
   }
 
   // 更新编辑栏位置

@@ -1,20 +1,12 @@
-import styles from "./index.less";
-import { Typography } from "antd";
-import SideMenu from "./sidemenu";
-import Scene from "./scene";
-import ProtoPanel from "./protopanel";
-import { useEngine } from "../engine";
-import useKeyPressEffect from "./useKeyPress";
-import { useStore } from "@/components/store/useStore";
-import { isEmpty } from "lodash";
-import RightPanel from "./rightpanel";
 import SplitPane from "react-split-pane";
-const { Title } = Typography;
+import styles from "./index.less";
+import RightPanel from "./rightpanel";
+import Scene from "./scene";
+import SideMenu from "./sidemenu";
+import useKeyPressEffect from "./useKeyPress";
+import { HomeOutlined } from "@ant-design/icons";
 
 export default function HomePage() {
-
-  const engine = useEngine();
-  const [{ activeElementKeys }] = useStore(engine.controller.setting.store, ["activeElementKeys"]);
 
   useKeyPressEffect();
 

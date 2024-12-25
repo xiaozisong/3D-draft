@@ -1,10 +1,9 @@
-import { Space, Switch, Button, Input, InputNumber, Popover, Tooltip} from "antd";
-import styles from "./index.less";
-import { useCallback, useMemo } from "react";
-import { useEngine } from "@/engine";
-import { TableOutlined } from "@ant-design/icons";
 import { useStore } from "@/components/store/useStore";
-import { div } from "three/examples/jsm/nodes/Nodes.js";
+import { useEngine } from "@/engine";
+import { TableOutlined, CameraOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import { Space, Switch, Button, Input, InputNumber, Popover, Tooltip} from "antd";
+import { useCallback, useMemo } from "react";
+import styles from "./index.less";
 
 export default function Toolbar() {
   const engine = useEngine();
@@ -12,12 +11,16 @@ export default function Toolbar() {
   const [{ gridSize }] = useStore(engine.controller.setting.store, ['gridSize']);
 
   const handle2DChange = useCallback((checked: boolean) => {
-    engine.cameraController.toogleCamera(checked);
+    engine.cameraController.toogleIsometricView(checked);
   }, []);
 
   const handleSizeChange = useCallback((size: number | null) => {
     engine.controller.setting.changeSetting('gridSize', size || 1);
   }, []);
+
+  const handleCameraChange = useCallback((checked: boolean) => {
+    engine.cameraController.toogleCamera(checked);
+  }, [])
 
   const sizeForm = useMemo(() => {
     return (
@@ -50,6 +53,12 @@ export default function Toolbar() {
             icon={<TableOutlined />}
           />
         </Popover>
+        <Switch
+          checkedChildren={<VideoCameraOutlined />}
+          unCheckedChildren={<CameraOutlined />}
+          defaultChecked={false}
+          onChange={handleCameraChange}
+        />
         <Switch
           checkedChildren='3D'
           unCheckedChildren='2D'

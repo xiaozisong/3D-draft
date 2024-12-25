@@ -1,6 +1,7 @@
 import { LineActionStatus } from "@/engine/interface";
 import { Render } from "@/engine/render";
 import { Line } from "../element/line";
+import * as THREE from "three";
 
 export class Events {
 
@@ -12,6 +13,10 @@ export class Events {
   pointdown(event: MouseEvent) {
     const me = this;
     event.preventDefault();
+    const camera = me.engine.cameraController.camera;
+    if (camera instanceof THREE.PerspectiveCamera) {
+      return;
+    }
     if (event.button === 0) {
       const { element, point } = me.engine.pickController.pickToPickableElement(event);
       const oldActiveObject = me.engine.controller.action.select.activeElement;

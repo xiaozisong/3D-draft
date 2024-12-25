@@ -3,7 +3,7 @@ import { SettingStore } from "@/engine/interface/setting";
 import { Render } from "@/engine/render";
 import { Utils } from "@/engine/utils";
 import { Line } from '../element/line';
-
+import { omit } from "lodash";
 
 export class Setting {
   initialData: SettingStore = {
@@ -21,7 +21,8 @@ export class Setting {
 
   applySetting(settings: SettingStore) {
     const me = this;
-    me.store.setState(settings);
+    const data = omit(settings, ['activeElementKeys', 'editbarPosition', 'editbarVisible']);
+    me.store.setState(data);
     const entries = Object.entries(settings);
     for(const [key, value] of entries) {
       me.changeSetting(key, value);

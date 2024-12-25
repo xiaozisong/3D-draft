@@ -50,11 +50,11 @@ export class Scene {
 
     var material = [
       new THREE.MeshBasicMaterial({ color: SIDE_DARK_COLOR }), // 前面
-      new THREE.MeshBasicMaterial({ color: 'green' }), // 后面
-      new THREE.MeshBasicMaterial({ color: 'blue' }), // 底面
+      new THREE.MeshBasicMaterial({ color: SIDE_DARK_COLOR }), // 后面
+      new THREE.MeshBasicMaterial({ color: 0xffffff }), // 底面
       new THREE.MeshBasicMaterial({ color: SIDE_LIGHT_COLOR }), // 左面
       new THREE.MeshBasicMaterial({ color: 0xffffff }), // 顶面
-      new THREE.MeshBasicMaterial({ color: 'yellow' }), // 右面
+      new THREE.MeshBasicMaterial({ color: 0xffffff }), // 右面
     ];
 
     const ground = new THREE.Mesh(

@@ -278,6 +278,7 @@ export class Icon extends Unit3DObject<IconOptions> {
       [type]: value,
     });
     if (!me.icon) { return; }
+    this.syncPosition();
     Utils.disposeGroup(me.icon);
     me.init();
     Utils.Render.executeAfterFrames(me.updateLine.bind(me), 2);
@@ -309,7 +310,6 @@ export class Icon extends Unit3DObject<IconOptions> {
         x,
         z,
         y,
-        size: me.icon?.scale.x * 1024,
       }
     }
   }

@@ -2,6 +2,7 @@ import { Schema } from "@/components/dynamicform";
 import { Area } from ".";
 import { COLOR_PRESETS } from "@/engine/constant/color";
 import unitSchema from '../unit/schema';
+import unitPostSchema from "../unit/postschema";
 
 export default {
   properties: {
@@ -67,6 +68,7 @@ export default {
       onChange: ({ key, value, instance }) => {
         (instance as Area).changeOpacity({ value, type: key });
       }
-    }
+    },
+    ...unitPostSchema.properties,
   }
 } as Schema;

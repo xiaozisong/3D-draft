@@ -2,11 +2,25 @@ import { Schema } from "@/components/dynamicform";
 import { Icon } from ".";
 import { COLOR_PRESETS } from "@/engine/constant/color";
 import unitSchema from "../unit/schema";
+import unitPostSchema from "../unit/postschema";
+
 const iconTypeOptions = () => {
 }
 export default {
   properties: {
     ...unitSchema.properties,
+    type: {
+      type: 'string',
+      title: "类型",
+      componentType: "IconSelect",
+      props: {
+        options: [],
+        style: { width: '100%' }
+      },
+      onChange: ({ key, value, instance }) => {
+        (instance as Icon).changeType({ value, type: key });
+      }
+    },
     size: {
       type: 'number',
       title: "尺寸",
@@ -19,18 +33,6 @@ export default {
       },
       onChange: ({ key, value, instance }) => {
         (instance as Icon).changeSize({ value, type: key });
-      }
-    },
-    type: {
-      type: 'string',
-      title: "类型",
-      componentType: "IconSelect",
-      props: {
-        options: [],
-        style: { width: '100%' }
-      },
-      onChange: ({ key, value, instance }) => {
-        (instance as Icon).changeType({ value, type: key });
       }
     },
     depth: {
@@ -59,5 +61,6 @@ export default {
         (instance as Icon).changeColor({ value, type: key });
       }
     },
+    ...unitPostSchema.properties,
   },
 } as Schema

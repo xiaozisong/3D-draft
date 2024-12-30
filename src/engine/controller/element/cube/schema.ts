@@ -2,6 +2,7 @@ import { Schema } from "@/components/dynamicform";
 import { Cube } from ".";
 import { COLOR_PRESETS } from '@/engine/constant/color';
 import unitSchema from "../unit/schema";
+import unitPostSchema from "../unit/postschema";
 
 export default {
   properties: {
@@ -56,5 +57,6 @@ export default {
         (instance as Cube).changeColor({ value, type: key });
       }
     },
+    ...unitPostSchema.properties
   },
 } as Schema

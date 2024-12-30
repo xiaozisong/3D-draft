@@ -30,6 +30,18 @@ export class Unit3DObject<OptionsType extends BaseOptions> extends Base3DObject<
     return { topColor, sideColorX, sideColorZ, otherColor };
   }
 
+  // 设置离地高度
+  setPositionY({ value, type }: { value: number, type: string }) {
+    this.options.y = value
+    this.position.y = value
+  }
+  // 同步位置数据到options 
+  syncPosition(){
+    this.options.x = this.position.x
+    this.options.y = this.position.y
+    this.options.z = this.position.z
+  }
+
   destroy(): void {
     super.destroy();
   }

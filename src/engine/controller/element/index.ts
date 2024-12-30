@@ -10,6 +10,7 @@ import { Line, LineOptions } from "./line";
 import { Point } from "./point";
 import { TOP_COLOR } from "@/engine/constant";
 import { Store } from '@/components/store';
+import { Utils } from "@/engine/utils";
 
 export class Elements extends THREE.Group {
 
@@ -209,6 +210,63 @@ export class Elements extends THREE.Group {
     me.engine.controller.element.store.setState({
       elementListHash: Date.now().toString(),
     })
+  }
+
+  // 复制选中元素
+  copySelectedElement() {
+    const me = this;
+    const activeElement = me.engine.controller.action.select.activeElement;
+    if (activeElement) {
+      const data = activeElement.getData();
+      Utils.clipboard.copyToClipboard(JSON.stringify(data));
+    }
+  }
+
+  // 粘贴选中元素
+  async pasteElement() {
+    const me = this;
+    const text = await Utils.clipboard.pasteFromClipboard();
+    if (!me.verifyElementData(text)) { return; }
+    const data = JSON.parse(text) as ElementData;
+    const newElementData = me.resolvePureData(data);
+    if (newElementData) {
+      const element = me.addElement(newElementData);
+      Utils.Render.executeAfterFrames(() => {
+        if (element) {
+          me.engine.controller.action.select.activeElement = element;
+        }
+      }, 1);
+      me.refreshElementList();
+    }
+  }
+
+  // 验证是否是合法的元素数据
+  verifyElementData(text: string): boolean {
+    try {
+      const data = JSON.parse(text) as ElementData;
+      if (data.type && data.options && data.options.x && data.options.y && data.options.z) {
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+    return false;
+  }
+
+  // 处理element数据为纯净数据
+  resolvePureData(data: ElementData) {
+    delete data.key;
+    delete data.options.key;
+    delete data.options.linkLineKeys;
+    delete data.options.linkTextKey;
+    const centerPoint = this.engine.pickController.getViewportCenterPoint();
+    if (!centerPoint) { return; }
+    const { x, y, z } = centerPoint;
+    data.options = {
+      ...data.options,
+      x, y, z
+    }
+    return data;
   }
 
   destroy() {

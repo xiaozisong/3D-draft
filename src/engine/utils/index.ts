@@ -7,6 +7,7 @@ import { get } from "lodash";
 import { Color } from "./color";
 import { Render } from "./render";
 import { Dom } from "./dom";
+import ClipboardManager from "./clipboard";
 export interface MeshElement extends Mesh {
   isElement: boolean;
   parent: MeshElement;
@@ -23,7 +24,11 @@ export class Utils {
   // 渲染工具类
   static Render = Render;
 
+  // dom工具类
   static Dom = Dom;
+
+  // 剪贴板工具类
+  static clipboard = ClipboardManager;
 
   // 生成文字canvas
   static getTextCanvas({ text, height, width }: { text: string, height: number, width: number }) {

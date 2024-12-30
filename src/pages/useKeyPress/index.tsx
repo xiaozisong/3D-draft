@@ -23,6 +23,22 @@ const useKeyPressEffect = () => {
     event.preventDefault();
     engine.controller.action.line.endCreateLine();
   });
+
+  // 复制物体
+  useKeyPress(['ctrl.c', 'meta.c'], (event) => {
+    const prevent = Utils.Dom.preventInputEvent(event);
+    if (prevent) { return; }
+    event.preventDefault();
+    engine.controller.element.copySelectedElement();
+  });
+
+  // 复制物体
+  useKeyPress(['ctrl.v', 'meta.v'], (event) => {
+    const prevent = Utils.Dom.preventInputEvent(event);
+    if (prevent) { return; }
+    event.preventDefault();
+    engine.controller.element.pasteElement();
+  });
 };
 
 export default useKeyPressEffect;

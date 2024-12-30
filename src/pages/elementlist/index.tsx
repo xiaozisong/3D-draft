@@ -2,12 +2,13 @@ import { useStore } from "@/components/store/useStore";
 import commonStyle from "@/components/styles/common.less";
 import { useEngine } from "@/engine";
 import { Element3D } from "@/engine/interface";
-import { Button, List, Typography } from "antd";
+import { Button, List, Typography, Empty } from "antd";
 import classnames from "classnames";
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import styles from "./index.less";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Utils } from "@/engine/utils";
+import { isEmpty } from "lodash";
 const { Title } = Typography;
 
 const ElementList = () => {
@@ -50,7 +51,7 @@ const ElementList = () => {
         className={styles.content}
         ref={listRef}
       >
-        <List
+        {!isEmpty(dataSource) ? <List
           bordered={false}
           dataSource={dataSource}
           renderItem={(item) => (
@@ -75,7 +76,11 @@ const ElementList = () => {
               </Button>
             </List.Item>
           )}
-        />
+        /> : (
+          <div className={styles.empty}>
+            <Empty description={"暂无元素"} />
+          </div>
+        )}
       </div>
     </div>
   );

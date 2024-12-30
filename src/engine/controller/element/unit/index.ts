@@ -10,16 +10,6 @@ export class Unit3DObject<OptionsType extends BaseOptions> extends Base3DObject<
     super(engine, options);
   }
 
-  // 改变名称
-  changeName({ value, type }: { value: string, type: string }) {
-    const me = this;
-    const newOptions = {
-      [type]: value,
-    } as Partial<OptionsType>;
-    me.setOptions(newOptions);
-    me.engine.controller.element.refreshElementList();
-  }
-
   // 生成面的颜色
   getColor() {
     const color = this.options.color || TOP_COLOR;
@@ -28,6 +18,16 @@ export class Unit3DObject<OptionsType extends BaseOptions> extends Base3DObject<
     const sideColorX = Utils.Color.darkenColor(color, 11);
     const otherColor = Utils.Color.darkenColor(color, 12);
     return { topColor, sideColorX, sideColorZ, otherColor };
+  }
+
+  // 改变名称
+  changeName({ value, type }: { value: string, type: string }) {
+    const me = this;
+    const newOptions = {
+      [type]: value,
+    } as Partial<OptionsType>;
+    me.setOptions(newOptions);
+    me.engine.controller.element.refreshElementList();
   }
 
   // 设置离地高度

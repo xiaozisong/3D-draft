@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { isEmpty } from "lodash";
 import { Point } from "../../element/point";
 import { Area } from "../../element/area";
+import CommandManager from "@/engine/tools/command/CommandManager";
 
 export class LineAction {
 
@@ -70,7 +71,7 @@ export class LineAction {
     const me = this;
     me.reset();
     this.status = LineActionStatus.create;
-    const activeElement = this.engine.controller.action.select.activeElement;
+    const activeElement = this.engine.controller.action.select.activeElements[0];
     if (!activeElement) { return }
     this.originElement = activeElement;
     const startPoint = this.originElement.position;
@@ -110,8 +111,7 @@ export class LineAction {
     const points = this.tempLine.getPoints();
     const newPoints = [...points, me.nextPoint?.x, me.nextPoint?.y, me.nextPoint?.z];
     // 更新点位
-    this.tempLine.updateGeometryPoint(newPoints);
-    this.tempLine.updateBreakPoints();
+    this.engine.commandManager.executeCommand(new CommandManager.LinePointUpdateCommand(this.engine, this.tempLine, newPoints));
     if (this.targetElement) {
       me.endCreateLine();
     }
@@ -130,7 +130,7 @@ export class LineAction {
 
     // const line = new Line(this.engine, { points: points });
     // 生成线条
-    const lineElement = me.engine.controller.element.addElement({
+    const data = {
       type: 'line',
       options: {
         name: '折线',
@@ -139,7 +139,9 @@ export class LineAction {
         endElementKey: this.targetElement?.key,
         showArrow,
       }
-    });
+    };
+
+    const lineElement = this.engine.commandManager.executeCommand(new CommandManager.AddElementCommand(this.engine, data)) as Line;
 
     //更新线条上的关系
     // lineElement.setOptions({
@@ -175,13 +177,6 @@ export class LineAction {
     this.targetElement = undefined;
     this.nextPoint = new THREE.Vector3();
   }
-
-  // 取消当前动作 
-  cancelAction() {
-    this.status = LineActionStatus.idle;
-    this.tempLine.visible = false;
-    this.tempLine.updatePoints([0, 0, 0, 0, 0, 0]);
-  };
 
   // 移动物体时更新该物体的关联线
   updateLinkLine(obejct: Element3D) {
@@ -239,7 +234,7 @@ export class LineAction {
   // 新增线条上的点
   addPoint(event: MouseEvent) {
     const me = this;
-    const activeElement = this.engine.controller.action.select.activeElement;
+    const activeElement = this.engine.controller.action.select.activeElements[0];
     if (!activeElement || !(activeElement instanceof Line) || me.status !== LineActionStatus.addPoint) {
       return;
     }
@@ -266,7 +261,8 @@ export class LineAction {
           newPositions.push(intersectPoint.x, intersectPoint.y, intersectPoint.z);
         }
       }
-      activeElement.updatePoints(newPositions);
+      // activeElement.updatePoints(newPositions);
+      this.engine.commandManager.executeCommand(new CommandManager.LinePointUpdateCommand(this.engine, activeElement, newPositions));
       const activeBreakPoint = activeElement.getBreakPoint(closestSegmentIndex + 1);
       this.engine.controller.action.select.selectObject(activeBreakPoint, event);
     }

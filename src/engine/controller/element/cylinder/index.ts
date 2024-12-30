@@ -22,7 +22,6 @@ export interface CylinderOptions extends BaseOptions {
 export class Cylinder extends Unit3DObject<CylinderOptions> {
   static schema = CylinderSchema;
   name: string = '棱柱体';
-  groundGap = 0.01;
   lineWdith = 0.02;
   lineWdithActive = 0.03;
 
@@ -80,7 +79,7 @@ export class Cylinder extends Unit3DObject<CylinderOptions> {
 
     this.position.x = me.options.x;
     this.position.z = me.options.z;
-    this.position.y = me.options.y || this.groundGap;
+    this.position.y = me.options.y;
 
     this.rotateY(180 / this.radialSegments * Math.PI / 180); // 绕y轴旋转45度
 

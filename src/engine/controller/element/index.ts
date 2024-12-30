@@ -1,16 +1,18 @@
+import { Store } from '@/components/store';
+import { TOP_COLOR } from "@/engine/constant";
 import { Element3D, ElementData } from "@/engine/interface";
 import { Render } from "@/engine/render";
+import CommandManager from '@/engine/tools/command/CommandManager';
+import { Utils } from "@/engine/utils";
 import * as THREE from "three";
 import { Area, AreaOptions } from "./area";
 import { Cube, CubeOptions } from "./cube";
 import { Cylinder, CylinderOptions } from "./cylinder";
 import { Icon, IconOptions } from "./icon";
-import { Text, TextOptions } from "./text";
 import { Line, LineOptions } from "./line";
 import { Point } from "./point";
-import { TOP_COLOR } from "@/engine/constant";
-import { Store } from '@/components/store';
-import { Utils } from "@/engine/utils";
+import { Text, TextOptions } from "./text";
+import { isArray, isEmpty } from 'lodash';
 
 export class Elements extends THREE.Group {
 
@@ -44,7 +46,6 @@ export class Elements extends THREE.Group {
   createElement(key: string) {
     const centerPoint = this.engine.pickController?.getViewportCenterPoint();
     if (!centerPoint) { return }
-
     const { x, y, z } = centerPoint;
     let data = { type: key, options: { x, y, z } } as ElementData;
     switch (key) {
@@ -102,7 +103,7 @@ export class Elements extends THREE.Group {
         };
         break;
     }
-    this.addElement(data);
+    this.engine.commandManager.executeCommand(new CommandManager.AddElementCommand(this.engine, data));
     this.refreshElementList();
   }
 
@@ -150,14 +151,8 @@ export class Elements extends THREE.Group {
   }
 
   // 移除选中元素
-  deleteSelectedElement() {
-    const activeElement = this.engine.controller.action.select.activeElement;
-    if (activeElement) { this.deleteElement(activeElement); }
-  }
-
-  // 移除选中元素
   deleteElement(element: Element3D) {
-    const selectedElement = this.engine.controller.action.select.activeElement;
+    const selectedElement = this.engine.controller.action.select.activeElements[0];
     // 删除时前置处理
     if (element instanceof Point) {
       this.engine.controller.action.line.removeLinePoint(element);
@@ -176,14 +171,23 @@ export class Elements extends THREE.Group {
       this.engine.controller.action.text.clearLinkText(element);
       this.removeElement(element.key);
       this.engine.controller.action.select.cancelSelectObject();
+      this.engine.controller.action.drag.onDragEnd();
       this.engine.controller.setting.updateEditBar();
     }
   }
 
-  // 移除选中元素
+  // 根据key删除元素
   deleteElementByKey(key: string) {
     const element = this.getElementByKey(key);
     if (element) { this.deleteElement(element); }
+  }
+
+  // 删除选中元素
+  deleteSelectedElement() {
+    const activeElements = this.engine.controller.action.select.activeElements;
+
+    this.engine.commandManager.executeCommand(new CommandManager.DeleteElementCommand(this.engine, activeElements)) as Element3D;
+    this.engine.controller.action.select.setActiveElements([]);
   }
 
   // 获取数据
@@ -215,10 +219,14 @@ export class Elements extends THREE.Group {
   // 复制选中元素
   copySelectedElement() {
     const me = this;
-    const activeElement = me.engine.controller.action.select.activeElement;
-    if (activeElement) {
-      const data = activeElement.getData();
-      Utils.clipboard.copyToClipboard(JSON.stringify(data));
+    const activeElements = me.engine.controller.action.select.activeElements;
+    if (!isEmpty(activeElements)) {
+      const datas = [];
+      for (const element of activeElements) {
+        const data = element.getData();
+        datas.push(data);
+      }
+      Utils.clipboard.copyToClipboard(JSON.stringify(datas));
     }
   }
 
@@ -226,31 +234,36 @@ export class Elements extends THREE.Group {
   async pasteElement() {
     const me = this;
     const text = await Utils.clipboard.pasteFromClipboard();
-    if (!me.verifyElementData(text)) { return; }
-    const data = JSON.parse(text) as ElementData;
-    const newElementData = me.resolvePureData(data);
-    if (newElementData) {
-      const element = me.addElement(newElementData);
-      Utils.Render.executeAfterFrames(() => {
-        if (element) {
-          me.engine.controller.action.select.activeElement = element;
-        }
-      }, 1);
-      me.refreshElementList();
+    const verifiedData = me.verifyElementData(text);
+    const elements: Element3D[] = [];
+    for (const data of verifiedData) {
+      const newElementData = me.resolvePureData(data);
+      if (newElementData) {
+        const element = this.engine.commandManager.executeCommand(new CommandManager.AddElementCommand(this.engine, newElementData)) as Element3D;
+        elements.push(element);
+      }
     }
+
+    Utils.Render.executeAfterFrames(() => {
+      me.engine.controller.action.select.setActiveElements(elements)
+    }, 1)
+    me.refreshElementList();
   }
 
   // 验证是否是合法的元素数据
-  verifyElementData(text: string): boolean {
+  verifyElementData(text: string): ElementData[] {
     try {
-      const data = JSON.parse(text) as ElementData;
-      if (data.type && data.options && data.options.x && data.options.y && data.options.z) {
-        return true;
-      }
+      let datas = JSON.parse(text) as ElementData[];
+      if (!isArray(datas)) { return []; }
+      datas = datas.filter(data => {
+        if (data.type && data.options && data.options.x && data.options.y && data.options.z) {
+          return true
+        }
+      })
+      return datas;
     } catch (error) {
-      return false;
+      return [];
     }
-    return false;
   }
 
   // 处理element数据为纯净数据

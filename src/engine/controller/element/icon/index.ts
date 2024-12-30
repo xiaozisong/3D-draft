@@ -24,7 +24,6 @@ export class Icon extends Unit3DObject<IconOptions> {
   iconDir = "icon/ant-icon-filled";
   name: string = '图标';
   lineWdith = 0.03;
-  groundGap = 0.01;
   // 轮廓线边距
   outlinePadding = 0.1;
 
@@ -88,7 +87,7 @@ export class Icon extends Unit3DObject<IconOptions> {
     const url = me.iconDir + "/" + type + ".svg";
     me.position.x = x;
     me.position.z = z;
-    me.position.y = y || me.groundGap;
+    me.position.y = y;
 
     me.engine.loader.load(url, function (data) {
       const paths = data.paths;

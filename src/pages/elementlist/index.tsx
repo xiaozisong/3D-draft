@@ -26,7 +26,7 @@ const ElementList = () => {
 
   // 选中
   const handleItemClick = useCallback((item: Element3D) => {
-    engine.controller.action.select.activeElement = item;
+    engine.controller.action.select.activeElements = [item];
   }, []);
 
   // 删除

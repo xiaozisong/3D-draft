@@ -134,7 +134,9 @@ export class Line extends Unit3DObject<LineOptions> {
   updatePoints(points: number[]) {
     this.updateGeometryPoint(points);
     this.updateBreakPoints();
-    this.updateArrow();
+    Utils.Render.executeAfterFrames(() => {
+      this.updateArrow();
+    }, 1)
   }
 
   // 更新箭头
@@ -173,6 +175,9 @@ export class Line extends Unit3DObject<LineOptions> {
         arrowStartPoint = new THREE.Vector3(points[length - 6], points[length - 5], points[length - 4]);
       }
       let endPoint = new THREE.Vector3(points[length - 3], points[length - 2], points[length - 1]);
+      if (arrowStartPoint.equals(endPoint)) {
+        arrowStartPoint = new THREE.Vector3(points[length - 9], points[length - 8], points[length - 7])
+      }
       // 如果链接的元素存在，则更新剪头的位置
       if (me.options.endElementKey) {
 
@@ -194,6 +199,7 @@ export class Line extends Unit3DObject<LineOptions> {
       // 计算箭头的旋转角度
       const angle = Math.atan2(direction.x, direction.z);
       this.arrow.rotation.z = angle;
+      this.arrow.position.y = this.arrow.position.y + 0.001;
       this.arrow.material.color.set(this.defaultOutlineColor);
     }
   }

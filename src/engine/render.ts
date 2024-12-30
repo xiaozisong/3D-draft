@@ -4,6 +4,9 @@ import { SVGLoader } from "three/addons";
 import { Camera } from "./camera";
 import { PickController } from "./pick";
 import { Controller } from "./controller";
+import CommandManager from "./tools/command/CommandManager";
+import MoveCommand from "./tools/command/MoveCommand";
+import RotateCommand from "./tools/command/RotateCommand";
 
 export class Render {
   // 渲染器 启用抗锯齿 + 允许渲染器的背景色包含 alpha 通道(背景可以设置透明)
@@ -41,6 +44,9 @@ export class Render {
 
   // 业务控制器
   controller: Controller;
+
+  // 命令管理器
+  commandManager: CommandManager = new CommandManager();
 
   constructor() {
     this.initRenderer();
@@ -120,5 +126,19 @@ export class Render {
 
   registerUpdate(key: string, fn: Function) {
     this.updates[key] = fn;
+  }
+
+  demo() {
+    // 初始化Three.js场景和对象
+    const scene = this.sceneController.scene;
+    const object = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 1), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+    scene.add(object);
+    const commandManager = this.commandManager
+    // 移动对象并记录命令
+    const moveCommand = new MoveCommand(object, new THREE.Vector3(10, 0, 0));
+    commandManager.executeCommand(moveCommand);
+    // 旋转对象并记录命令
+    const rotateCommand = new RotateCommand(object, new THREE.Euler(0, Math.PI / 2, 0));
+    commandManager.executeCommand(rotateCommand);
   }
 }

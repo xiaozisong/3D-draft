@@ -16,7 +16,7 @@ function ProtoPanel() {
   const [form] = Form.useForm();
 
   const schema = useMemo(() => {
-    const activeElement = engine.controller.action.select.activeElement;
+    const activeElement = engine.controller.action.select.activeElements[0];
     if (activeElement) {
       const schema = get(activeElement, 'constructor.schema') as unknown as Schema;
       if (schema) {
@@ -30,7 +30,7 @@ function ProtoPanel() {
     if (!schema) {
       return;
     }
-    const activeElement = engine.controller.action.select.activeElement;
+    const activeElement = engine.controller.action.select.activeElements[0];
     if (!activeElement) { return; }
     const entries = Object.entries(changedValues) as [string, Value][];
     const properties = schema.properties;
@@ -45,7 +45,7 @@ function ProtoPanel() {
   }, [schema]);
 
   useLayoutEffect(() => {
-    const activeElement = engine.controller.action.select.activeElement;
+    const activeElement = engine.controller.action.select.activeElements[0];
     if (activeElement) {
       form.setFieldsValue(activeElement.options);
     }

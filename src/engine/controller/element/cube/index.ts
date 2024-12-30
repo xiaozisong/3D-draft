@@ -21,7 +21,6 @@ export interface CubeOptions extends BaseOptions {
 export class Cube extends Unit3DObject<CubeOptions> {
   static schema = CubeSchema;
   name: string = '立方体';
-  groundGap = 0.01;
 
   lineWdith = 0.02;
   lineWdithActive = 0.03;
@@ -69,7 +68,7 @@ export class Cube extends Unit3DObject<CubeOptions> {
     const cube = new THREE.Mesh(geometry, material);
     geometry.translate(0, height / 2, 0);
     this.position.x = me.options.x;
-    this.position.y = me.options.y || this.groundGap;
+    this.position.y = me.options.y;
     this.position.z = me.options.z;
     me.cube = cube;
 
@@ -202,6 +201,20 @@ export class Cube extends Unit3DObject<CubeOptions> {
       mat.dispose();
     });
     this.cube.material = newMaterial;
+  }
+
+  // 更新属性
+  updateAttribute({ value, type }: { value: any, type: string }) {
+    switch (type) {
+      case value: 'color'
+        this.changeColor({ value, type });
+        break;
+      case value: 'width'
+        this.changeSize({ value, type });
+        break;
+      default:
+        break;
+    }
   }
 
   active() {

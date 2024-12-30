@@ -30,7 +30,6 @@ export class Text extends Unit3DObject<TextOptions> {
 
   name = '文字';
   lineWdith = 0.03;
-  groundGap = 0.2;
   outlinePadding = 0.05;
 
   text: any;
@@ -100,7 +99,7 @@ export class Text extends Unit3DObject<TextOptions> {
 
     this.position.x = x;
     this.position.z = z;
-    this.position.y = y || this.groundGap;
+    this.position.y = y;
 
   }
 

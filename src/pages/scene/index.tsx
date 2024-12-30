@@ -28,7 +28,7 @@ export default function Scene() {
     }
     if (container && !ready) {
       engine.initDom(container);
-      engine.controller.post?.initPostRender();
+      // engine.controller.post?.initPostRender();
       const { elements, settings } = sceneData as SceneData;
       if (elements) {
         engine.controller.data?.setData(elements);

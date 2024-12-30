@@ -1,6 +1,7 @@
-import { LineActionStatus } from "@/engine/interface";
+import { LineActionStatus, Element3D } from "@/engine/interface";
 import { Render } from "@/engine/render";
 import { Line } from "../element/line";
+import CommandManager from "@/engine/tools/command/CommandManager";
 import * as THREE from "three";
 
 export class Events {
@@ -19,10 +20,11 @@ export class Events {
     }
     if (event.button === 0) {
       const { element, point } = me.engine.pickController.pickToPickableElement(event);
-      const oldActiveObject = me.engine.controller.action.select.activeElement;
+      const oldActiveObject = me.engine.controller.action.select.activeElements[0];
       if (!element) {
         // 取消选中
         me.engine.controller.action.select.cancelSelectObject();
+        me.engine.controller.action.drag.onDragEnd();
       } else {
         // 如果已经是新增点模式，则开始新增点
         if (element && element instanceof Line && oldActiveObject && me.engine.controller.action.line.status === LineActionStatus.addPoint) {
@@ -34,6 +36,7 @@ export class Events {
         // }
         // 选中
         me.engine.controller.action.select.selectObject(element, event);
+        me.engine.controller.action.drag.onDragStart(element, event);
       }
       // 如果选中的是线条，则进入线条的新增点模式
       if (element && element instanceof Line) {
@@ -52,8 +55,8 @@ export class Events {
   pointerMove(event: MouseEvent) {
     const me = this;
     // 拖拽物体
-    if (me.engine.controller.action.select.dragObject) {
-      me.engine.controller.action.select.moveObject(event);
+    if (me.engine.controller.action.drag.dragingObject) {
+      me.engine.controller.action.drag.onDraging(event);
     }
     // 绘制连线
     if (me.engine.controller.action.line.status === LineActionStatus.create) {
@@ -65,7 +68,11 @@ export class Events {
   // 鼠标松开
   pointerup() {
     const me = this;
-    me.engine.controller.action.select.dragObject = undefined;
+    if (me.engine.controller.action.drag.isDraging) {
+      const dragStartPosition = me.engine.controller.action.drag.dragStartPosition;
+      const dragingObject = me.engine.controller.action.drag.dragingObject as Element3D;
+      me.engine.commandManager.executeCommand(new CommandManager.DragCommand(this.engine, { dragStartPosition, dragingObject }))
+    }
   }
 
   // 绑定事件
@@ -75,6 +82,13 @@ export class Events {
     domElement.addEventListener("pointerdown", this.pointdown.bind(this), false);
     domElement.addEventListener("pointermove", this.pointerMove.bind(this), false);
     domElement.addEventListener("pointerup", this.pointerup.bind(this), false);
+  }
+
+  // 主动触发事件
+  raiseEvent(type: string) {
+    const me = this;
+    const domElement = me.engine.renderer.domElement;
+    domElement.dispatchEvent(new Event(type));
   }
 
 }

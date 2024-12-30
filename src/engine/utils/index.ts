@@ -144,7 +144,7 @@ export class Utils {
    * 
    * @memberOf Utils
    */
-  static getIntersectPointBySegment({
+  static getIntersectPointBySegment1({
     endPoint,
     startPoint,
     target,
@@ -158,6 +158,33 @@ export class Utils {
     const distance = startPoint.distanceTo(endPoint);
     // 使用Raycaster 检测交点
     const raycaster = new THREE.Raycaster(startPoint, direction, 0, distance);
+    const intersects = raycaster.intersectObject(target);
+    if (intersects.length > 0) {
+      const intersectPoint = intersects[0].point;
+      return intersectPoint;
+    }
+    return null;
+  }
+
+  static getIntersectPointBySegment({
+    endPoint,
+    startPoint,
+    target,
+  }: {
+    endPoint: THREE.Vector3,
+    startPoint: THREE.Vector3,
+    target: Element3D,
+  }) {
+    // 创建射线
+    const raycaster = new THREE.Raycaster();
+    const direction = new THREE.Vector3().subVectors(endPoint, startPoint).normalize();
+    const length = startPoint.distanceTo(endPoint);
+
+    // 设置射线起点和方向
+    raycaster.set(startPoint, direction);
+    raycaster.far = length;
+
+    // 检测交点
     const intersects = raycaster.intersectObject(target);
     if (intersects.length > 0) {
       const intersectPoint = intersects[0].point;

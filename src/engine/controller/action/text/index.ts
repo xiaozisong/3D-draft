@@ -3,6 +3,7 @@ import { Render } from "@/engine/render";
 import { Utils } from "@/engine/utils";
 import * as THREE from "three";
 import { Text } from '@/engine/controller/element/text';
+import CommandManager from "@/engine/tools/command/CommandManager";
 
 export class TextAction {
   constructor(private engine: Render) {
@@ -11,13 +12,13 @@ export class TextAction {
 
   // 添加文字
   addTextForActiveElement() {
-    const activeElement = this.engine.controller.action.select.activeElement;
+    const activeElement = this.engine.controller.action.select.activeElements[0];
     if (!activeElement || activeElement.options.linkTextKey) {
       return;
     }
     const { z: length, y } = Utils.getGroupSize(activeElement);
     const position = activeElement.position;
-    const text = this.engine.controller.element.addElement({
+    const data = {
       type: 'text',
       options: {
         name: '文字',
@@ -29,7 +30,8 @@ export class TextAction {
         fontSize: 0.5,
         lineHeight: 1.5,
       }
-    });
+    };
+    const text = this.engine.commandManager.executeCommand(new CommandManager.AddElementCommand(this.engine, data)) as Text;
     activeElement.setOptions({
       linkTextKey: text.key,
     });

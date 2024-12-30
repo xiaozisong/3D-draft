@@ -13,6 +13,7 @@ import { Color } from "antd/es/color-picker";
 export interface AreaOptions extends BaseOptions{
   x: number,
   z: number,
+  y: number,
   width: number,
   height: number,
   length: number,
@@ -24,7 +25,6 @@ export class Area extends Unit3DObject<AreaOptions> {
   static schema = AreaSchema;
   name: string = '平面';
   lineWdith = 0.03;
-  groundGap = 0;
   outlinePadding = 0;
 
   area: any;
@@ -55,6 +55,7 @@ export class Area extends Unit3DObject<AreaOptions> {
     const { x, z, y, color, width, height, length, opacity = 0.5 } = me.options
     this.position.x = x;
     this.position.z = z;
+    this.position.z = y;
 
     // 创建平面几何体
     const geometry = new THREE.BoxGeometry(length, height, width);
@@ -77,7 +78,6 @@ export class Area extends Unit3DObject<AreaOptions> {
     const area = new THREE.Mesh(geometry, material);
 
     // this.rotation.x = - Math.PI / 2;
-    this.position.y = this.groundGap;
 
     this.area = area;
 

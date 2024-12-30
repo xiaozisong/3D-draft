@@ -3,7 +3,7 @@ import { SettingStore } from "@/engine/interface/setting";
 import { Render } from "@/engine/render";
 import { Utils } from "@/engine/utils";
 import { Line } from '../element/line';
-import { pick } from "lodash";
+import { pick, isEmpty } from "lodash";
 
 export class Setting {
   initialData: SettingStore = {
@@ -46,14 +46,15 @@ export class Setting {
   // 更新编辑栏位置
   updateEditBar() {
     const me = this;
-    const activeElement = me.engine.controller.action.select.activeElement;
-    if (!activeElement) { 
+    const activeElements = me.engine.controller.action.select.activeElements;
+    if (isEmpty(activeElements) || activeElements.length > 1) { 
       this.store.setState({
         editbarPosition: { x: 0, y: 0 },
         editbarVisible: false
       })  
       return;
     }
+    const activeElement = activeElements[0];
     const objectPosition = [activeElement.position.x, activeElement.position.y, activeElement.position.z]
     const editbarPosition = Utils.Math.getViewportPointByWorldPoint({
       camera: this.engine.cameraController.camera,

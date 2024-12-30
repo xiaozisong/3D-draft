@@ -44,6 +44,32 @@ export default {
         (instance as Text).changeColor({ value, type: key });
       }
     },
+    outlineColor: {
+      type: 'string',
+      title: "轮廓颜色",
+      componentType: "ColorPicker",
+      props: {
+        showText: true,
+        presets: COLOR_PRESETS,
+      },
+      onChange: ({ key, value, instance }) => {
+        (instance as Text).changeOutlineColor({ value, type: key });
+      }
+    },
+    outlineWidth: {
+      type: 'number',
+      title: "轮廓线宽",
+      componentType: "InputNumber",
+      props: {
+        min: 0,
+        step: 0.01,
+        max: 0.1,
+        style: { width: '100%' }
+      },
+      onChange: ({ key, value, instance }) => {
+        (instance as Text).changeTextAttribute({ value, type: key });
+      }
+    },
     lineHeight: {
       type: 'number',
       title: '行高',

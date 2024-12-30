@@ -17,6 +17,8 @@ export interface TextOptions extends BaseOptions {
   color: string,
   fontSize: number,
   fontWeight: string,
+  outlineColor?: string,
+  outlineWidth?: number, 
   lineHeight?: number,
   linkElementKey?: string,
   linkElementRelactionPosition?: THREE.Vector3
@@ -52,20 +54,42 @@ export class Text extends Unit3DObject<TextOptions> {
 
   init() {
     const me = this;
-    const { x, z, y, text: textContent = 'default text', color, fontSize, fontWeight, lineHeight = 1.5 } = me.options;
+    if (!me.options.color) {
+      me.options.color = '#000000';
+    }
+    if (!me.options.fontSize) {
+      me.options.fontSize = 0.3;
+    }
+    if (!me.options.fontWeight) {
+      me.options.fontWeight = 'bold';
+    }
+    if (!me.options.outlineColor) {
+      me.options.outlineColor = '#ffffff';
+    }
+    if (!me.options.lineHeight) {
+      me.options.lineHeight = 1.5;
+    }
+    if (!me.options.outlineWidth) {
+      me.options.outlineWidth = 0.02;
+    }
+
+    const { 
+      x, z, y, text: textContent = 'default text', color, fontSize, fontWeight, lineHeight = 1.5, 
+      outlineColor, outlineWidth,
+    } = me.options;
 
     let text = new TextMesh();
     text.font = 'MicrosoftYahei.woff';
+    text.textAlign = 'center';
+    text.anchorX = 'center';
+    text.anchorY = 'middle';
     text.text = textContent;
     text.fontSize = fontSize;
     text.color = color;
     text.fontWeight = fontWeight;
     text.lineHeight = lineHeight;
-    text.outlineColor = '#ffffff'
-    text.outlineWidth = 0.02;
-    text.textAlign = 'center';
-    text.anchorX = 'center';
-    text.anchorY = 'middle';
+    text.outlineColor = outlineColor;
+    text.outlineWidth = outlineWidth;
 
     text.sync()
     
@@ -132,6 +156,18 @@ export class Text extends Unit3DObject<TextOptions> {
       [type]: color,
     });
     this.text.color = color;
+    this.text.sync();
+  }
+
+  // 改变文字轮廓颜色
+  changeOutlineColor({ value, type }: { value: Color, type: string }) {
+    const me = this;
+    const color = value.toHexString();
+    if (!this.text) { return; }
+    me.setOptions({
+      [type]: color,
+    });
+    this.text.outlineColor = color;
     this.text.sync();
   }
 

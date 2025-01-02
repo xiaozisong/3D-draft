@@ -15,7 +15,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Unit3DObject<OptionsType>).setPositionY({ value, type: key });
+        (instance as Unit3DObject<OptionsType>).updateAttribute({ value, type: key as 'x' | 'y' | 'z' });
       }
     },
   },

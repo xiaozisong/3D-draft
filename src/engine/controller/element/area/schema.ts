@@ -3,6 +3,7 @@ import { Area } from ".";
 import { COLOR_PRESETS } from "@/engine/constant/color";
 import unitSchema from '../unit/schema';
 import unitPostSchema from "../unit/postschema";
+import CommandManager from "@/engine/tools/command/CommandManager";
 
 export default {
   properties: {
@@ -15,9 +16,6 @@ export default {
         min: 0.25,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Area).updateSize({ value, type: key });
-      }
     },
     width: {
       type: 'number',
@@ -27,9 +25,6 @@ export default {
         min: 0.2,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Area).updateSize({ value, type: key });
-      }
     },
     color: {
       type: 'string',
@@ -39,9 +34,6 @@ export default {
         showText: true,
         presets: COLOR_PRESETS,
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Area).updateColor({ value, type: key });
-      }
     },
     // height: {
     //   type: 'number',
@@ -65,9 +57,6 @@ export default {
         step: 0.1,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Area).changeOpacity({ value, type: key });
-      }
     },
     ...unitPostSchema.properties,
   }

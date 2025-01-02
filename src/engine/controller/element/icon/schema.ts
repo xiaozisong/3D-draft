@@ -17,9 +17,6 @@ export default {
         options: [],
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Icon).changeType({ value, type: key });
-      }
     },
     size: {
       type: 'number',
@@ -31,9 +28,6 @@ export default {
         precision: 2,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Icon).updateSize({ value, type: key });
-      }
     },
     depth: {
       type: 'number',
@@ -45,9 +39,6 @@ export default {
         precision: 2,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Icon).changeDepth({ value, type: key });
-      }
     },
     color: {
       type: 'string',
@@ -57,9 +48,6 @@ export default {
         showText: true,
         presets: COLOR_PRESETS
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Icon).updateColor({ value, type: key });
-      }
     },
     ...unitPostSchema.properties,
   },

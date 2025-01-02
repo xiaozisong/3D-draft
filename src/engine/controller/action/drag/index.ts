@@ -34,9 +34,9 @@ export class DragAction {
       return element;
     }
     // 计算点击位置与物体中心偏移量
-    var intersectPoint = me.engine.pickController.intersectPlane(event);
+    var { point: intersectPoint } = me.engine.pickController.pickToPointFromElementOrPlane(event, [target]);
     if (intersectPoint) {
-      me.engine.controller.action.drag.dragDeltaToCenter.subVectors(intersectPoint, target.position);
+      me.dragDeltaToCenter.subVectors(intersectPoint.clone(), target.position.clone());
     }
     me.updateDragStartEffect(target);
   }
@@ -45,9 +45,9 @@ export class DragAction {
   updateDragStartEffect(target: Element3D) {
     const me = this;
     // 记录拖拽物体
-    me.engine.controller.action.drag.dragingObject = target;
+    me.dragingObject = target;
     // 记录拖拽物体起始位置
-    me.engine.controller.action.drag.dragStartPosition.copy(target.position);
+    me.dragStartPosition.copy(target.position);
     me.isDraging = true;
   }
 
@@ -78,7 +78,7 @@ export class DragAction {
     me.dragingObject.position.x = targetPoint.x;
     me.dragingObject.position.z = targetPoint.z;
     if (me.dragingObject instanceof Text || me.dragingObject instanceof Icon) {
-      me.dragingObject.position.y = targetPoint.y + 0.005;
+      me.dragingObject.position.y = targetPoint.y + 0.001;
     } else {
       me.dragingObject.position.y = targetPoint.y;
     }
@@ -103,6 +103,10 @@ export class DragAction {
 
   // 拖拽结束
   onDragEnd() {
+    // 同步物体位置
+    this.dragingObject?.syncPosition();
+    this.engine.controller.element.refreshProtoPanel();
+    // 重置拖拽参数
     this.dragDeltaToCenter.set(0, 0, 0);
     this.dragStartPosition.set(0, 0, 0);
     this.dragOffset.set(0, 0, 0);

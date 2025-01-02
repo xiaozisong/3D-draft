@@ -149,7 +149,7 @@ export class Text extends Unit3DObject<TextOptions> {
   // 改变文字颜色
   updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
-    const color = value.toHexString();
+    const color = value.toHexString ? value.toHexString() : value;
     if (!this.text) { return; }
     me.setOptions({
       [type]: color,
@@ -158,20 +158,8 @@ export class Text extends Unit3DObject<TextOptions> {
     this.text.sync();
   }
 
-  // 改变文字轮廓颜色
-  changeOutlineColor({ value, type }: { value: Color, type: string }) {
-    const me = this;
-    const color = value.toHexString();
-    if (!this.text) { return; }
-    me.setOptions({
-      [type]: color,
-    });
-    this.text.outlineColor = color;
-    this.text.sync();
-  }
-
   // 改变文字属性
-  changeTextAttribute({ value, type }: { value: number, type: string }) {
+  updateAttribute({ value, type }: { value: number, type: string }) {
     const me = this;
     if (!this.text) { return; }
     me.setOptions({
@@ -180,6 +168,7 @@ export class Text extends Unit3DObject<TextOptions> {
     this.text[type] = value;
     this.text.sync();
     Utils.Render.executeAfterFrames(this.updateOutLine.bind(me), 2);
+    super.updateAttribute({ value, type });
   }
 
   active() {

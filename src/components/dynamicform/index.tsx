@@ -1,8 +1,10 @@
 import { Element3D } from "@/engine/interface";
-import { ColorPicker, Form, FormProps, Input, InputNumber, Checkbox } from "antd";
+import { Form, FormProps, Input, InputNumber, Checkbox } from "antd";
 import { isEmpty } from "lodash";
 import React from "react";
 import IconSelect from "../iconselect";
+import { Render } from "@/engine/render";
+import ColorPicker from "../colorpicker";
 
 const componentMap: Record<string, React.FC<any>> = {
   Input,
@@ -21,7 +23,17 @@ export interface SchemaField {
   componentType?: string;
   props?: any;
   options?: any;
-  onChange?: ({ key, value, instance }: { key: string; value: Value; instance: Element3D }) => void;
+  onChange?: ({ 
+    key, 
+    value, 
+    instance,
+    engine,
+  }: { 
+    key: string; 
+    value: Value; 
+    instance: Element3D;
+    engine: Render;
+  }) => void;
 }
 
 export interface Schema {

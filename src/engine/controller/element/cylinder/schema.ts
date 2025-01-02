@@ -16,9 +16,6 @@ export default {
         step:0.5,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Cylinder).updateSize({ value, type: key });
-      }
     },
     height: {
       type: 'number',
@@ -29,9 +26,6 @@ export default {
         step:0.5,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Cylinder).updateSize({ value, type: key });
-      }
     },
     color: {
       type: 'string',
@@ -41,9 +35,6 @@ export default {
         showText: true,
         presets: COLOR_PRESETS
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Cylinder).updateColor({ value, type: key });
-      }
     },
     ...unitPostSchema.properties,
   },

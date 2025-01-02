@@ -7,11 +7,13 @@ import { Empty, Form, Typography } from "antd";
 import { get, isEmpty } from "lodash";
 import { useCallback, useLayoutEffect, useMemo, useRef, memo } from "react";
 import styles from "./index.less";
+import CommandManager from "@/engine/tools/command/CommandManager";
 const { Title } = Typography;
 
 function ProtoPanel() {
   const engine = useEngine();
   const [{ activeElementKeys }] = useStore(engine.controller.setting.store, ['activeElementKeys']);
+  const [{ protoPanelHash }] = useStore(engine.controller.element.store, ['protoPanelHash']);
 
   const [form] = Form.useForm();
 
@@ -37,9 +39,17 @@ function ProtoPanel() {
     entries.forEach(([key, value]) => {
       const field = get(properties, `${key}`);
       const valueType = getTypeByString(field?.type);
+      const typedValue = value as typeof valueType;
+
+      // 统一属性变更命令
+      engine.commandManager.executeCommand(
+        new CommandManager.AttributeUpdateCommand(engine, {
+          element: activeElement,
+          fieldData: { value: typedValue, type: key }
+        })
+      )
       if (field?.onChange) {
-        const typedValue = value as typeof valueType;
-        field.onChange({ key, value: typedValue, instance: activeElement });
+        field.onChange({ key, value: typedValue, instance: activeElement, engine });
       }
     });
   }, [schema]);
@@ -54,7 +64,7 @@ function ProtoPanel() {
         form.resetFields();
       }
     }
-  }, [activeElementKeys]);
+  }, [activeElementKeys, protoPanelHash]);
 
   return (
     <div className={styles.proto}>

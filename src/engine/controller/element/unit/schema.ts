@@ -10,9 +10,6 @@ export default {
       props: {
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Unit3DObject<OptionsType>).changeName({ value, type: key });
-      }
     },
   },
 } as Schema

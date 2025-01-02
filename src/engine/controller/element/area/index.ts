@@ -161,7 +161,7 @@ export class Area extends Unit3DObject<AreaOptions> {
   // 改变颜色
   updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
-    const color = value.toHexString();
+    const color = value.toHexString ? value.toHexString() : value;
     me.setOptions({
       [type]: color,
     });
@@ -170,7 +170,7 @@ export class Area extends Unit3DObject<AreaOptions> {
   }
 
   // 改变透明度
-  changeOpacity({ value, type }: { value: number, type: string }) {
+  updateOpacity({ value, type }: { value: number, type: string }) {
     const me = this;
     me.setOptions({
       [type]: value,

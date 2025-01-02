@@ -4,12 +4,13 @@ import * as THREE from "three";
 import { COLOR_SET } from "@/engine/constant/color";
 import { Utils } from "@/engine/utils";
 import { BaseOptions } from "@/engine/interface";
+import { Color } from "antd/es/color-picker";
 export interface IBase3DObject extends THREE.Group {
   key: string;
   isElement: boolean;
 }
 
-export class Base3DObject<OptionsType extends BaseOptions> extends THREE.Group {
+export abstract class Base3DObject<OptionsType extends BaseOptions> extends THREE.Group {
   // 元素标记
   isElement: boolean = true;
   // 元素唯一标识
@@ -27,6 +28,21 @@ export class Base3DObject<OptionsType extends BaseOptions> extends THREE.Group {
     super();
     this.key = options.key || nanoid();
   }
+
+  // 更新颜色
+  abstract updateColor(options: { value: Color, type: string }): void
+
+  // 更新尺寸
+  abstract updateSize(options: { value: number, type: string }): void
+
+  // 更新透明度
+  abstract updateOpacity(options: { value: number, type: string }): void
+
+  // 更新深度
+  abstract updateDepth(options: { value: number, type: string }): void
+
+  // 更新类型
+  abstract updateType(options: { value: string, type: string }): void
 
   getOptions() {
     return this.options;

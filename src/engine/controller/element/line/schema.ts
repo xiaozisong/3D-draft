@@ -14,9 +14,6 @@ export default {
         showText: true,
         presets: COLOR_PRESETS,
       },
-      onChange: ({ value, key, instance }) => {
-        (instance as Line).changeProperty({ value, type: key });
-      }
     },
     lineWidth: {
       type: 'number',
@@ -28,9 +25,6 @@ export default {
         max: 0.05,
         style: { width: '100%' },
       },
-      onChange: ({ value, key, instance }) => {
-        (instance as Line).changeProperty({ value, type: key });
-      }
     },
     dashed: {
       type: 'number',
@@ -42,9 +36,6 @@ export default {
       options: {
         valuePropName: 'checked'
       },
-      onChange: ({ value, key, instance }) => {
-        (instance as Line).changeProperty({ value, type: key });
-      }
     },
   }
 } as Schema;

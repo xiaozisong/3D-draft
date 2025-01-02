@@ -4,6 +4,7 @@ import DeleteElementCommand from "./DeleteElementCommand";
 import LinePointUpdateCommand from "./LinePointUpdateCommand";
 import CreateLineCommand from "./CreateLineCommand";
 import DragCommand from "./DragCommand";
+import AttributeUpdateCommand from "./AttributeUpdateCommand";
 
 class CommandManager {
   // 新增元素命令
@@ -18,10 +19,14 @@ class CommandManager {
   // 拖拽命令
   static DragCommand = DragCommand;
 
+  // 属性更新命令
+  static AttributeUpdateCommand = AttributeUpdateCommand;
+
   // 创建
   static CreateLineCommand = CreateLineCommand;
 
   private undoStack: Command[] = [];
+  
   private redoStack: Command[] = [];
 
   executeCommand(command: Command) {

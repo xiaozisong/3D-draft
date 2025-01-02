@@ -213,7 +213,7 @@ export class Icon extends Unit3DObject<IconOptions> {
   }
 
   // 改变厚度
-  changeDepth({ value, type }: { value: number, type: string }) {
+  updateDepth({ value, type }: { value: number, type: string }) {
     const me = this;
     me.setOptions({
       [type]: value,
@@ -241,7 +241,7 @@ export class Icon extends Unit3DObject<IconOptions> {
   // 改变颜色
   updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
-    const color = value.toHexString();
+    const color = value.toHexString ? value.toHexString() : value;
     me.setOptions({
       [type]: color,
     });
@@ -271,7 +271,7 @@ export class Icon extends Unit3DObject<IconOptions> {
   }
 
   // 更新图标类型
-  changeType({ value, type }: { value: string, type: string }) {
+  updateType({ value, type }: { value: string, type: string }) {
     const me = this;
     me.setOptions({
       [type]: value,

@@ -192,7 +192,7 @@ export class Cylinder extends Unit3DObject<CylinderOptions> {
   // 改变颜色
   updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
-    const color = value.toHexString();
+    const color = value.toHexString ? value.toHexString() : value;
     me.setOptions({
       [type]: color,
     });

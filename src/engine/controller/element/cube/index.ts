@@ -183,7 +183,7 @@ export class Cube extends Unit3DObject<CubeOptions> {
   // 改变颜色
   updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
-    const color = value.toHexString();
+    const color = value.toHexString ? value.toHexString() : value;
     me.setOptions({
       [type]: color
     });
@@ -201,22 +201,6 @@ export class Cube extends Unit3DObject<CubeOptions> {
       mat.dispose();
     });
     this.cube.material = newMaterial;
-  }
-
-  // 更新属性
-  updateAttribute({ value, type }: { value: any, type: string }) {
-    switch (type) {
-      case 'color':
-        this.updateColor({ value, type });
-        break;
-      case 'width':
-      case 'length':
-      case 'width':
-        this.updateSize({ value, type });
-        break;
-      default:
-        break;
-    }
   }
 
   active() {

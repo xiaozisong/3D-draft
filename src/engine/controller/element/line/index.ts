@@ -6,6 +6,7 @@ import { BaseOptions } from "@/engine/interface";
 import { Point } from "../point";
 import LineSchema from "./schema";
 import { Unit3DObject } from "../unit";
+import { Color } from "antd/es/color-picker";
 
 export interface LineOptions extends BaseOptions {
   points: number[],
@@ -205,10 +206,10 @@ export class Line extends Unit3DObject<LineOptions> {
   }
 
   // 改变线条属性
-  changeProperty({ value, type }: { value: any, type: string }) {
+  updateAttribute({ value, type }: { value: any, type: string }) {
     if (!this.line || value === undefined) { return; }
     if (type === 'color') {
-      value = value.toHexString();
+      value = value.toHexString ? value.toHexString() : value;
     }
     this.setOptions({
       [type]: value
@@ -228,6 +229,7 @@ export class Line extends Unit3DObject<LineOptions> {
     this.matLine.dashed = dashed as boolean;
     this.line.computeLineDistances();
     this.updateArrow();
+    super.updateAttribute({ value, type });
   }
 
   // 设置箭头是否可见

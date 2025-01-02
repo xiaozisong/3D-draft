@@ -15,9 +15,6 @@ export default {
         min: 0.25,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Text).changeTextAttribute({ value, type: key });
-      }
     },
     fontSize: {
       type: 'number',
@@ -28,9 +25,6 @@ export default {
         step: 0.1,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Text).changeTextAttribute({ value, type: key });
-      }
     },
     color: {
       type: 'string',
@@ -40,9 +34,6 @@ export default {
         showText: true,
         presets: COLOR_PRESETS,
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Text).updateColor({ value, type: key });
-      }
     },
     outlineColor: {
       type: 'string',
@@ -52,9 +43,6 @@ export default {
         showText: true,
         presets: COLOR_PRESETS,
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Text).changeOutlineColor({ value, type: key });
-      }
     },
     outlineWidth: {
       type: 'number',
@@ -66,9 +54,6 @@ export default {
         max: 0.1,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Text).changeTextAttribute({ value, type: key });
-      }
     },
     lineHeight: {
       type: 'number',
@@ -79,9 +64,6 @@ export default {
         step: 0.5,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Text).changeTextAttribute({ value, type: key });
-      }
     },
     ...unitPostSchema.properties,
   }

@@ -42,16 +42,12 @@ const useKeyPressEffect = () => {
 
   // 撤销
   useKeyPress(["ctrl.z", "meta.z"], (event) => {
-    const prevent = Utils.Dom.preventInputEvent(event);
-    if (prevent) { return; }
     event.preventDefault();
     engine.commandManager.undo();
   }, { exactMatch: true });
 
   // 重做
   useKeyPress(["shit.ctrl.z", "shift.meta.z"], (event) => {
-    const prevent = Utils.Dom.preventInputEvent(event);
-    if (prevent) { return; }
     event.preventDefault();
     engine.commandManager.redo();
   }, { exactMatch: true });

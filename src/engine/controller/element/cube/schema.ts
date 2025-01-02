@@ -13,11 +13,9 @@ export default {
       componentType: "InputNumber",
       props: {
         min: 0.25,
+        step: 0.25,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Cube).updateAttribute({ value, type: key });
-      }
     },
     width: {
       type: 'number',
@@ -25,11 +23,9 @@ export default {
       componentType: "InputNumber",
       props: {
         min: 0.25,
+        step: 0.25,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Cube).updateAttribute({ value, type: key });
-      }
     },
     height: {
       type: 'number',
@@ -37,11 +33,9 @@ export default {
       componentType: "InputNumber",
       props: {
         min: 0.25,
+        step: 0.25,
         style: { width: '100%' }
       },
-      onChange: ({ key, value, instance }) => {
-        (instance as Cube).updateAttribute({ value, type: key });
-      }
     },
     color: {
       type: 'string',

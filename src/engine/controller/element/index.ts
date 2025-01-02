@@ -12,12 +12,13 @@ import { Icon, IconOptions } from "./icon";
 import { Line, LineOptions } from "./line";
 import { Point } from "./point";
 import { Text, TextOptions } from "./text";
-import { isArray, isEmpty } from 'lodash';
+import { isArray, isEmpty, isNil } from 'lodash';
 
 export class Elements extends THREE.Group {
 
   initialData = {
     elementListHash: '1',
+    protoPanelHash: '1',
   }
 
   store = new Store(this.initialData);
@@ -81,6 +82,7 @@ export class Elements extends THREE.Group {
           fontSize: 0.3,
           fontWeight: "bold",
           lineHeight: 1.5,
+          y: 0.001,
         };
         break;
       case "area":
@@ -100,6 +102,7 @@ export class Elements extends THREE.Group {
           ...data.options,
           size: 1,
           color: "#000000",
+          y: 0.001,
         };
         break;
     }
@@ -210,10 +213,13 @@ export class Elements extends THREE.Group {
 
   // 刷新元素列表
   refreshElementList() {
-    const me = this;
-    me.engine.controller.element.store.setState({
+    this.store.setState({
       elementListHash: Date.now().toString(),
     })
+  }
+
+  refreshProtoPanel() {
+    this.store.setState({ protoPanelHash: Date.now().toString() });
   }
 
   // 复制选中元素
@@ -256,7 +262,7 @@ export class Elements extends THREE.Group {
       let datas = JSON.parse(text) as ElementData[];
       if (!isArray(datas)) { return []; }
       datas = datas.filter(data => {
-        if (data.type && data.options && data.options.x && data.options.y && data.options.z) {
+        if (data.type && data.options && !isNil(data.options.x) && !isNil(data.options.y) && !isNil(data.options.z)) {
           return true
         }
       })

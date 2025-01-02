@@ -41,7 +41,7 @@ export class Data {
     localStorage.setItem('isometric-3d-editor', JSON.stringify({
       elements,
       settings,
-      version: VERSION,
+      version: process.env.VERSION,
     }))
     message.success("保存成功");
   }

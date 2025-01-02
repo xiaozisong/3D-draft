@@ -25,7 +25,7 @@ export default function Scene() {
     if (container && !ready) {
       engine.initDom(container);
       // 数据版本
-      if (sceneData?.version !== VERSION) {
+      if (sceneData?.version !== process.env.VERSION) {
         return;
       }
       // engine.controller.post?.initPostRender();

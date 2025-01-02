@@ -7,7 +7,7 @@ export default defineConfig({
     { path: "/docs", component: "docs" },
   ],
   define: {
-    VERSION: '0.0.2',
+    'process.env.VERSION': '0.0.2'
   },
   npmClient: 'pnpm',
 });

@@ -147,7 +147,7 @@ export class Text extends Unit3DObject<TextOptions> {
   }
 
   // 改变文字颜色
-  changeColor({ value, type }: { value: Color, type: string }) {
+  updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
     const color = value.toHexString();
     if (!this.text) { return; }

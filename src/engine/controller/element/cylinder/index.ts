@@ -169,7 +169,7 @@ export class Cylinder extends Unit3DObject<CylinderOptions> {
   }
 
   // 改变尺寸
-  changeSize({ value, type }: { value: number, type: string }) {
+  updateSize({ value, type }: { value: number, type: string }) {
     const me = this;
     if (!this.cylinder || !value || value < 0.25) { return; }
     this.setOptions({
@@ -190,7 +190,7 @@ export class Cylinder extends Unit3DObject<CylinderOptions> {
   }
 
   // 改变颜色
-  changeColor({ value, type }: { value: Color, type: string }) {
+  updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
     const color = value.toHexString();
     me.setOptions({

@@ -16,7 +16,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Area).changeSize({ value, type: key });
+        (instance as Area).updateSize({ value, type: key });
       }
     },
     width: {
@@ -28,7 +28,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Area).changeSize({ value, type: key });
+        (instance as Area).updateSize({ value, type: key });
       }
     },
     color: {
@@ -40,7 +40,7 @@ export default {
         presets: COLOR_PRESETS,
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Area).changeColor({ value, type: key });
+        (instance as Area).updateColor({ value, type: key });
       }
     },
     // height: {

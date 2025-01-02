@@ -32,7 +32,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Icon).changeSize({ value, type: key });
+        (instance as Icon).updateSize({ value, type: key });
       }
     },
     depth: {
@@ -58,7 +58,7 @@ export default {
         presets: COLOR_PRESETS
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Icon).changeColor({ value, type: key });
+        (instance as Icon).updateColor({ value, type: key });
       }
     },
     ...unitPostSchema.properties,

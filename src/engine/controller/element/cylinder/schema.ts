@@ -17,7 +17,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Cylinder).changeSize({ value, type: key });
+        (instance as Cylinder).updateSize({ value, type: key });
       }
     },
     height: {
@@ -30,7 +30,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Cylinder).changeSize({ value, type: key });
+        (instance as Cylinder).updateSize({ value, type: key });
       }
     },
     color: {
@@ -42,7 +42,7 @@ export default {
         presets: COLOR_PRESETS
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Cylinder).changeColor({ value, type: key });
+        (instance as Cylinder).updateColor({ value, type: key });
       }
     },
     ...unitPostSchema.properties,

@@ -167,7 +167,7 @@ export class Cube extends Unit3DObject<CubeOptions> {
   }
 
   // 改变尺寸
-  changeSize({ value, type }: { value: number, type: string }) {
+  updateSize({ value, type }: { value: number, type: string }) {
     if (!this.cube || !value || value < 0.25) { return; }
     this.setOptions({
       [type]: value
@@ -181,7 +181,7 @@ export class Cube extends Unit3DObject<CubeOptions> {
   }
 
   // 改变颜色
-  changeColor({ value, type }: { value: Color, type: string }) {
+  updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
     const color = value.toHexString();
     me.setOptions({
@@ -206,11 +206,13 @@ export class Cube extends Unit3DObject<CubeOptions> {
   // 更新属性
   updateAttribute({ value, type }: { value: any, type: string }) {
     switch (type) {
-      case value: 'color'
-        this.changeColor({ value, type });
+      case 'color':
+        this.updateColor({ value, type });
         break;
-      case value: 'width'
-        this.changeSize({ value, type });
+      case 'width':
+      case 'length':
+      case 'width':
+        this.updateSize({ value, type });
         break;
       default:
         break;

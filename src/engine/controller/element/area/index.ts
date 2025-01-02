@@ -126,7 +126,7 @@ export class Area extends Unit3DObject<AreaOptions> {
   }
 
   // 改变尺寸
-  changeSize({ value, type }: { value: number, type: string }) {
+  updateSize({ value, type }: { value: number, type: string }) {
     if (!this.area || !value || value < 0.01) { return; }
     this.setOptions({
       [type]: value,
@@ -159,7 +159,7 @@ export class Area extends Unit3DObject<AreaOptions> {
   }
 
   // 改变颜色
-  changeColor({ value, type }: { value: Color, type: string }) {
+  updateColor({ value, type }: { value: Color, type: string }) {
     const me = this;
     const color = value.toHexString();
     me.setOptions({

@@ -29,7 +29,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Text).changeColor({ value, type: key });
+        (instance as Text).changeTextAttribute({ value, type: key });
       }
     },
     color: {
@@ -41,7 +41,7 @@ export default {
         presets: COLOR_PRESETS,
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Text).changeColor({ value, type: key });
+        (instance as Text).updateColor({ value, type: key });
       }
     },
     outlineColor: {

@@ -16,7 +16,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Cube).changeSize({ value, type: key });
+        (instance as Cube).updateAttribute({ value, type: key });
       }
     },
     width: {
@@ -28,7 +28,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Cube).changeSize({ value, type: key });
+        (instance as Cube).updateAttribute({ value, type: key });
       }
     },
     height: {
@@ -40,7 +40,7 @@ export default {
         style: { width: '100%' }
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Cube).changeSize({ value, type: key });
+        (instance as Cube).updateAttribute({ value, type: key });
       }
     },
     color: {
@@ -54,7 +54,7 @@ export default {
         presets: COLOR_PRESETS,
       },
       onChange: ({ key, value, instance }) => {
-        (instance as Cube).changeColor({ value, type: key });
+        (instance as Cube).updateColor({ value, type: key });
       }
     },
     ...unitPostSchema.properties

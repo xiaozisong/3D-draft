@@ -18,8 +18,9 @@ export class Events {
     if (camera instanceof THREE.PerspectiveCamera) {
       return;
     }
+    // 左键单击
     if (event.button === 0) {
-      const { element, point } = me.engine.pickController.pickToPickableElement(event);
+      const { element } = me.engine.pickController.pickToPickableElement(event);
       const oldActiveObject = me.engine.controller.action.select.activeElements[0];
       if (!element) {
         // 取消选中
@@ -35,8 +36,8 @@ export class Events {
         //   me.engine.controller.action.line.status = LineActionStatus.idle;
         // }
         // 选中
-        me.engine.controller.action.select.selectObject(element, event);
-        me.engine.controller.action.drag.onDragStart(element, event);
+        const activeElements = me.engine.controller.action.select.selectObject(element, event);
+        me.engine.controller.action.drag.onDragStart(activeElements, event);
       }
       // 如果选中的是线条，则进入线条的新增点模式
       if (element && element instanceof Line) {

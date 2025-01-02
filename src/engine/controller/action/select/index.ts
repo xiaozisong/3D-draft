@@ -37,15 +37,19 @@ export class SelectAction {
   }
 
   // 选中物体
-  selectObject(target: Element3D, event: MouseEvent) {
+  selectObject(target: Element3D, event: MouseEvent): Element3D[] {
     const me = this;
     if (!target) {
       return target;
     }
 
     // 执行选中
-    me.activeElements = [target];
-    return target;
+    if (event.shiftKey) {
+      me.activeElements = [...me.activeElements, target];
+    } else {
+      me.activeElements = [target];
+    }
+    return me.activeElements;
   }
 
   // 取消选中物体

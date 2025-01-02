@@ -95,7 +95,13 @@ export class TextAction {
   // 清除关联文字
   clearLinkText(element: Element3D) {
     if (element.options.linkTextKey) {
-      this.engine.controller.element.removeElement(element.options.linkTextKey);
+      // this.engine.controller.element.removeElement(element.options.linkTextKey);
+      const text = this.engine.controller.element.getElementByKey(element.options.linkTextKey) as Text;
+      if (text) {
+        text.setOptions({
+          linkElementKey: ''
+        })
+      }
     }
   }
 }

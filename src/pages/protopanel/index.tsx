@@ -72,7 +72,7 @@ function ProtoPanel() {
         <Title level={5}>属性</Title>
       </div>
       <div className={styles.content}>
-        {!isEmpty(activeElementKeys) && schema ? (
+        {activeElementKeys.length === 1 && schema ? (
           <DynamicForm
             schema={schema}
             // size='small'
@@ -82,7 +82,7 @@ function ProtoPanel() {
           />
         ) : (
           <div className={styles.empty}>
-            <Empty description={'选择物体后显示属性'} />
+            <Empty description={'单选物体后显示属性'} />
           </div>
         )}
       </div>

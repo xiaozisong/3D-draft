@@ -27,18 +27,14 @@ export class DragAction {
   }
 
   // 开始拖拽
-  onDragStart(element: Element3D, event: MouseEvent) {
+  onDragStart(elements: Element3D[], event: MouseEvent) {
     const me = this;
-    const target = element;
-    if (!target) {
-      return element;
-    }
     // 计算点击位置与物体中心偏移量
-    var { point: intersectPoint } = me.engine.pickController.pickToPointFromElementOrPlane(event, [target]);
+    var { point: intersectPoint } = me.engine.pickController.pickToPointFromElementOrPlane(event, elements);
     if (intersectPoint) {
-      me.dragDeltaToCenter.subVectors(intersectPoint.clone(), target.position.clone());
+      me.dragDeltaToCenter.subVectors(intersectPoint.clone(), elements[0].position.clone());
     }
-    me.updateDragStartEffect(target);
+    me.updateDragStartEffect(elements[0]);
   }
 
   // 更新拖拽开始效果

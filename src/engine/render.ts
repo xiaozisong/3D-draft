@@ -1,10 +1,11 @@
 import * as THREE from "three";
-import { SVGLoader } from "three/addons";
+import { SVGLoader, DRACOLoader, GLTFLoader } from "three/addons";
 import { Camera } from "./camera";
 import { Controller } from "./controller";
 import { PickController } from "./pick";
 import { Scene } from "./scene";
 import CommandManager from "./tools/command/CommandManager";
+import { TextureLoader } from "three";
 
 export class Render {
   // 渲染器 启用抗锯齿 + 允许渲染器的背景色包含 alpha 通道(背景可以设置透明)
@@ -29,7 +30,13 @@ export class Render {
   height: number = 500;
 
   // SVG加载器
-  loader = new SVGLoader();
+  SVGLoader = new SVGLoader();
+  // GLTF加载器
+  GLTFLoader = new GLTFLoader();
+  // 纹理加载器
+  TextureLoader = new TextureLoader();
+  // 压缩纹理加载器
+  DRACOLoader = new DRACOLoader();
 
   // 场景控制器
   sceneController: Scene;
@@ -50,8 +57,10 @@ export class Render {
     this.initRenderer();
     this.cameraController = new Camera(this);
     this.sceneController = new Scene(this);
-    this.pickController = new PickController(this)
+    this.pickController = new PickController(this);
     this.controller = new Controller(this);
+    this.DRACOLoader.setDecoderPath('draco/');
+    this.GLTFLoader.setDRACOLoader(this.DRACOLoader);
     this.animate();
     this.initEvent();
   }

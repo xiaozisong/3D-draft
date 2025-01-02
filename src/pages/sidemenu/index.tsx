@@ -42,6 +42,13 @@ const data = [
   // },
 ];
 
+const dataAdvanced = [
+  {
+    key: "model",
+    name: "模型",
+  },
+];
+
 const items: CollapseProps["items"] = [
   {
     key: "1",
@@ -51,7 +58,7 @@ const items: CollapseProps["items"] = [
   {
     key: "2",
     label: "高级",
-    children: <p>{"暂无"}</p>,
+    children: <ElementList data={dataAdvanced} />,
   },
 ];
 

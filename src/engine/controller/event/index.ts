@@ -56,7 +56,7 @@ export class Events {
   pointerMove(event: MouseEvent) {
     const me = this;
     // 拖拽物体
-    if (me.engine.controller.action.drag.dragingObject) {
+    if (me.engine.controller.action.drag.isDraging) {
       me.engine.controller.action.drag.onDraging(event);
     }
     // 绘制连线
@@ -70,9 +70,9 @@ export class Events {
   pointerup() {
     const me = this;
     if (me.engine.controller.action.drag.isDraging) {
-      const dragStartPosition = me.engine.controller.action.drag.dragStartPosition;
-      const dragingObject = me.engine.controller.action.drag.dragingObject as Element3D;
-      me.engine.commandManager.executeCommand(new CommandManager.DragCommand(this.engine, { dragStartPosition, dragingObject }))
+      const dragStartPositions = me.engine.controller.action.drag.dragStartPositions;
+      const dragingObjects = me.engine.controller.action.drag.dragingObjects as Element3D[];
+      me.engine.commandManager.executeCommand(new CommandManager.DragCommand(this.engine, { dragStartPositions, dragingObjects }))
     }
   }
 

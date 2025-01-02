@@ -13,6 +13,7 @@ import { Line, LineOptions } from "./line";
 import { Point } from "./point";
 import { Text, TextOptions } from "./text";
 import { isArray, isEmpty, isNil } from 'lodash';
+import { Model, ModelOptions } from './model';
 
 export class Elements extends THREE.Group {
 
@@ -132,6 +133,9 @@ export class Elements extends THREE.Group {
         break;
       case 'line':
         element = new Line(this.engine, { ...options, key } as LineOptions)
+        break;
+      case 'model':
+        element = new Model(this.engine, { ...options, key } as ModelOptions)
         break;
     }
     if (element) {

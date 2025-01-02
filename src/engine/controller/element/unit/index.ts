@@ -71,6 +71,7 @@ export abstract class Unit3DObject<OptionsType extends BaseOptions> extends Base
       case 'height':
       case 'length':
       case 'width':
+      case 'radius':
         this.updateSize({ value, type })
         break;
       case 'x':

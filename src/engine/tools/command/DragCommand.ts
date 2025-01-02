@@ -4,8 +4,8 @@ import { Command } from './interface';
 import * as THREE from 'three';
 
 class DragCommand implements Command {
-  constructor(private engine: Render, private options: { dragStartPosition: THREE.Vector3, dragingObject: Element3D }) {
-    this.options.dragStartPosition = this.options.dragStartPosition.clone();
+  constructor(private engine: Render, private options: { dragStartPositions: THREE.Vector3[], dragingObjects: Element3D[] }) {
+    this.options.dragStartPositions = this.options.dragStartPositions.map(item => new THREE.Vector3(item.x, item.y, item.z));
   }
 
   execute(): void {
@@ -13,12 +13,8 @@ class DragCommand implements Command {
   }
 
   undo(): void {
-    const x = this.options.dragStartPosition.x;
-    const y = this.options.dragStartPosition.y;
-    const z = this.options.dragStartPosition.z;
-    const oldPosition = new THREE.Vector3(x, y, z);
-    this.engine.controller.action.drag.updateDragStartEffect(this.options.dragingObject);
-    this.engine.controller.action.drag.updateDragingEffect(oldPosition);
+    this.engine.controller.action.drag.updateDragStartEffect(this.options.dragingObjects);
+    this.engine.controller.action.drag.updateDragingEffect(this.options.dragStartPositions[0]);
     this.engine.controller.action.drag.onDragEnd();
   }
 }

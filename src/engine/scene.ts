@@ -34,7 +34,7 @@ export class Scene {
     this.addGround();
     this.addControls();
     // this.initAxesHelper();
-    // this.initLight();
+    this.initLight();
   }
 
   // 初始化坐标轴
@@ -134,17 +134,30 @@ export class Scene {
 
   // 初始化光
   initLight() {
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0000ff, 1);
-    hemiLight.position.set(0, 20, 0);
-    this.scene.add(hemiLight);
+    const scene = this.scene;
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-    dirLight.position.set(300, 300, 300);
-    this.scene.add(dirLight);
+    // 添加环境光
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1); // 环境光，颜色和强度
+    scene.add(ambientLight);
 
-    // 创建环境光
-    const ambientLight = new THREE.AmbientLight(0x404040, 1); // 光的颜色，例如 0x404040
-    this.scene.add(ambientLight);
+    // 添加方向光
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // 方向光，颜色和强度
+    directionalLight.position.set(5, 10, 7.5); // 设置方向光的位置
+    scene.add(directionalLight);
+
+    // 添加点光
+    const pointLight = new THREE.PointLight(0xffffff, 1); // 点光，颜色和强度
+    pointLight.position.set(-50, 50, -50); // 设置点光的位置
+    scene.add(pointLight);
+
+    // 添加半球光
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xcccccc, 1); // 半球光，天空颜色，地面颜色和强度
+    hemisphereLight.position.set(0, 20, 0); // 设置半球光位置
+    scene.add(hemisphereLight);
+
+    const spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(-40, 60, 10);
+    scene.add(spotLight);
   }
 
   // 初始化轨道控制器

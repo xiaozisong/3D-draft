@@ -1,5 +1,6 @@
 import { Element3D } from "@/engine/interface";
 import { Render } from "@/engine/render";
+import { uniqBy } from "lodash";
 
 export class SelectAction {
 
@@ -45,7 +46,10 @@ export class SelectAction {
 
     // 执行选中
     if (event.shiftKey) {
-      me.activeElements = [...me.activeElements, target];
+      const existInActive = me.activeElements.includes(target);
+      if (event.shiftKey || existInActive) {
+        me.activeElements = uniqBy([...me.activeElements, target], 'key');
+      }
     } else {
       me.activeElements = [target];
     }

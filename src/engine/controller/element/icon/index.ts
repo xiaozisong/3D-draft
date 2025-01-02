@@ -89,7 +89,7 @@ export class Icon extends Unit3DObject<IconOptions> {
     me.position.z = z;
     me.position.y = y;
 
-    me.engine.loader.load(url, function (data) {
+    me.engine.SVGLoader.load(url, function (data) {
       const paths = data.paths;
 
       const svgElement = data.xml as unknown as SVGElement;
